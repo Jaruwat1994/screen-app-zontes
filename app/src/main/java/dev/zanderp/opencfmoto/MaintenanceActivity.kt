@@ -113,7 +113,7 @@ class MaintenanceActivity : AppCompatActivity() {
             c.addView(text(
                 if (cons == null) getString(R.string.maint_fuel_need_two)
                 else getString(R.string.maint_fuel_stats, String.format(Locale.getDefault(), "%.2f", cons.first),
-                    cons.second?.let { String.format(Locale.getDefault(), "%.3f €/km", it) } ?: "—", cons.third),
+                    cons.second?.let { String.format(Locale.getDefault(), "%.3f ${Maintenance.currency}/km", it) } ?: "—", cons.third),
                 14f, R.color.text_primary,
             ))
             c.addView(text(getString(R.string.maint_fuel_hint), 12f, R.color.text_secondary))
@@ -128,7 +128,7 @@ class MaintenanceActivity : AppCompatActivity() {
             for (e in log) {
                 val what = when (e.kind) {
                     "fuel" -> "⛽ " + String.format(Locale.getDefault(), "%.2f L", e.liters ?: 0.0) +
-                        (e.euros?.let { String.format(Locale.getDefault(), " · %.2f €", it) } ?: "")
+                        (e.euros?.let { String.format(Locale.getDefault(), " · %.2f ${Maintenance.currency}", it) } ?: "")
                     else -> "🔧 " + (book.tasks.firstOrNull { it.id == e.taskId }?.name ?: e.taskId.orEmpty()) +
                         " · " + Maintenance.fmtKm(e.km)
                 }
@@ -194,7 +194,7 @@ class MaintenanceActivity : AppCompatActivity() {
 
     private fun askRefuel() {
         val liters = number(null, getString(R.string.maint_liters), decimal = true)
-        val euros = number(null, getString(R.string.maint_euros), decimal = true)
+        val euros = number(null, getString(if (Maintenance.isThailand()) R.string.maint_th_baht else R.string.maint_euros), decimal = true)
         val box = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; addView(liters); addView(euros) }
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.maint_refuel)

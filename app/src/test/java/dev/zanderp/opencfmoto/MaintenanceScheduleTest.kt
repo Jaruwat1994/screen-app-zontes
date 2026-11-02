@@ -38,6 +38,14 @@ class MaintenanceScheduleTest {
         assertNull(next(1000, 6000, null, 9000.0))             // far past: ask instead of "overdue by 8,000"
     }
 
+    @Test fun thailand_by_country_or_language() {
+        assertEquals(true, Maintenance.isThailand(java.util.Locale.forLanguageTag("th-TH")))
+        assertEquals(true, Maintenance.isThailand(java.util.Locale.forLanguageTag("en-TH")))  // English UI, Thai region
+        assertEquals(true, Maintenance.isThailand(java.util.Locale.forLanguageTag("th")))
+        assertEquals(false, Maintenance.isThailand(java.util.Locale.forLanguageTag("es-ES")))
+        assertEquals(false, Maintenance.isThailand(java.util.Locale.forLanguageTag("en-US")))
+    }
+
     @Test fun plain_interval_unchanged() {
         assertEquals(9000.0, next(null, 3000, 6000.0, 7000.0))
         assertNull(next(null, 3000, null, 7000.0))

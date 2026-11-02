@@ -117,9 +117,7 @@ object Maintenance {
         Task("coolant", ctx.getString(R.string.maint_coolant), 30000, 36, null, null, firstKm = 30000),
         Task("brakes", ctx.getString(R.string.maint_brakes), 6000, 12, null, null, firstKm = 6000),
         Task("tyres", ctx.getString(R.string.maint_tyres), 6000, 12, null, null, firstKm = 6000),
-        Task("itv", ctx.getString(R.string.maint_itv), null, 24, null, null),
-        Task("insurance", ctx.getString(R.string.maint_insurance), null, 12, null, null),
-    )
+    ) + paperworkTasks(ctx)
 
     /** Swap the task list for [plan], keeping when each matching task was last done and the rider's own tasks. */
     fun applyPlan(ctx: Context, plan: List<Task>) {
@@ -131,6 +129,25 @@ object Maintenance {
         LogBus.log("[MAINT] plan applied: ${plan.size} tasks (+${custom.size} custom)")
     }
 
+    /** Thai phone (country or language): Thai paperwork and baht instead of Spain's ITV and euros. */
+    fun isThailand(locale: Locale = Locale.getDefault()) = locale.country == "TH" || locale.language == "th"
+
+    val currency: String get() = if (isThailand()) "฿" else "€"
+
+    /**
+     * Yearly paperwork. Thailand: compulsory insurance (พ.ร.บ.) and road tax are renewed together;
+     * bikes over 5 years old need an inspection (ตรอ.) first, so riders of newer bikes can delete it.
+     */
+    private fun paperworkTasks(ctx: Context) = if (isThailand()) listOf(
+        Task("th_act", ctx.getString(R.string.maint_th_act), null, 12, null, null),
+        Task("th_tax", ctx.getString(R.string.maint_th_tax), null, 12, null, null),
+        Task("th_inspection", ctx.getString(R.string.maint_th_inspection), null, 12, null, null),
+        Task("insurance", ctx.getString(R.string.maint_insurance), null, 12, null, null),
+    ) else listOf(
+        Task("itv", ctx.getString(R.string.maint_itv), null, 24, null, null),
+        Task("insurance", ctx.getString(R.string.maint_insurance), null, 12, null, null),
+    )
+
     private fun defaultTasks(ctx: Context) = listOf(
         Task("oil", ctx.getString(R.string.maint_oil), 3000, 12, null, null),
         Task("air", ctx.getString(R.string.maint_air), 6000, 12, null, null),
@@ -138,9 +155,7 @@ object Maintenance {
         Task("brakes", ctx.getString(R.string.maint_brakes), 6000, null, null, null),
         Task("tyres", ctx.getString(R.string.maint_tyres), 5000, null, null, null),
         Task("service", ctx.getString(R.string.maint_service), 6000, 12, null, null),
-        Task("itv", ctx.getString(R.string.maint_itv), null, 24, null, null),
-        Task("insurance", ctx.getString(R.string.maint_insurance), null, 12, null, null),
-    )
+    ) + paperworkTasks(ctx)
 
     private fun taskJson(t: Task) = JSONObject().put("id", t.id).put("name", t.name).put("on", t.enabled).apply {
         t.everyKm?.let { put("km", it) }

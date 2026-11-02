@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Thai paperwork tasks in the maintenance logbook (Maintenance.paperworkTasks), shown on Thai phones. -->
+<resources>
+    <string name="maint_th_act">Compulsory insurance (Por Ror Bor)</string>
+    <string name="maint_th_tax">Annual road tax</string>
+    <string name="maint_th_inspection">Vehicle inspection (bikes over 5 years)</string>
+    <string name="maint_th_baht">Baht (optional)</string>
+</resources>

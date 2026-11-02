@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="maint_th_act">ต่อ พ.ร.บ.</string>
+    <string name="maint_th_tax">ต่อภาษีประจำปี</string>
+    <string name="maint_th_inspection">ตรวจสภาพรถ ตรอ. (รถอายุเกิน 5 ปี)</string>
+    <string name="maint_th_baht">บาท (ไม่บังคับ)</string>
+</resources>
