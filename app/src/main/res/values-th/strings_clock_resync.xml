@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Zontes clock resync. Translated: en, es, ca; other locales fall back to English. -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="setup_clock_resync">ซิงค์นาฬิกาหน้าปัดใหม่ (Zontes)</string>
+    <string name="setup_clock_resync_desc">ตัดการเชื่อมต่อไม่กี่วินาทีแล้วเชื่อมต่อใหม่ เพื่อให้หน้าปัดรับเวลาอีกครั้ง อัจฉริยะ: ทำเฉพาะเมื่อหน้าปัดขอเวลาช้า (สัญญาณว่าซิงค์ไม่สำเร็จ) สูงสุด 3 ครั้ง ทำครั้งเดียวเสมอ: ทำในการเชื่อมต่อครั้งแรกทุกครั้งที่หน้าปัดเปิดขึ้น ทำงานเฉพาะกับหน้าปัด Zontes</string>
+    <string name="setup_clock_resync_smart">อัจฉริยะ</string>
+    <string name="setup_clock_resync_once">ทำครั้งเดียวเสมอ</string>
+    <string name="clock_resyncing">⏱ กำลังตั้งนาฬิกาหน้าปัด…</string>
+</resources>

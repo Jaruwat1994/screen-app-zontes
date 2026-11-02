@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- Bike switched off for a long time: stop waiting (battery). -->
+    <string name="bike_gone_channel">ไม่พบรถ</string>
+    <string name="bike_gone_title">หยุดรอรถแล้ว</string>
+    <string name="bike_gone_text">รถดับอยู่ 20 นาที แอปจึงหยุดค้นหารถเพื่อประหยัดแบตเตอรี่ แตะ เชื่อมต่อ เมื่อกลับมาที่รถ</string>
+
+    <!-- Trophies -->
+    <string name="tr_channel">ถ้วยรางวัล</string>
+    <string name="tr_unlocked_title">🏆 ปลดล็อกถ้วยรางวัลแล้ว!</string>
+    <string name="tr_screen_title">ถ้วยรางวัล</string>
+    <string name="tr_header">ปลดล็อกแล้ว %1$d จาก %2$d</string>
+    <string name="tr_next">ถัดไป</string>
+    <string name="tr_earned_on">ได้รับเมื่อ %1$s</string>
+    <string name="tr_card_line">🏆 ถ้วยรางวัล: %1$d จาก %2$d · ดูทั้งหมด ›</string>
+    <string name="tr_distance">กิโลเมตร</string>
+    <string name="tr_distance_d">ขับขี่รวม %1$s km</string>
+    <string name="tr_longest">ทริปไกล</string>
+    <string name="tr_longest_d">ทริปเดียว %1$s km ขึ้นไป</string>
+    <string name="tr_speed">ความเร็วสูงสุด</string>
+    <string name="tr_speed_d">ทำความเร็วถึง %1$s km/h (GPS)</string>
+    <string name="tr_streak">ไฟแรง</string>
+    <string name="tr_streak_d">ขับขี่ %1$s วันติดต่อกัน</string>
+    <string name="tr_rides">ขาประจำ</string>
+    <string name="tr_rides_d">บันทึก %1$s ทริป</string>
+    <string name="tr_hours">ชั่วโมงบนเบาะ</string>
+    <string name="tr_hours_d">ขับขี่ %1$s ชั่วโมง</string>
+    <string name="tr_months">ขี่ได้ทั้งปี</string>
+    <string name="tr_months_d">ขับขี่ใน %1$s เดือนที่ต่างกัน</string>
+    <string name="tr_early">นกตื่นเช้า</string>
+    <string name="tr_early_d">เริ่มทริปก่อน 7:00</string>
+    <string name="tr_night">นักบิดยามดึก</string>
+    <string name="tr_night_d">จบทริปหลัง 23:00</string>
+    <string name="tr_weekend">นักบิดสุดสัปดาห์</string>
+    <string name="tr_weekend_d">ขับขี่ทั้งวันเสาร์และวันอาทิตย์ของสุดสัปดาห์เดียวกัน</string>
+</resources>

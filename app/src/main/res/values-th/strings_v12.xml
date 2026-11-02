@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="extras_section">ฟีเจอร์เสริมสำหรับทริป</string>
+    <string name="extras_parking">จอดรถไว้ที่ไหน?</string>
+    <string name="extras_parking_desc">จดจำตำแหน่งที่คุณจอดรถไว้เมื่อตัดการเชื่อมต่อจากหน้าปัด แสดงบนหน้าจอหลัก วิดเจ็ตบนหน้าจอโฮม และนาฬิกา พร้อมเส้นทางเดินเท้า</string>
+    <string name="extras_rain">แจ้งเตือนฝน</string>
+    <string name="extras_rain_desc">เมื่อเชื่อมต่อ แอปจะตรวจพยากรณ์อากาศ 3 ชั่วโมงข้างหน้ารอบตัวคุณ (Open-Meteo ใช้ตำแหน่งโดยประมาณเท่านั้น) และเตือนบนโทรศัพท์และนาฬิกาหากมีแนวโน้มฝนตก</string>
+    <string name="extras_turns">สั่นเตือนทางเลี้ยวบนนาฬิกา</string>
+    <string name="extras_turns_desc">การนำทางของ Android Auto จะสั่นนาฬิกาก่อนถึงจุดเลี้ยวแต่ละจุด: 2 ครั้ง = ซ้าย, 3 ครั้ง = ขวา, ยาว + สั้น N ครั้ง = ทางออกที่ N ของวงเวียน, ยาว 2 ครั้ง = กลับรถ (ทดลอง)</string>
+    <string name="extras_turns_toast">มีผลตั้งแต่การเชื่อมต่อหน้าปัดครั้งถัดไป</string>
+    <string name="rain_channel">การแจ้งเตือนระหว่างทริป</string>
+    <string name="rain_title">🌧️ ฝนน่าจะตก</string>
+    <string name="rain_title_heavy">🌧️ ฝนน่าจะตกหนัก</string>
+    <string name="rain_now">ฝนกำลังตกหรือกำลังจะตกในบริเวณที่คุณอยู่</string>
+    <string name="rain_in_minutes">ฝนน่าจะตกในอีกประมาณ %1$d นาทีในบริเวณที่คุณอยู่</string>
+    <string name="rain_source">สภาพอากาศ: Open-Meteo.com</string>
+    <string name="parked_pill">🅿️ รถของคุณ · %1$s</string>
+    <string name="parked_pill_dist">🅿️ รถของคุณ · %1$s · %2$s</string>
+    <string name="parked_cleared">ล้างจุดจอดรถแล้ว</string>
+    <string name="open_failed">เปิดไม่ได้</string>
+    <string name="widget_label">RideScreen · จุดจอดรถ</string>
+    <string name="widget_description">ตำแหน่งที่จอดรถไว้ และทริปล่าสุด</string>
+    <string name="widget_parked">🅿️ รถของคุณ</string>
+    <string name="widget_last_ride">ทริปล่าสุด</string>
+    <string name="widget_last_ride_sub">เฉลี่ย %1$d · สูงสุด %2$d km/h</string>
+    <string name="widget_no_rides">ยังไม่มีทริป</string>
+    <string name="share_button">แชร์</string>
+    <string name="share_preparing">กำลังเตรียมรูปภาพ…</string>
+    <string name="share_km">km</string>
+    <string name="share_time">เวลา</string>
+    <string name="share_avg">เฉลี่ย km/h</string>
+    <string name="share_max">สูงสุด km/h</string>
+    <string name="share_rides">ทริป</string>
+    <string name="share_hours">ชั่วโมงขับขี่</string>
+    <string name="share_all_title">ทุกเส้นทางที่ฉันขับขี่ตั้งแต่ %1$s</string>
+    <string name="share_footer">Android Auto บนหน้าปัด · RideScreen AA</string>
+    <string name="share_text">ขับขี่ด้วย RideScreen AA 🏍️</string>
+    <string name="share_chooser">แชร์ทริป</string>
+    <string name="all_rides_button">🗺 ทั้งหมด</string>
+    <string name="all_rides_title">ทุกเส้นทางที่ฉันขับขี่</string>
+    <string name="trips_loading_all">กำลังโหลดทริปทั้งหมด…</string>
+    <string name="all_rides_stats">%1$d ทริป · %2$s km</string>
+    <string name="live_pill_start">📍 แชร์ทริปแบบสด</string>
+    <string name="live_pill_active">📍 กำลังแชร์สด · แตะเพื่อหยุด</string>
+    <string name="live_title">แชร์ทริปแบบสด</string>
+    <string name="live_explain">สร้างลิงก์ส่วนตัวที่แสดงตำแหน่งของคุณบนแผนที่ระหว่างขับขี่ ลิงก์จะหยุดเองไม่กี่นาทีหลังจบทริป (หรือหลัง 12 ชั่วโมง) และตำแหน่งจะถูกลบในอีกหนึ่งวันต่อมา ชื่อของคุณที่ผู้รับลิงก์จะเห็น:</string>
+    <string name="live_name_hint">ชื่อของคุณ (ไม่บังคับ)</string>
+    <string name="live_start">สร้างลิงก์</string>
+    <string name="live_failed">สร้างลิงก์ไม่ได้ มีการเชื่อมต่ออินเทอร์เน็ตไหม?</string>
+    <string name="live_share_text">ติดตามทริปของฉันแบบสด 🏍️ %1$s</string>
+    <string name="live_stopped">หยุดแชร์ตำแหน่งแล้ว</string>
+</resources>
