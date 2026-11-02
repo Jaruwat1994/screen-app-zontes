@@ -80,6 +80,7 @@ class VideoPipeline(
     private var mirrorDisplayListener: DisplayManager.DisplayListener? = null
     private var gpxVoice: GpxVoice? = null
     private var gpxDashUi: GpxDashUi? = null
+    private var customDashUi: CustomDashUi? = null
     private var encoderW = 0
     private var encoderH = 0
     @Volatile private var running = false
@@ -438,42 +439,24 @@ class VideoPipeline(
         }
     }
 
+    /** Own-content mode (no AA, mirror or map): the rider's widget screen ([DashLayout]). */
     private fun setupDisplayAndPresentation() {
         try {
             val display = createOwnVirtualDisplay() ?: return
             val pres = Presentation(context, display)
-            val root = LinearLayout(pres.context).apply {
-                orientation = LinearLayout.VERTICAL
-                gravity = Gravity.CENTER
-                setBackgroundColor(Color.parseColor("#0D47A1"))
-            }
-            val title = TextView(pres.context).apply {
-                text = "OpenCfMoto"
-                setTextColor(Color.WHITE)
-                textSize = 28f
-                gravity = Gravity.CENTER
-            }
-            val clock = TextView(pres.context).apply {
-                setTextColor(Color.parseColor("#80D8FF"))
-                textSize = 20f
-                gravity = Gravity.CENTER
-            }
-            root.addView(title)
-            root.addView(clock)
-            pres.setContentView(root)
+            val themed = ContextThemeWrapper(pres.context, R.style.Theme_OpenCfMoto)
+            ScreenMargins.load(context)
+            val ui = CustomDashUi(
+                themed, DashLayout.load(context),
+                (height - ScreenMargins.top - ScreenMargins.bottom).coerceAtLeast(16), projected = true,
+            )
+            ui.root.setPadding(ScreenMargins.left, ScreenMargins.top, ScreenMargins.right, ScreenMargins.bottom)
+            ui.bind()
+            customDashUi = ui
+            pres.setContentView(ui.root)
             pres.show()
             presentation = pres
-            log("[VIDEO] presentation shown on virtual display")
-
-            val ticker = object : Runnable {
-                var n = 0
-                override fun run() {
-                    if (!running) return
-                    clock.text = "frame tick ${n++}"
-                    main.postDelayed(this, 100)
-                }
-            }
-            main.post(ticker)
+            log("[VIDEO] custom dash shown → ${width}x${height} ${DashLayout.load(context).widgets}")
         } catch (e: Exception) {
             log("[VIDEO] display/presentation failed: $e")
         }
@@ -799,6 +782,8 @@ class VideoPipeline(
         main.post {
             try { gpxDashUi?.release() } catch (_: Exception) {}
             gpxDashUi = null
+            try { customDashUi?.release() } catch (_: Exception) {}
+            customDashUi = null
             try { presentation?.dismiss() } catch (_: Exception) {}
             presentation = null
             try { virtualDisplay?.release() } catch (_: Exception) {}

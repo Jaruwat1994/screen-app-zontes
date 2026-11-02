@@ -123,6 +123,9 @@
             android:name=".MaintenanceActivity"
             android:exported="false" />
         <activity
+            android:name=".DashLayoutActivity"
+            android:exported="false" />
+        <activity
             android:name=".YearInReviewActivity"
             android:exported="false" />
         <activity

@@ -341,6 +341,10 @@ class MainActivity : AppCompatActivity() {
         set(v) { parkPrefs.edit().putBoolean("then_stop", v).apply() }
 
     /** v2.3 quick destinations: calendar permission asked from the 📅 chip. */
+    private val dashLayoutLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { res ->
+        if (res.resultCode == RESULT_OK) startDashScreenLink()
+    }
+
     private val calendarPermLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { _ ->
         renderQuickDestinations()
     }
@@ -802,6 +806,7 @@ class MainActivity : AppCompatActivity() {
             "v${BuildConfig.VERSION_NAME}"
         // v2.2 home (proposal A): "Más" row icons + the tiles (icon bubble, title, live detail).
         (findViewById<View>(R.id.btn_gpx) as? MaterialButton)?.setIconResource(R.drawable.ic_place)
+        (findViewById<View>(R.id.btn_dash_screen) as? MaterialButton)?.setIconResource(R.drawable.ic_speed)
         (findViewById<View>(R.id.btn_mirror_start) as? MaterialButton)?.setIconResource(R.drawable.ic_cast)
         (findViewById<View>(R.id.btn_aa_start) as? MaterialButton)?.setIconResource(R.drawable.ic_qr)
         (findViewById<View>(R.id.btn_devices) as? MaterialButton)?.setIconResource(R.drawable.ic_devices)
@@ -898,6 +903,9 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_mirror_start).setOnClickListener { onMirrorPressed() }
         findViewById<View>(R.id.btn_gpx).setOnClickListener { onMapPressed() }
+        findViewById<View>(R.id.btn_dash_screen).setOnClickListener {
+            dashLayoutLauncher.launch(Intent(this, DashLayoutActivity::class.java))
+        }
         findViewById<Button>(R.id.btn_aa_stop).setOnClickListener { stopEverything() }
 
         toggleLogBtn.setOnClickListener {
@@ -2786,6 +2794,24 @@ class MainActivity : AppCompatActivity() {
             log("→ Mirror: scan the dash QR…")
             scanLauncher.launch(Intent(this, QrScanActivity::class.java))
         }
+    }
+
+    /**
+     * The rider's widget screen ([DashLayout]): with no AA, mirror or map active the bike's video
+     * pipeline falls into its own-content Presentation, which draws [CustomDashUi].
+     */
+    private fun startDashScreenLink() {
+        val saved = BikeMemory.lastQr(this) ?: run {
+            Toast.makeText(this, R.string.dl_need_bike, Toast.LENGTH_LONG).show()
+            return
+        }
+        log("→ My dash: ${DashLayout.load(this).widgets} → '${BikeMemory.lastBikeName(this)}'")
+        pendingAaStart = false
+        ensureLocationPermission()
+        tearDownForModeSwitch(clearMap = true, clearMirror = true)
+        applyProfile(saved)
+        ConnectionState.set(Phase.MIRRORING, BikeMemory.lastBikeName(this) ?: saved.ssid)
+        joinWifi(saved, gateOnAaSteady = false)
     }
 
     /**

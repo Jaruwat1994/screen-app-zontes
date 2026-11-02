@@ -625,6 +625,7 @@
                     android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButton android:id="@+id/btn_gpx" style="@style/HomeMore" android:text="@string/gpx_map" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_dash_screen" style="@style/HomeMore" android:text="@string/dl_more" />
                     <com.google.android.material.button.MaterialButton android:id="@+id/btn_mirror_start" style="@style/HomeMore" android:text="@string/main_mirror" />
                     <com.google.android.material.button.MaterialButton android:id="@+id/btn_aa_start" style="@style/HomeMore" android:text="@string/main_scan" />
                     <com.google.android.material.button.MaterialButton android:id="@+id/btn_devices" style="@style/HomeMore" android:text="@string/garage_garage" />

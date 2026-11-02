@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dl_more">หน้าปัด</string>
+    <string name="dl_title">หน้าจอหน้าปัดของฉัน</string>
+    <string name="dl_hint">เลือกสิ่งที่จะแสดงบนหน้าปัดเมื่อเชื่อมต่อด้วยหน้าจอนี้แทน Android Auto ช่องแรกจะแสดงขนาดใหญ่</string>
+    <string name="dl_widgets">ช่องข้อมูล</string>
+    <string name="dl_large">ใหญ่</string>
+    <string name="dl_accent">สีเน้น</string>
+    <string name="dl_send">แสดงบนหน้าปัด</string>
+    <string name="dl_max">ได้สูงสุด %1$d ช่อง</string>
+    <string name="dl_need_bike">เชื่อมต่อรถครั้งแรกก่อน (สแกน QR บนหน้าปัด)</string>
+    <string name="dl_w_speed">ความเร็ว</string>
+    <string name="dl_w_clock">เวลา</string>
+    <string name="dl_w_trip">ระยะทริป</string>
+    <string name="dl_w_ride_time">เวลาขับขี่</string>
+    <string name="dl_w_heading">ทิศทาง</string>
+    <string name="dl_w_altitude">ความสูง</string>
+    <string name="dl_w_max_speed">ความเร็วสูงสุด</string>
+    <string name="dl_w_phone">มือถือ</string>
+    <string name="dl_w_maintenance">บำรุงรักษา</string>
+</resources>

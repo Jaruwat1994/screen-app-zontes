@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The rider's own dash screen: DashLayout / CustomDashUi / DashLayoutActivity. -->
+<resources>
+    <string name="dl_more">My dash</string>
+    <string name="dl_title">My dash screen</string>
+    <string name="dl_hint">Choose what the dash shows when you connect with this screen instead of Android Auto. The first widget is drawn large.</string>
+    <string name="dl_widgets">Widgets</string>
+    <string name="dl_large">large</string>
+    <string name="dl_accent">Accent colour</string>
+    <string name="dl_send">Show on dash</string>
+    <string name="dl_max">Up to %1$d widgets</string>
+    <string name="dl_need_bike">Connect to your bike once first (scan the dash QR).</string>
+    <string name="dl_w_speed">Speed</string>
+    <string name="dl_w_clock">Time</string>
+    <string name="dl_w_trip">Trip</string>
+    <string name="dl_w_ride_time">Ride time</string>
+    <string name="dl_w_heading">Heading</string>
+    <string name="dl_w_altitude">Altitude</string>
+    <string name="dl_w_max_speed">Max speed</string>
+    <string name="dl_w_phone">Phone</string>
+    <string name="dl_w_maintenance">Maintenance</string>
+</resources>
