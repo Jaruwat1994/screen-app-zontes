@@ -30,8 +30,8 @@
             <FrameLayout
                 android:id="@+id/hero_card"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:background="@color/surface_high">
+                android:layout_height="250dp"
+                android:background="@color/bg">
 
                 <ImageView
                     android:id="@+id/hero_placeholder"
@@ -72,6 +72,17 @@
                     android:paddingTop="14dp"
                     android:paddingEnd="14dp">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/archivo_black"
+                        android:text="//"
+                        android:textColor="@color/brand_gold"
+                        android:textSize="22sp"
+                        tools:ignore="HardcodedText" />
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -85,7 +96,15 @@
                             android:fontFamily="@font/archivo_black"
                             android:text="@string/brand_wordmark"
                             android:textColor="@color/text_primary"
-                            android:textSize="19sp" />
+                            android:textSize="22sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:letterSpacing="0.04"
+                            android:text="@string/brand_tagline"
+                            android:textColor="#CCF1F4EC"
+                            android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/brand_version"
@@ -112,10 +131,25 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|start"
+                    android:layout_gravity="center_vertical|start"
                     android:layout_marginStart="22dp"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginTop="34dp"
                     android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/hero_brand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/archivo_black"
+                        android:includeFontPadding="false"
+                        android:letterSpacing="0.06"
+                        android:maxLines="1"
+                        android:shadowColor="#99000000"
+                        android:shadowDy="2"
+                        android:shadowRadius="8"
+                        android:textColor="@color/text_primary"
+                        android:textSize="24sp"
+                        tools:text="ZONTES" />
 
                     <TextView
                         android:id="@+id/hero_name"
@@ -123,17 +157,24 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/archivo_black"
                         android:maxLines="1"
-                        android:textColor="@color/brand_gold"
-                        android:textSize="46sp"
+                        android:paddingEnd="12dp"
+                        android:shadowColor="#99000000"
+                        android:shadowDy="2"
+                        android:shadowRadius="8"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/text_primary"
+                        android:textSize="56sp"
                         tools:text="125X" />
 
                     <TextView
                         android:id="@+id/hero_sub"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:letterSpacing="0.06"
                         android:maxLines="1"
                         android:textColor="#E6F1F4EC"
-                        android:textSize="13sp"
+                        android:textSize="14sp"
                         tools:text="ZT473788" />
                 </LinearLayout>
             </FrameLayout>
@@ -142,8 +183,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginTop="-6dp"
                 android:paddingHorizontal="16dp"
-                android:paddingTop="6dp"
                 android:paddingBottom="16dp">
 
                 <!-- v2.2 home (proposal A): status + today's numbers in one card. -->
@@ -151,7 +192,10 @@
                     android:id="@+id/status_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_stat_tile"
+                    android:background="@drawable/bg_status_card"
+                    android:elevation="10dp"
+                    android:outlineAmbientShadowColor="@color/brand_gold"
+                    android:outlineSpotShadowColor="@color/brand_gold"
                     android:orientation="vertical"
                     android:padding="16dp">
 
@@ -179,6 +223,17 @@
                             android:textColor="@color/text_primary"
                             android:textSize="17sp" />
 
+                        <ImageButton
+                            android:id="@+id/btn_status_bt"
+                            android:layout_width="48dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_bt_button"
+                            android:contentDescription="@string/home_bt_settings"
+                            android:padding="11dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_bluetooth"
+                            app:tint="@color/text_primary" />
+
                         <ProgressBar
                             android:id="@+id/status_progress"
                             style="?android:attr/progressBarStyleSmall"
@@ -198,19 +253,15 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="14dp"
-                        android:background="@color/surface_high" />
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@drawable/bg_line_top"
                         android:baselineAligned="false"
                         android:gravity="bottom"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:paddingTop="14dp">
 
                         <!-- v2.3: live speed while projecting (replaces "km/h máx"). -->
                         <LinearLayout
@@ -255,40 +306,59 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:gravity="center_horizontal"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/stat_km"
-                                style="@style/HeroStatValue"
-                                android:text="--" />
+                            <ImageView style="@style/HeroStatIcon" android:src="@drawable/ic_tile_route" />
+
+                            <LinearLayout style="@style/HeroStatRow">
+                                <TextView
+                                    android:id="@+id/stat_km"
+                                    style="@style/HeroStatValue"
+                                    android:text="--" />
+                                <TextView style="@style/HeroStatUnit" android:text="km" tools:ignore="HardcodedText" />
+                            </LinearLayout>
 
                             <TextView
                                 style="@style/HeroStatLabel"
-                                android:text="@string/stat_km_today" />
+                                android:text="@string/home_stat_dist" />
                         </LinearLayout>
+
+                        <View style="@style/HeroStatDivider" />
 
                         <LinearLayout
                             android:id="@+id/stat_max_box"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:gravity="center_horizontal"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/stat_max"
-                                style="@style/HeroStatValue"
-                                android:text="--" />
+                            <ImageView style="@style/HeroStatIcon" android:src="@drawable/ic_speed" />
+
+                            <LinearLayout style="@style/HeroStatRow">
+                                <TextView
+                                    android:id="@+id/stat_max"
+                                    style="@style/HeroStatValue"
+                                    android:text="--" />
+                                <TextView style="@style/HeroStatUnit" android:text="km/h" tools:ignore="HardcodedText" />
+                            </LinearLayout>
 
                             <TextView
                                 style="@style/HeroStatLabel"
-                                android:text="@string/stat_max_today" />
+                                android:text="@string/home_stat_max" />
                         </LinearLayout>
+
+                        <View style="@style/HeroStatDivider" />
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:gravity="center_horizontal"
                             android:orientation="vertical">
+
+                            <ImageView style="@style/HeroStatIcon" android:src="@drawable/ic_tile_timer" />
 
                             <TextView
                                 android:id="@+id/stat_clock"
@@ -517,8 +587,8 @@
 
                     <ImageView
                         android:id="@+id/parked_thumb"
-                        android:layout_width="76dp"
-                        android:layout_height="76dp"
+                        android:layout_width="96dp"
+                        android:layout_height="84dp"
                         android:background="@color/surface_high"
                         android:contentDescription="@null"
                         android:scaleType="centerCrop" />
@@ -559,6 +629,12 @@
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/parked_walk"
                                 style="@style/Widget.OpenCfMoto.Segment"
+                                android:background="@drawable/bg_connect_gold"
+                                android:textColor="@color/on_brand"
+                                app:backgroundTint="@null"
+                                app:icon="@drawable/ic_nav_arrow"
+                                app:iconSize="16dp"
+                                app:iconTint="@color/on_brand"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="8dp"
@@ -569,7 +645,15 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/parked_view_photo"
-                                style="@style/Widget.OpenCfMoto.Segment"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:textColor="@color/text_primary"
+                                app:cornerRadius="20dp"
+                                app:icon="@drawable/ic_tile_camera"
+                                app:iconSize="16dp"
+                                app:iconTint="@color/brand_gold"
+                                app:strokeColor="@color/brand_gold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:minWidth="0dp"
@@ -609,29 +693,48 @@
                     android:id="@+id/more_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
+                    android:layout_marginStart="2dp"
                     android:layout_marginTop="22dp"
-                    android:letterSpacing="0.12"
+                    android:drawableStart="@drawable/bg_section_bar"
+                    android:drawablePadding="10dp"
+                    android:fontFamily="@font/archivo_semibold"
+                    android:gravity="center_vertical"
                     android:text="@string/main_more"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp" />
 
-                <LinearLayout
+                <!-- Home navigation menu: wide shortcuts that scroll sideways, a light runs round the panel. -->
+                <FrameLayout
+                    android:id="@+id/home_nav"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_nav_panel"
+                    android:padding="8dp">
 
-                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_gpx" style="@style/HomeMore" android:text="@string/gpx_map" />
-                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_dash_screen" style="@style/HomeMore" android:text="@string/dl_more" />
-                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_mirror_start" style="@style/HomeMore" android:text="@string/main_mirror" />
-                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_aa_start" style="@style/HomeMore" android:text="@string/main_scan" />
-                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_devices" style="@style/HomeMore" android:text="@string/garage_garage" />
-                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_controls_more" style="@style/HomeMore" android:text="@string/controls_controls" />
-                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_setup" style="@style/HomeMore" android:text="@string/home_settings_short" />
-                </LinearLayout>
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fadingEdgeLength="24dp"
+                        android:requiresFadingEdge="horizontal"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btn_gpx" style="@style/HomeMore" android:background="@drawable/bg_more_item_active" android:text="@string/gpx_map" app:iconTint="@color/brand_gold" />
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btn_dash_screen" style="@style/HomeMore" android:text="@string/dl_more" />
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btn_mirror_start" style="@style/HomeMore" android:text="@string/main_mirror" />
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btn_aa_start" style="@style/HomeMore" android:text="@string/main_scan" />
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btn_devices" style="@style/HomeMore" android:text="@string/garage_garage" />
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btn_controls_more" style="@style/HomeMore" android:text="@string/controls_controls" />
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btn_setup" style="@style/HomeMore" android:text="@string/home_settings_short" />
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btn_more_about" style="@style/HomeMore" android:text="@string/home_nav_about" app:icon="@drawable/ic_info" />
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </FrameLayout>
 
                 <!-- Hidden since v2.2 (kept for code refs): Stop merged into Connect; logs/tips live in Help. -->
                 <com.google.android.material.button.MaterialButton
@@ -787,14 +890,44 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Connect becomes Disconnect while linking or projecting. Pinned like a thumb button. -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_connect"
-        style="@style/Widget.OpenCfMoto.Button.Connect"
+    <!-- Connect becomes Disconnect while linking or projecting. Pinned like a thumb button, on the
+         carbon + gold-line backdrop from the brand mockup (its glow lines frame the button). -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="14dp"
-        android:text="@string/main_connect" />
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/home_bottom" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_connect"
+            style="@style/Widget.OpenCfMoto.Button.Connect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="34dp"
+            android:elevation="14dp"
+            android:outlineAmbientShadowColor="@color/brand_gold"
+            android:outlineSpotShadowColor="@color/brand_gold"
+            android:text="@string/main_connect" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="54dp"
+            android:layout_marginBottom="10dp"
+            android:elevation="16dp"
+            android:fontFamily="@font/archivo_black"
+            android:importantForAccessibility="no"
+            android:text="»"
+            android:textColor="@color/on_brand"
+            android:textSize="30sp"
+            tools:ignore="HardcodedText" />
+    </FrameLayout>
 </LinearLayout>

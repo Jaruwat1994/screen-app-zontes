@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_stat_dist">Distance today</string>
+    <string name="home_stat_max">Top speed</string>
+    <string name="home_bt_settings">Bluetooth settings</string>
+    <string name="home_tile_trips_hint">Your riding routes</string>
+    <string name="home_tile_maint_hint">Check / book a service</string>
+    <string name="home_tile_tl_hint">Traffic conditions</string>
+    <string name="home_tile_live_hint">Follow in real time</string>
+    <string name="home_nav_about">About</string>
+    <string name="fuel_subtitle_th">Gasohol 95 · within %1$d km · reference price %2$.2f ฿/L (Bangchak, %3$s; other brands differ by a few satang) · tap to navigate</string>
+    <string name="fuel_subtitle_th_noprice">Gasohol 95 · within %1$d km · price board unavailable right now · tap to navigate</string>
+</resources>

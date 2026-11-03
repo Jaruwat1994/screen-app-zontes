@@ -984,6 +984,14 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_setup).setOnClickListener { SetupActivity.start(this) }
         findViewById<View>(R.id.btn_hero_menu).setOnClickListener { SetupActivity.start(this) }
+        findViewById<View>(R.id.btn_more_about).setOnClickListener { AboutActivity.start(this) }
+        // Lights running round the status card and the navigation menu (started in onResume).
+        runningRims = listOf(R.id.status_card to 24f, R.id.home_nav to 22f).map { (id, r) ->
+            GoldRimDrawable(this, r, running = true).also { findViewById<View>(id).foreground = it }
+        }
+        findViewById<View>(R.id.btn_status_bt).setOnClickListener {
+            runCatching { startActivity(Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS)) }
+        }
         findViewById<View>(R.id.btn_trips_list).setOnClickListener { TripsListActivity.start(this) }
         findViewById<View>(R.id.brand_title).setOnClickListener { AboutActivity.start(this) }
         findViewById<View>(R.id.btn_about_page).setOnClickListener { AboutActivity.start(this) }
@@ -1024,7 +1032,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private var runningRims: List<GoldRimDrawable> = emptyList()
+
     override fun onPause() {
+        runningRims.forEach { it.stop() }
         statsHandler.removeCallbacks(todayTicker)
         statsHandler.removeCallbacks(husTicker)
         statsHandler.removeCallbacks(pkeTicker)
@@ -1051,6 +1062,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
+        runningRims.forEach { it.start() }
         super.onResume()
         Support.onResume(this)
         renderQuickDestinations()
@@ -1302,9 +1314,26 @@ class MainActivity : AppCompatActivity() {
                 android.graphics.BitmapFactory.decodeFile(p, android.graphics.BitmapFactory.Options().apply { inSampleSize = sample })
             }.getOrNull()
         }
-        photo.setImageBitmap(bmp)
-        findViewById<View>(R.id.hero_placeholder).visibility = if (bmp == null) View.VISIBLE else View.GONE
-        findViewById<TextView>(R.id.hero_name).text = bike?.name ?: ""
+        // No Garage photo yet: the ZRide hero art (bike + rider at dusk) instead of an empty card.
+        if (bmp != null) photo.setImageBitmap(bmp) else photo.setImageResource(R.drawable.home_hero)
+        findViewById<View>(R.id.hero_placeholder).visibility = View.GONE
+        // "Zontes 368G" → "ZONTES" on top, the model big below (just "ZONTES" before pairing).
+        val name = bike?.name?.trim().orEmpty()
+        val cut = name.lastIndexOf(' ')
+        findViewById<TextView>(R.id.hero_brand).text = (if (cut > 0) name.substring(0, cut) else "Zontes").uppercase(java.util.Locale.ROOT)
+        findViewById<TextView>(R.id.hero_name).apply {
+            text = if (cut > 0) name.substring(cut + 1) else name.takeUnless { it.equals("zontes", true) }.orEmpty()
+            visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+            // White, slanted, the last character in gold ("368G"), like the brand mockup.
+            paint.textSkewX = -0.2f
+            val model = text.toString()
+            if (model.isNotEmpty()) text = android.text.SpannableString(model).apply {
+                setSpan(
+                    android.text.style.ForegroundColorSpan(ContextCompat.getColor(this@MainActivity, R.color.brand_gold)),
+                    model.length - 1, model.length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
+                )
+            }
+        }
         findViewById<TextView>(R.id.hero_sub).text = bike?.qr?.ssid ?: getString(R.string.main_no_bike_paired_yet)
         // Wordmark: the last word in gold.
         findViewById<TextView>(R.id.brand_title).apply {
@@ -1424,33 +1453,72 @@ class MainActivity : AppCompatActivity() {
 
     // ---- v2.2 home (proposal A) ----
 
-    private class Tile(val sub: TextView, val title: TextView)
+    /** [hint] fills the detail line when there is no live detail (artwork tiles only). */
+    private class Tile(val sub: TextView, val title: TextView, val hint: String?)
     private val tiles = HashMap<Int, Tile>()
 
-    /** Icon bubble (soft colour per shortcut) + title + a live detail line, inside a HomeTile container. */
-    /** Black & gold home tile: gold line icon on a faint gold disc, title, optional detail. */
-    private fun buildTile(id: Int, @androidx.annotation.DrawableRes icon: Int, title: String, sub: String = "", big: Boolean = false) {
+    /**
+     * Black & gold home tile. With [art] (the grid): illustration card, title + detail at the
+     * bottom left and a gold chevron. Without (the big riding tiles): large gold icon, title, detail.
+     */
+    private fun buildTile(
+        id: Int, @androidx.annotation.DrawableRes icon: Int, title: String, sub: String = "", big: Boolean = false,
+        @androidx.annotation.DrawableRes art: Int = 0, hint: String? = null,
+    ) {
         val box = findViewById<android.widget.LinearLayout?>(id) ?: return
         box.removeAllViews()
         val dp = resources.displayMetrics.density
         val gold = ContextCompat.getColor(this, R.color.brand_gold)
+        val primary = ContextCompat.getColor(this, R.color.text_primary)
+        val secondary = ContextCompat.getColor(this, R.color.text_secondary)
+        val semibold = androidx.core.content.res.ResourcesCompat.getFont(this, R.font.archivo_semibold)
+        val shown = sub.ifBlank { hint.orEmpty() }
+        if (art != 0) {
+            val pic = androidx.core.graphics.drawable.RoundedBitmapDrawableFactory.create(
+                resources, android.graphics.BitmapFactory.decodeResource(resources, art),
+            ).apply { cornerRadius = 20 * dp }
+            // No intrinsic size: the artwork follows the tile, it must not make the tile as tall as the bitmap.
+            box.background = object : android.graphics.drawable.LayerDrawable(
+                arrayOf(pic, ContextCompat.getDrawable(this, R.drawable.bg_tile_rim)!!, GoldRimDrawable(this, 20f)),
+            ) {
+                override fun getIntrinsicWidth() = -1
+                override fun getIntrinsicHeight() = -1
+            }
+            box.gravity = android.view.Gravity.BOTTOM or android.view.Gravity.START
+            box.minimumHeight = (104 * dp).toInt()
+            box.setPadding((12 * dp).toInt(), (10 * dp).toInt(), (6 * dp).toInt(), (10 * dp).toInt())
+            val row = android.widget.LinearLayout(this).apply { gravity = android.view.Gravity.CENTER_VERTICAL }
+            val texts = android.widget.LinearLayout(this).apply { orientation = android.widget.LinearLayout.VERTICAL }
+            val t = TextView(this).apply {
+                text = title; textSize = 15f; setTextColor(primary); typeface = semibold; maxLines = 1
+                // Long Thai titles ("การบำรุงรักษา") shrink to fit instead of being cut.
+                androidx.core.widget.TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(this, 10, 15, 1, android.util.TypedValue.COMPLEX_UNIT_SP)
+                setShadowLayer(6f, 0f, 1f, 0xCC000000.toInt())
+            }
+            val st = TextView(this).apply {
+                text = shown; textSize = 11f; setTextColor(secondary); maxLines = 1
+                ellipsize = android.text.TextUtils.TruncateAt.END
+                visibility = if (shown.isBlank()) View.GONE else View.VISIBLE
+            }
+            texts.addView(t); texts.addView(st)
+            row.addView(texts, android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+            row.addView(TextView(this).apply { text = "›"; textSize = 24f; setTextColor(gold); setPadding((4 * dp).toInt(), 0, 0, (2 * dp).toInt()) })
+            box.addView(row, android.widget.LinearLayout.LayoutParams(android.widget.LinearLayout.LayoutParams.MATCH_PARENT, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT))
+            tiles[id] = Tile(st, t, hint)
+            return
+        }
+        box.setBackgroundResource(R.drawable.bg_stat_tile)
         val bubble = android.widget.ImageView(this).apply {
             setImageResource(icon)
             imageTintList = android.content.res.ColorStateList.valueOf(gold)
-            val pad = ((if (big) 9 else 10) * dp).toInt()
-            setPadding(pad, pad, pad, pad)
-            background = android.graphics.drawable.GradientDrawable().apply {
-                shape = android.graphics.drawable.GradientDrawable.OVAL
-                setColor((gold and 0x00FFFFFF) or 0x1F000000)
-            }
         }
-        val size = ((if (big) 42 else 46) * dp).toInt()
+        val size = ((if (big) 34 else 38) * dp).toInt()
         box.addView(bubble, android.widget.LinearLayout.LayoutParams(size, size))
         val t = TextView(this).apply {
             text = title
-            textSize = if (big) 15f else 13f
-            setTextColor(ContextCompat.getColor(this@MainActivity, R.color.text_primary))
-            typeface = androidx.core.content.res.ResourcesCompat.getFont(this@MainActivity, R.font.archivo_medium)
+            textSize = if (big) 15f else 14f
+            setTextColor(primary)
+            typeface = semibold
             gravity = if (big) android.view.Gravity.START else android.view.Gravity.CENTER
             maxLines = 2
             setPadding(0, (8 * dp).toInt(), 0, 0)
@@ -1459,29 +1527,30 @@ class MainActivity : AppCompatActivity() {
         val st = TextView(this).apply {
             text = sub
             textSize = 11f
-            setTextColor(ContextCompat.getColor(this@MainActivity, R.color.text_secondary))
+            setTextColor(secondary)
             gravity = t.gravity
             maxLines = 2
             ellipsize = android.text.TextUtils.TruncateAt.END
             visibility = if (sub.isBlank()) View.GONE else View.VISIBLE
         }
         box.addView(st)
-        tiles[id] = Tile(st, t)
+        tiles[id] = Tile(st, t, null)
     }
 
     private fun setTileSub(id: Int, sub: String?) {
         val tile = tiles[id] ?: return
-        tile.sub.text = sub.orEmpty()
-        tile.sub.visibility = if (sub.isNullOrBlank()) View.GONE else View.VISIBLE
+        val shown = sub?.takeIf { it.isNotBlank() } ?: tile.hint
+        tile.sub.text = shown.orEmpty()
+        tile.sub.visibility = if (shown.isNullOrBlank()) View.GONE else View.VISIBLE
     }
 
     private fun setupHomeTiles() {
-        buildTile(R.id.btn_trips_list, R.drawable.ic_place, getString(R.string.home_tile_trips))
-        buildTile(R.id.btn_fuel, R.drawable.ic_tile_fuel, getString(R.string.home_tile_fuel), getString(R.string.home_tile_fuel_sub))
-        buildTile(R.id.btn_maint, R.drawable.ic_tile_maint, getString(R.string.home_tile_maint))
-        buildTile(R.id.btn_traffic_lights, R.drawable.ic_tile_traffic, getString(R.string.home_tile_tl))
-        buildTile(R.id.btn_live, R.drawable.ic_tile_route, getString(R.string.home_tile_live))
-        buildTile(R.id.btn_help, R.drawable.ic_tile_help, getString(R.string.home_tile_help), getString(R.string.home_tile_help_sub))
+        buildTile(R.id.btn_trips_list, R.drawable.ic_place, getString(R.string.home_tile_trips), art = R.drawable.tile_trip, hint = getString(R.string.home_tile_trips_hint))
+        buildTile(R.id.btn_fuel, R.drawable.ic_tile_fuel, getString(R.string.home_tile_fuel), getString(R.string.home_tile_fuel_sub), art = R.drawable.tile_fuel)
+        buildTile(R.id.btn_maint, R.drawable.ic_tile_maint, getString(R.string.home_tile_maint), art = R.drawable.tile_maint, hint = getString(R.string.home_tile_maint_hint))
+        buildTile(R.id.btn_traffic_lights, R.drawable.ic_tile_traffic, getString(R.string.home_tile_tl), art = R.drawable.tile_traffic, hint = getString(R.string.home_tile_tl_hint))
+        buildTile(R.id.btn_live, R.drawable.ic_tile_route, getString(R.string.home_tile_live), art = R.drawable.tile_live, hint = getString(R.string.home_tile_live_hint))
+        buildTile(R.id.btn_help, R.drawable.ic_tile_help, getString(R.string.home_tile_help), getString(R.string.home_tile_help_sub), art = R.drawable.tile_help)
         buildTile(R.id.btn_park_photo, R.drawable.ic_tile_camera, getString(R.string.home_big_park), getString(R.string.home_big_park_sub), big = true)
         buildTile(R.id.btn_controls, R.drawable.ic_tune, getString(R.string.controls_controls), getString(R.string.home_big_controls_sub), big = true)
         buildTile(R.id.btn_hud_view, R.drawable.ic_speed, getString(R.string.hud_dash_view), getString(R.string.home_big_hud_sub), big = true)
@@ -1522,10 +1591,10 @@ class MainActivity : AppCompatActivity() {
         val live = sessionAlive(phase)
         findViewById<View?>(R.id.live_section)?.visibility = if (live) View.VISIBLE else View.GONE
         findViewById<View?>(R.id.hero_card)?.let { hero ->
-            val h = ((if (live) 190 else 280) * resources.displayMetrics.density).toInt()
+            val h = ((if (live) 190 else 250) * resources.displayMetrics.density).toInt()
             if (hero.layoutParams.height != h) { hero.layoutParams.height = h; hero.requestLayout() }
         }
-        findViewById<TextView?>(R.id.hero_name)?.textSize = if (live) 34f else 46f
+        findViewById<TextView?>(R.id.hero_name)?.textSize = if (live) 40f else 56f
         placeLiveShare(big = live)
         renderParked()
         renderPkeCard()
@@ -1554,7 +1623,8 @@ class MainActivity : AppCompatActivity() {
             else v.setPadding((6 * dp).toInt(), (14 * dp).toInt(), (6 * dp).toInt(), (12 * dp).toInt())
         }
         style(liveTile, big); style(controls, !big)
-        buildTile(R.id.btn_live, R.drawable.ic_tile_route, getString(R.string.home_tile_live), big = big)
+        buildTile(R.id.btn_live, R.drawable.ic_tile_route, getString(R.string.home_tile_live), big = big,
+            art = if (big) 0 else R.drawable.tile_live, hint = getString(R.string.home_tile_live_hint))
         buildTile(R.id.btn_controls, R.drawable.ic_tune, getString(R.string.controls_controls),
             getString(R.string.home_big_controls_sub), big = !big)
         controls.setOnClickListener { startActivity(Intent(this, ControlsActivity::class.java)) }

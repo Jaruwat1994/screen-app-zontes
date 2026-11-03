@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Over a tile's artwork: dark fade at the bottom so the title reads. The gold rim is GoldRimDrawable. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient android:angle="270" android:startColor="#00000000" android:centerColor="#26000000" android:endColor="#B3000000" />
+    <corners android:radius="20dp" />
+</shape>

@@ -5,17 +5,17 @@
 
     <!-- ZRide Screen "black & gold": near-black ground, gold accents and thin gold card rims. The accent keeps its old resource name (brand_orange) so every screen that tints
          with it follows without touching code. -->
-    <color name="brand_orange">#D4AF5A</color>
-    <color name="brand_orange_dark">#9C7A35</color>
+    <color name="brand_orange">#F5B80C</color>
+    <color name="brand_orange_dark">#B38400</color>
     <color name="on_brand">#1A1305</color>
-    <color name="brand_gold">#D4AF5A</color>
+    <color name="brand_gold">#F5B80C</color>
 
     <!-- Near-black surfaces -->
-    <color name="bg">#0A0A0B</color>
-    <color name="surface">#121214</color>
-    <color name="surface_high">#1C1C20</color>
-    <color name="outline">#4A3F2A</color>
-    <color name="card_rim">#66D4AF5A</color>
+    <color name="bg">#090B10</color>
+    <color name="surface">#11141A</color>
+    <color name="surface_high">#1A1D24</color>
+    <color name="outline">#5A4818</color>
+    <color name="card_rim">#80F5B80C</color>
 
     <!-- Text -->
     <color name="text_primary">#F5F1E8</color>

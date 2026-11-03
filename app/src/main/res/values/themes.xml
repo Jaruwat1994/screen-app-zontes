@@ -29,6 +29,8 @@
         <item name="colorSurfaceContainerHigh">@color/surface_high</item>
         <item name="colorSurfaceContainerHighest">@color/surface_high</item>
         <item name="elevationOverlayEnabled">false</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.OpenCfMoto.Outlined</item>
+        <item name="materialCardViewStyle">@style/Card.OpenCfMoto.Default</item>
 
         <!-- Archivo everywhere; Archivo Black for headline numbers and titles (TextAppearance.Ocm.Display). -->
         <!-- Only android:fontFamily here: a theme-level app:fontFamily makes AppCompat override every
@@ -178,6 +180,9 @@
         <item name="android:minHeight">@dimen/btn_segment_min_height</item>
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
+        <item name="strokeColor">@color/card_rim</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="iconTint">@color/brand_gold</item>
     </style>
 
     <!-- Visual test: rounded pill shortcut (Controles / Viajes). -->
@@ -193,7 +198,9 @@
         <item name="backgroundTint">@color/surface</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="iconGravity">textStart</item>
-        <item name="iconTint">@color/text_primary</item>
+        <item name="iconTint">@color/brand_gold</item>
+        <item name="strokeColor">@color/card_rim</item>
+        <item name="strokeWidth">1dp</item>
         <item name="iconSize">20dp</item>
         <item name="iconPadding">8dp</item>
     </style>
@@ -210,6 +217,36 @@
         <item name="autoSizeMaxTextSize">25sp</item>
     </style>
 
+    <style name="HeroStatIcon">
+        <item name="android:layout_width">22dp</item>
+        <item name="android:layout_height">22dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:contentDescription">@null</item>
+        <item name="tint">@color/brand_gold</item>
+    </style>
+
+    <style name="HeroStatRow">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:baselineAligned">true</item>
+    </style>
+
+    <style name="HeroStatUnit">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="HeroStatDivider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">#26FFFFFF</item>
+    </style>
+
     <style name="HeroStatLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -223,9 +260,24 @@
         <item name="cardCornerRadius">22dp</item>
         <item name="cardBackgroundColor">@color/surface</item>
         <item name="cardElevation">0dp</item>
-        <item name="strokeColor">@color/outline</item>
+        <item name="strokeColor">@color/card_rim</item>
         <item name="strokeWidth">1dp</item>
         <item name="contentPadding">20dp</item>
+    </style>
+
+    <!-- Every MaterialCardView without a style: same dark glass + gold rim. -->
+    <style name="Card.OpenCfMoto.Default" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardBackgroundColor">@color/surface</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeColor">@color/card_rim</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="Widget.OpenCfMoto.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/brand_gold</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="iconTint">@color/brand_gold</item>
     </style>
 
     <style name="Card.OpenCfMoto.Log" parent="Card.OpenCfMoto">
@@ -277,9 +329,9 @@
     </style>
 
     <style name="HomeMore" parent="Widget.Material3.Button.TextButton">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">84dp</item>
+        <item name="android:layout_height">84dp</item>
+        <item name="android:layout_weight">0</item>
         <item name="android:minWidth">0dp</item>
         <item name="android:paddingStart">0dp</item>
         <item name="android:paddingEnd">0dp</item>
@@ -290,8 +342,13 @@
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="iconGravity">top</item>
-        <item name="iconTint">@color/text_secondary</item>
-        <item name="iconPadding">4dp</item>
-        <item name="iconSize">22dp</item>
+        <item name="iconTint">@color/text_primary</item>
+        <item name="android:layout_marginStart">3dp</item>
+        <item name="android:layout_marginEnd">3dp</item>
+        <item name="android:background">@drawable/bg_more_item</item>
+        <item name="backgroundTint">@null</item>
+        <item name="iconSize">24dp</item>
+        <item name="iconPadding">6dp</item>
+        <item name="android:paddingTop">8dp</item>
     </style>
 </resources>

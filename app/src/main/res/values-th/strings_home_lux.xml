@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_stat_dist">ระยะทางวันนี้</string>
+    <string name="home_stat_max">ความเร็วสูงสุด</string>
+    <string name="home_bt_settings">ตั้งค่าบลูทูธ</string>
+    <string name="home_tile_trips_hint">เส้นทางการขับขี่</string>
+    <string name="home_tile_maint_hint">ตรวจเช็ก / นัดบริการ</string>
+    <string name="home_tile_tl_hint">สภาพการจราจร</string>
+    <string name="home_tile_live_hint">ติดตามแบบเรียลไทม์</string>
+    <string name="home_nav_about">เกี่ยวกับ</string>
+    <string name="fuel_subtitle_th">แก๊สโซฮอล์ 95 · ภายใน %1$d km · ราคาอ้างอิง %2$.2f บาท/ลิตร (บางจาก %3$s ปั๊มอื่นอาจต่างเล็กน้อย) · แตะเพื่อนำทาง</string>
+    <string name="fuel_subtitle_th_noprice">แก๊สโซฮอล์ 95 · ภายใน %1$d km · ยังดึงราคาไม่ได้ในขณะนี้ · แตะเพื่อนำทาง</string>
+</resources>

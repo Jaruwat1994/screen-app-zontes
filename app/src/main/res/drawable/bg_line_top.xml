@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hairline divider along the top edge only. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:gravity="top" android:height="1dp">
+        <shape><gradient android:angle="0" android:startColor="#14FFFFFF" android:centerColor="#33FFFFFF" android:endColor="#14FFFFFF" /></shape>
+    </item>
+</layer-list>

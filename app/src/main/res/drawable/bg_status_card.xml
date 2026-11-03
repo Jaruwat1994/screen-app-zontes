@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Status card fill: dark glass with a faint diagonal sheen. The rim and its running light are GoldRimDrawable. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <gradient android:angle="270" android:startColor="#FF1C2029" android:centerColor="#FF12151B" android:endColor="#FF1A160C" />
+            <corners android:radius="24dp" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <gradient android:angle="45" android:startColor="#00FFFFFF" android:centerColor="#00FFFFFF" android:endColor="#12FFFFFF" />
+            <corners android:radius="24dp" />
+        </shape>
+    </item>
+</layer-list>

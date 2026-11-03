@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Home navigation menu panel (scrolls sideways). The rim and its running light are GoldRimDrawable. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient android:angle="270" android:startColor="#FF161920" android:endColor="#FF0D0F14" />
+    <corners android:radius="22dp" />
+</shape>
