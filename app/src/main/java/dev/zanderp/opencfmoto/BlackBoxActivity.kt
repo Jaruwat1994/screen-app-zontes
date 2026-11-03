@@ -23,7 +23,6 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
 import java.text.DateFormat
-import java.util.Date
 import java.util.Locale
 
 /**
@@ -63,7 +62,7 @@ class BlackBoxActivity : AppCompatActivity() {
             root.addView(MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
                 isAllCaps = false
                 textAlignment = View.TEXT_ALIGNMENT_VIEW_START
-                text = "${outcomeEmoji(s.outcome)} ${fmt.format(Date(s.impact))}\n${outcomeLabel(s.outcome)} · $speed · ${"%.1f".format(s.peakG)} g"
+                text = "${outcomeEmoji(s.outcome)} ${ThaiDate.format(fmt, s.impact)}\n${outcomeLabel(s.outcome)} · $speed · ${"%.1f".format(s.peakG)} g"
                 setOnClickListener { startActivity(Intent(this@BlackBoxActivity, BlackBoxActivity::class.java).putExtra(EXTRA_FILE, f.name)) }
             }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
         }
@@ -74,7 +73,7 @@ class BlackBoxActivity : AppCompatActivity() {
         root.removeAllViews()
         val fmt = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.MEDIUM)
         root.addView(title("${outcomeEmoji(s.outcome)} ${getString(R.string.bb_event)}"))
-        root.addView(body(fmt.format(Date(s.impact)) + " · " + outcomeLabel(s.outcome)))
+        root.addView(body(ThaiDate.format(fmt, s.impact) + " · " + outcomeLabel(s.outcome)))
         root.addView(ChartView(this, s), LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(220)).apply { topMargin = dp(14) })
         root.addView(body(getString(R.string.bb_chart_legend)))
         root.addView(header(getString(R.string.bb_figures)))
@@ -105,7 +104,7 @@ class BlackBoxActivity : AppCompatActivity() {
         val dash = "—"
         val text = buildString {
             appendLine("RideScreen AA · ${getString(R.string.bb_event)}")
-            appendLine(fmt.format(Date(s.impact)))
+            appendLine(ThaiDate.format(fmt, s.impact))
             appendLine()
             appendLine("${getString(R.string.bb_speed_impact)}: ${s.kmhAtImpact?.let { "${it.toInt()} km/h" } ?: dash}")
             appendLine("${getString(R.string.bb_speed_5s)}: ${s.kmh5sBefore?.let { "${it.toInt()} km/h" } ?: dash}")

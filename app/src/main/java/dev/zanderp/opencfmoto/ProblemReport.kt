@@ -47,7 +47,7 @@ object ProblemReport {
         }
 
     fun subject(model: String, version: String): String =
-        "OpenCfMoto ${bikeLine(model, "")} report — $version"
+        "ZRide Screen ${bikeLine(model, "")} report — $version"
 
     private fun bikeLine(model: String, year: String): String {
         val m = model.trim().ifEmpty { "unknown model" }

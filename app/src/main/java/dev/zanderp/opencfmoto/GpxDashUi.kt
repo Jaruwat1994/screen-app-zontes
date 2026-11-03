@@ -201,7 +201,8 @@ class GpxDashUi(
             // (older builds stuffed home/parked/markers into overlayPlaces).
             for (p in GpxSession.overlayPlaces) {
                 if (p.category == "home" || p.category == "pin") continue
-                if (p.name == "Parked" || p.subtitle.contains("Parked", ignoreCase = true)) continue
+                if (p.name == "Parked" || p.subtitle.contains("Parked", ignoreCase = true) ||
+                    p.subtitle == context.getString(R.string.f1_place_parked_here)) continue
                 out.add(p)
             }
             lapTimer.gate?.let { out.add(MapPlace("S/F", it.lat, it.lon, "lap")) }
@@ -1400,7 +1401,7 @@ class GpxDashUi(
         }
         wirePreviewAction(R.id.gpx_preview_home) {
             val p = pendingPlace ?: return@wirePreviewAction
-            MapPlaces.setHome(context, p.copy(name = if (p.name == "Dropped pin" || p.name == context.getString(R.string.hc_dash_dropped_pin)) "Home" else p.name))
+            MapPlaces.setHome(context, p.copy(name = if (p.name == "Dropped pin" || p.name == context.getString(R.string.hc_dash_dropped_pin)) context.getString(R.string.dest_home) else p.name))
             refreshPins()
             statusView.text = context.getString(R.string.hc_dash_home_set)
             if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_home_set))
@@ -1421,7 +1422,7 @@ class GpxDashUi(
                 return@setOnClickListener
             }
             val place = MapPlace(
-                "Parked", loc.latitude, loc.longitude, "parking", context.getString(R.string.hc_dash_marked_on_arrival),
+                context.getString(R.string.f1_place_parked), loc.latitude, loc.longitude, "parking", context.getString(R.string.hc_dash_marked_on_arrival),
             )
             MapPlaces.setParked(context, place)
             refreshPins()
@@ -1523,7 +1524,7 @@ class GpxDashUi(
                 return@setOnClickListener
             }
             val place = MapPlace(
-                "Parked", loc.latitude, loc.longitude, "parking", context.getString(R.string.hc_dash_marked_on_dash),
+                context.getString(R.string.f1_place_parked), loc.latitude, loc.longitude, "parking", context.getString(R.string.hc_dash_marked_on_dash),
             )
             MapPlaces.setParked(context, place)
             refreshPins()
@@ -1547,7 +1548,7 @@ class GpxDashUi(
                 statusView.text = context.getString(R.string.hc_dash_no_gps_home)
                 return@setOnClickListener
             }
-            val place = MapPlace("Home", loc.latitude, loc.longitude, "home", context.getString(R.string.hc_dash_set_on_dash))
+            val place = MapPlace(context.getString(R.string.dest_home), loc.latitude, loc.longitude, "home", context.getString(R.string.hc_dash_set_on_dash))
             MapPlaces.setHome(context, place)
             refreshPins()
             statusView.text = context.getString(R.string.hc_dash_home_set_here)
@@ -2344,6 +2345,10 @@ class GpxDashUi(
                 statusView.text = when {
                     nav != null -> GpxNav.formatHud(
                         speedKmh, rideStats.avgKmh(), prog, nav.totalM, units, showNextStop,
+                        HudWords(
+                            context.getString(R.string.f1_hud_route), context.getString(R.string.f1_hud_off),
+                            context.getString(R.string.f1_hud_avg), context.getString(R.string.hc_dash_waypoint),
+                        ),
                     )
                     dest != null -> {
                         val dM = GpxNav.haversineM(

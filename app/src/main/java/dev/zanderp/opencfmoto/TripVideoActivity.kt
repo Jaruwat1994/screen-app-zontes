@@ -330,7 +330,7 @@ class TripVideoActivity : AppCompatActivity() {
             setOnClickListener { open(m.uri) }
         }, LinearLayout.LayoutParams(dp(112), dp(63)).apply { marginEnd = dp(10) })
         val col = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        val when_ = java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.SHORT).format(java.util.Date(m.addedMs))
+        val when_ = ThaiDate.format(java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.SHORT), m.addedMs)
         val secs = m.durationMs / 1000
         col.addView(TextView(this).apply {
             text = "$when_ · ${secs / 60}:${String.format(Locale.US, "%02d", secs % 60)} · " +

@@ -10,7 +10,7 @@
     <string name="supported_bikes_confirmed_title">ยืนยันแล้วโดยชุมชน OpenCfMoto</string>
     <string name="supported_bikes_confirmed">CFMoto: 800MT (MT‑X / Explore / Explore GT / Ibex 800) · 1000 MT‑X · 800NK (US CRCP) · 800NK Advanced · 675NK · 675SR‑R · 700MT Adventure · 450MT · 450SR (+ SR‑S / TC) · 450CL‑C / CL‑C450 · 450NK · สกู๊ตเตอร์ 150SC · CFORCE 850 / 1000 · GOES Terrox 1000 / Gladiator G3 1000\nอื่นๆ: Voge DS800 Rally / DS900X · Moto Morini X-Cape 649 / 700 / Seiemmezzo · Benelli TRK 702 / 702X · Rieju 307 · Morbidelli T1002VX / T352X · QJ Motor SRK800RR / SRK450RR / SRK250RD / SRT 600 / SRV600</string>
     <string name="supported_bikes_other_title">แบรนด์อื่น (Carbit / EasyConnect)</string>
-    <string name="supported_bikes_other">ใช้วิธีเชื่อมต่อผ่าน QR ของ Carbit แบบเดียวกัน — ลองกด เชื่อมต่อ หากหน้าปัดแสดง QR สำหรับจับคู่ รายงานผลได้ใน Discord\nVoge (DS800 Rally / DS900X ยืนยันแล้ว) · Moto Morini (X-Cape 649 / 700 / Seiemmezzo ยืนยันแล้ว; 1200 SoftAP ทดลอง; MotoFun) · Zontes (125X / 125V / 368 G·K·E ยืนยันแล้ว; 125M, 350D กำลังทดสอบ) · Benelli (เช่น TRK 702 / 702X) · Rieju (307 ยืนยันแล้ว) · QJ Motor (SRK800RR / SRK250RD / SRK450RR / SRT/SRV 600 ยืนยันแล้ว; 600SX / 550SX กำลังทดสอบ; Fort 4.0) · Morbidelli / MBP (T1002VX / T352X ยืนยันแล้ว) · Longjia (เช่น V-Bob 650; MotoFUN / Carbit Ride — ยังไม่ยืนยัน) · Kove (Thinkerride SoftAP ทดลอง — ยังไม่มีวิดีโอหน้าปัด)</string>
+    <string name="supported_bikes_other">ใช้วิธีเชื่อมต่อผ่าน QR ของ Carbit แบบเดียวกัน — ลองกด เชื่อมต่อ หากหน้าปัดแสดง QR สำหรับจับคู่ ส่งผลได้ที่ ความช่วยเหลือ → รายงานปัญหา\nVoge (DS800 Rally / DS900X ยืนยันแล้ว) · Moto Morini (X-Cape 649 / 700 / Seiemmezzo ยืนยันแล้ว; 1200 SoftAP ทดลอง; MotoFun) · Zontes (125X / 125V / 368 G·K·E ยืนยันแล้ว; 125M, 350D กำลังทดสอบ) · Benelli (เช่น TRK 702 / 702X) · Rieju (307 ยืนยันแล้ว) · QJ Motor (SRK800RR / SRK250RD / SRK450RR / SRT/SRV 600 ยืนยันแล้ว; 600SX / 550SX กำลังทดสอบ; Fort 4.0) · Morbidelli / MBP (T1002VX / T352X ยืนยันแล้ว) · Longjia (เช่น V-Bob 650; MotoFUN / Carbit Ride — ยังไม่ยืนยัน) · Kove (Thinkerride SoftAP ทดลอง — ยังไม่มีวิดีโอหน้าปัด)</string>
     <string name="supported_bikes_full_title">รายการทั้งหมด — หน้าปัด CFMoto EasyConnect / MotoPlay ที่รู้จัก</string>
     <string name="supported_bikes_full">เนกเก็ต:  125NK · 450NK · 675NK · 800NK · 800NK Advanced · 800NK Sport · 800NK (US CRCP)\nสปอร์ต:  300SR · 450SR · 450SR‑S · 450SR TC · 500SR VOOM · 675SR · 675SR‑R\nทัวริ่ง / แอดเวนเจอร์:  450MT · 700MT · 700MT Adventure · 800MT‑X · 800MT Explore · 800MT Explore GT · 1000 MT‑X\nครุยเซอร์:  450CL‑C · CL‑C450\nสกู๊ตเตอร์:  150SC\nATV / SSV (TFT):  CFORCE 800 · CFORCE 850 Touring · CFORCE 1000 · CFORCE 1000 Touring · GOES Terrox 1000 / Gladiator G3 1000\nอื่นๆ:  U10 Pro (หากหน้าปัดมี QR)</string>
     <string name="supported_bikes_unlikely_title">มักไม่มี QR สำหรับฉายภาพ</string>
@@ -19,8 +19,8 @@
     <string name="about_about">เกี่ยวกับ</string>
     <string name="about_wireless_android_auto_for_carbit_easyconnect_das">Android Auto ไร้สายสำหรับหน้าปัด Carbit / EasyConnect (CFMoto MotoPlay และหน้าปัดตระกูลเดียวกัน)</string>
     <string name="about_community_support">ชุมชน &amp; การสนับสนุน</string>
-    <string name="about_questions_logs_or_a_new_bike_join_discord_tips_k">มีคำถาม บันทึก (log) หรือรถรุ่นใหม่? เข้าร่วม Discord ได้เลย เงินสนับสนุนช่วยให้โปรเจกต์เดินหน้าต่อ</string>
-    <string name="about_discord">Discord</string>
+    <string name="about_questions_logs_or_a_new_bike_join_discord_tips_k">มีคำถาม เจอปัญหา หรือมีรถรุ่นใหม่? กด แจ้งปัญหา แล้วเลือกส่งทาง LINE อีเมล หรือแอปอื่น บันทึก (log) จะถูกลบข้อมูลส่วนตัวออกก่อนส่งถึงทีม ZRide</string>
+    <string name="about_discord">แจ้งปัญหา / ส่ง log</string>
     <string name="about_donate">บริจาค</string>
     <string name="about_copyright_2">ลิขสิทธิ์</string>
     <string name="about_website_alexandru_rocks">เว็บไซต์ — alexandru.rocks</string>
@@ -383,7 +383,7 @@
     <string name="setup_bluetooth_clock">ตั้งนาฬิกาหน้าปัดผ่าน Bluetooth (ทดลอง)</string>
     <string name="setup_bluetooth_clock_desc">หน้าปัดบางรุ่นขอเวลาผ่าน Bluetooth ไม่ใช่ Wi-Fi และจะค้างที่ 00:00 หากไม่ได้รับ จับคู่รถในการตั้งค่า Bluetooth ของ Android ก่อน ปิดไว้เป็นค่าเริ่มต้น — แอปจะตอบกลับหลังจากหน้าปัดส่งโปรโตคอลของตัวเองมาก่อนเท่านั้น</string>
     <string name="setup_clock_lab">แล็บนาฬิกา (ทดลอง)</string>
-    <string name="setup_clock_lab_desc">ชุดทดสอบเดียวสำหรับการทดลองนาฬิกาทุกแบบ — สอบถาม/ซิงค์ผ่าน Wi‑Fi, รับฟังผ่าน Bluetooth (ZT / EC-BTP), ค้างอยู่บน Wi‑Fi ของรถ ค่าเริ่มต้นตรงกับ ล่าสุด 2.0.13 (ack ว่าง 0x10451, echo 0x10600, ปิด BLE) เลือกชุดค่า กดเชื่อมต่อหนึ่งครั้ง แล้วแชร์บันทึก (log) ใน Discord #clock-issue อย่าเปิดชุดค่าทิ้งไว้ระหว่างขับขี่ประจำวัน</string>
+    <string name="setup_clock_lab_desc">ชุดทดสอบเดียวสำหรับการทดลองนาฬิกาทุกแบบ — สอบถาม/ซิงค์ผ่าน Wi‑Fi, รับฟังผ่าน Bluetooth (ZT / EC-BTP), ค้างอยู่บน Wi‑Fi ของรถ ค่าเริ่มต้นตรงกับ ล่าสุด 2.0.13 (ack ว่าง 0x10451, echo 0x10600, ปิด BLE) เลือกชุดค่า กดเชื่อมต่อหนึ่งครั้ง แล้วส่งบันทึก (log) ที่ ความช่วยเหลือ → รายงานปัญหา อย่าเปิดชุดค่าทิ้งไว้ระหว่างขับขี่ประจำวัน</string>
     <string name="setup_clock_lab_bt">รับฟังผ่าน Bluetooth</string>
     <string name="setup_clock_lab_presets">ค่าที่ตั้งไว้ล่วงหน้า (กรอกเฉพาะค่าปรับ)</string>
     <string name="setup_clock_lab_preset_latest">ล่าสุด</string>
@@ -438,7 +438,7 @@
     <string name="setup_secrets_on_desc">เปิด — รหัสผ่าน/หมายเลขซีเรียลจะอยู่ในบันทึกที่แชร์</string>
     <string name="setup_off_passwords_and_serials_are_redacted_recommend">ปิด — ปกปิดรหัสผ่านและหมายเลขซีเรียล (แนะนำ)</string>
     <string name="setup_share_settings">แชร์การตั้งค่า</string>
-    <string name="setup_export_bike_tuning_only_profile_resolution_fit_m">ส่งออกเฉพาะการปรับแต่งรถ — โปรไฟล์ ความละเอียด การปรับขนาด ขอบจอ ปุ่ม รูปแบบการเชื่อมต่อ Wi‑Fi (ไม่มีรหัสผ่าน ไม่มีค่าส่วนตัว) แชร์บน Discord เพื่อให้ผู้อื่นนำเข้าได้</string>
+    <string name="setup_export_bike_tuning_only_profile_resolution_fit_m">ส่งออกเฉพาะการปรับแต่งรถ — โปรไฟล์ ความละเอียด การปรับขนาด ขอบจอ ปุ่ม รูปแบบการเชื่อมต่อ Wi‑Fi (ไม่มีรหัสผ่าน ไม่มีค่าส่วนตัว) แชร์ (LINE, อีเมล…) เพื่อให้ผู้อื่นนำเข้าได้</string>
     <string name="setup_share_json">แชร์ JSON</string>
     <string name="setup_import">นำเข้า…</string>
     <string name="setup_supported_bikes">รถที่รองรับ</string>

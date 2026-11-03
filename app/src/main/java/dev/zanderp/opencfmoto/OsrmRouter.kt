@@ -51,7 +51,7 @@ object OsrmRouter {
             try {
                 onResult(route(fromLat, fromLon, toLat, toLon))
             } catch (e: Exception) {
-                onError(e.message ?: "Routing failed")
+                onError(AppHttp.userMessage(e, R.string.f1_route_failed))
             }
         }
     }

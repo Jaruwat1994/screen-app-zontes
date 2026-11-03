@@ -1,5 +1,6 @@
 package dev.zanderp.opencfmoto
 
+import android.content.Context
 import android.net.Uri
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
@@ -246,34 +247,39 @@ data class QrData(
 
         /**
          * Hint for failed scans (vehicle-info QR, app-download QR, etc.) — not a pairing code.
+         * English (for logs); pass a [Context] to get the rider-facing, translated text.
          */
-        fun parseFailureHint(raw: String): String? {
+        fun parseFailureHint(raw: String): String? = failureHint(raw)?.second
+
+        fun parseFailureHint(raw: String, ctx: Context): String? = failureHint(raw)?.let { ctx.getString(it.first) }
+
+        private fun failureHint(raw: String): Pair<Int, String>? {
             val t = raw.trim()
-            when {
+            return when {
                 t.contains("motomorini.com", ignoreCase = true) &&
                     !t.contains("Wifi=", ignoreCase = true) ->
-                    return "Moto Morini QR has no Wifi= field — open the phone-link / MotoFun QR on the dash"
+                    R.string.f1_qr_hint_morini to "Moto Morini QR has no Wifi= field — open the phone-link / MotoFun QR on the dash"
                 Regex("""(?i)^code:.*engine:.*vin:""").containsMatchIn(t) ||
                     t.contains("color:", ignoreCase = true) && t.contains("vin:", ignoreCase = true) ->
-                    return "that QR is bike info (color/VIN), not Wi‑Fi pairing — open MotoPlay / EasyConnect / MotoFun QR"
+                    R.string.f1_qr_hint_bike_info to "that QR is bike info (color/VIN), not Wi‑Fi pairing — open MotoPlay / EasyConnect / MotoFun QR"
                 t.contains("carbit.com", ignoreCase = true) &&
                     t.contains("downsdk", ignoreCase = true) ->
-                    return "that is the Carbit app-download QR, not pairing — open MotoPlay / EasyConnect so the Wi-Fi QR (SSID + password) stays on screen"
+                    R.string.f1_qr_hint_carbit_download to "that is the Carbit app-download QR, not pairing — open MotoPlay / EasyConnect so the Wi-Fi QR (SSID + password) stays on screen"
                 t.contains("carbit.com", ignoreCase = true) &&
                     !t.contains("ssid=", ignoreCase = true) &&
                     (t.contains("action=128", ignoreCase = true) || t.contains("bm=", ignoreCase = true)) ->
-                    return "this dash joins your phone hotspot — turn on Android hotspot with the SSID/password shown on the dash, then Connect"
+                    R.string.f1_qr_hint_phone_hotspot to "this dash joins your phone hotspot — turn on Android hotspot with the SSID/password shown on the dash, then Connect"
                 Regex("""(?i)^CARBIT[0-9A-F]{12}$""").containsMatchIn(t) ->
-                    return "Carbit ID QR — enable Android hotspot with the SSID/password on the dash, then Connect"
+                    R.string.f1_qr_hint_carbit_id to "Carbit ID QR — enable Android hotspot with the SSID/password on the dash, then Connect"
                 t.contains("thinkerride.com", ignoreCase = true) ||
                     t.contains("kove", ignoreCase = true) && t.contains("download", ignoreCase = true) ||
                     t.contains("KOVE APP", ignoreCase = true) ->
-                    return "Kove/Thinkerride — need the SoftAP pairing QR (SSID+password on the dash, or g.thinkerride.com?SSID&PWD&ap=1). Garage → enter SSID/pwd if the QR is only “download KOVE APP”"
+                    R.string.f1_qr_hint_kove to "Kove/Thinkerride — need the SoftAP pairing QR (SSID+password on the dash, or g.thinkerride.com?SSID&PWD&ap=1). Garage → enter SSID/pwd if the QR is only “download KOVE APP”"
                 t.startsWith("http", ignoreCase = true) &&
                     !t.contains("ssid=", ignoreCase = true) &&
                     !t.contains("Wifi=", ignoreCase = true) ->
-                    return "URL QR without ssid/pwd — need the dash pairing QR (Carbit / EasyConnect / MotoFun / Thinkerride SoftAP), or enable phone hotspot if the dash asks for it"
-                else -> return null
+                    R.string.f1_qr_hint_url to "URL QR without ssid/pwd — need the dash pairing QR (Carbit / EasyConnect / MotoFun / Thinkerride SoftAP), or enable phone hotspot if the dash asks for it"
+                else -> null
             }
         }
 

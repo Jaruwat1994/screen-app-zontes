@@ -42,7 +42,7 @@ object OverpassClient {
             try {
                 onResult(corridorPois(points))
             } catch (e: Exception) {
-                onError(e.message ?: "POI fetch failed")
+                onError(AppHttp.userMessage(e, R.string.f1_poi_failed))
             }
         }
     }
@@ -65,7 +65,7 @@ object OverpassClient {
             try {
                 onResult(nearbyByTag(tag, lat, lon, radiusM, maxResults))
             } catch (e: Exception) {
-                onError(e.message ?: "Nearby search failed")
+                onError(AppHttp.userMessage(e, R.string.f1_search_failed))
             }
         }
     }

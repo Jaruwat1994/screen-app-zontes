@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- F1 "Thai 100%": QR hints, network errors and other text built in Kotlin. -->
+<resources>
+    <!-- QrData.parseFailureHint -->
+    <string name="f1_qr_hint_morini">Moto Morini QR has no Wifi= field — open the phone-link / MotoFun QR on the dash</string>
+    <string name="f1_qr_hint_bike_info">That QR is bike info (color/VIN), not Wi‑Fi pairing — open the MotoPlay / EasyConnect / MotoFun QR</string>
+    <string name="f1_qr_hint_carbit_download">That is the Carbit app-download QR, not pairing — open MotoPlay / EasyConnect so the Wi‑Fi QR (SSID + password) stays on screen</string>
+    <string name="f1_qr_hint_phone_hotspot">This dash joins your phone hotspot — turn on the Android hotspot with the SSID/password shown on the dash, then Connect</string>
+    <string name="f1_qr_hint_carbit_id">Carbit ID QR — turn on the Android hotspot with the SSID/password on the dash, then Connect</string>
+    <string name="f1_qr_hint_kove">Kove/Thinkerride — needs the SoftAP pairing QR (SSID + password on the dash). In Garage, enter SSID/password if the QR only says “download KOVE APP”</string>
+    <string name="f1_qr_hint_url">Web QR without SSID/password — scan the dash pairing QR (Carbit / EasyConnect / MotoFun / Thinkerride), or turn on the phone hotspot if the dash asks for it</string>
+
+    <!-- AppHttp.userMessage -->
+    <string name="f1_net_busy">Map service is busy — try again shortly</string>
+    <string name="f1_net_down">Map service temporarily unavailable (HTTP %1$d)</string>
+    <string name="f1_net_http">Request failed (HTTP %1$d)</string>
+    <string name="f1_net_offline">No internet connection</string>
+    <string name="f1_net_timeout">Connection timed out — try again</string>
+    <string name="f1_net_failed">Network error — try again</string>
+    <string name="f1_route_failed">Routing failed</string>
+    <string name="f1_search_failed">Search failed</string>
+    <string name="f1_poi_failed">Couldn\'t load places along the route</string>
+
+    <!-- Saved places (default names) -->
+    <string name="f1_place_parked">Parked</string>
+    <string name="f1_place_parked_here">Parked here</string>
+
+    <!-- BluetoothHelper.shortLine (button mapping header) -->
+    <string name="f1_bt_short_none">Bluetooth: not available</string>
+    <string name="f1_bt_short_off">Bluetooth: off — tap to open settings</string>
+    <string name="f1_bt_short_connected">BT connected: %1$s</string>
+    <string name="f1_bt_short_no_device">BT: on, no audio device connected — tap to pair</string>
+
+    <!-- Trip video cards -->
+    <string name="f1_unit_min">%1$d min</string>
+
+    <!-- Map dash status line (GpxNav.formatHud) -->
+    <string name="f1_hud_route">Route</string>
+    <string name="f1_hud_off">OFF</string>
+    <string name="f1_hud_avg">avg</string>
+    <string name="setup_bike_profile_toast">Bike profile: %1$s</string>
+</resources>

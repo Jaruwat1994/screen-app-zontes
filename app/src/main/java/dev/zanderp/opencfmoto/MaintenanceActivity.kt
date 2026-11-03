@@ -132,7 +132,7 @@ class MaintenanceActivity : AppCompatActivity() {
                     else -> "🔧 " + (book.tasks.firstOrNull { it.id == e.taskId }?.name ?: e.taskId.orEmpty()) +
                         " · " + Maintenance.fmtKm(e.km)
                 }
-                body.addView(text("${df.format(Date(e.at))} — $what", 13f, R.color.text_secondary))
+                body.addView(text("${ThaiDate.format(df, e.at)} — $what", 13f, R.color.text_secondary))
             }
         }
     }
@@ -147,7 +147,7 @@ class MaintenanceActivity : AppCompatActivity() {
         t.everyMonths?.let { parts += getString(R.string.maint_every_months, it) }
         val last = ArrayList<String>()
         t.lastKm?.let { last += Maintenance.fmtKm(it) }
-        t.lastAt?.let { last += DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(it)) }
+        t.lastAt?.let { last += ThaiDate.format(DateFormat.getDateInstance(DateFormat.MEDIUM), it) }
         return parts.joinToString(" · ") + if (last.isNotEmpty()) "\n" + getString(R.string.maint_last, last.joinToString(" · ")) else ""
     }
 
@@ -224,7 +224,7 @@ class MaintenanceActivity : AppCompatActivity() {
         val lastDate = MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle)
         fun showDate() {
             lastDate.text = getString(R.string.maint_last_date) + ": " +
-                (lastAt?.let { DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(it)) } ?: "—")
+                (lastAt?.let { ThaiDate.format(DateFormat.getDateInstance(DateFormat.MEDIUM), it) } ?: "—")
         }
         showDate()
         lastDate.setOnClickListener {

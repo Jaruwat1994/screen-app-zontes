@@ -460,7 +460,7 @@ class TripLook(
                 val bar = 13 * u
                 c.drawRect(0f, 0f, w.toFloat(), bar, fill(Color.BLACK))
                 c.drawRect(0f, h - bar, w.toFloat(), h.toFloat(), fill(Color.BLACK))
-                val date = DateFormat.getDateInstance(DateFormat.LONG).format(Date(tMs)).uppercase()
+                val date = ThaiDate.format(DateFormat.getDateInstance(DateFormat.LONG), tMs).uppercase()
                 val rightW = max(measure("$date · $clock", tfLight, 2.3f * u), measure("$kmh KM/H", tfMedium, 2.8f * u))
                 val ts = fitSize(title, tfSerifItalic, w - 9 * u - rightW - 4 * u, 5.2f * u)
                 part(c, OverlayPart.TITLE, w, h, RectF(4 * u, h - bar + u, 5 * u + measure(title, tfSerifItalic, ts), h - u)) {
@@ -508,7 +508,7 @@ class TripLook(
             }
             VideoStyle.TELEMETRY -> {
                 val ts = fitSize(title, tfArchivo, w - 4 * u - 24 * u - 6 * u, 4 * u)
-                val sub = DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(tMs)) + " · " + clock
+                val sub = ThaiDate.format(DateFormat.getDateInstance(DateFormat.MEDIUM), tMs) + " · " + clock
                 val ss = fitSize(sub, tfArchivo, w - 4 * u - 24 * u - 6 * u, 2.6f * u)
                 part(c, OverlayPart.TITLE, w, h, RectF(3 * u, 2 * u, 5 * u + max(measure(title, tfArchivo, ts), measure(sub, tfArchivo, ss)), 12.5f * u)) {
                     text(c, title, 4 * u, 7 * u, ts, tfArchivo)
@@ -601,10 +601,10 @@ class TripLook(
         val t = if (style == VideoStyle.RETRO) deaccent(title.uppercase()).replace("→", ">") else if (style == VideoStyle.SPORT) title.uppercase() else title
         val size = fitSize(t, headline(), w - 12 * u, 8 * u)
         text(c, t, w / 2f, h * 0.46f, size, headline(), align = Paint.Align.CENTER)
-        val date = DateFormat.getDateInstance(DateFormat.FULL).format(Date(trip.start))
+        val date = ThaiDate.format(DateFormat.getDateInstance(DateFormat.FULL), trip.start)
         text(c, date.replaceFirstChar { it.uppercase() }, w / 2f, h * 0.46f + 6 * u, 3.2f * u, tfLight, accent(), Paint.Align.CENTER)
         val mins = ((trip.end - trip.start) / 60_000L).toInt()
-        text(c, "${km(totalKm)} km  ·  $mins min", w / 2f, h * 0.46f + 11 * u, 3 * u, tfMedium, Color.argb(220, 255, 255, 255), Paint.Align.CENTER)
+        text(c, "${km(totalKm)} km  ·  " + ctx.getString(R.string.f1_unit_min, mins), w / 2f, h * 0.46f + 11 * u, 3 * u, tfMedium, Color.argb(220, 255, 255, 255), Paint.Align.CENTER)
         val s = 26 * u
         routeFit(c, RectF(w / 2f - s / 2, h * 0.62f, w / 2f + s / 2, h * 0.62f + s), accent(), null, 0.8f * u, pts.lastIndex, 0f)
     }
@@ -626,7 +626,7 @@ class TripLook(
         val avg = if (trip.movingTimeMs > 0) (trip.distanceMeters / (trip.movingTimeMs / 1000.0) * 3.6).roundToInt() else 0
         val rows = listOf(
             ctx.getString(R.string.tvl_distance) to "${km(totalKm)} km",
-            ctx.getString(R.string.tvl_time) to "$mins min",
+            ctx.getString(R.string.tvl_time) to ctx.getString(R.string.f1_unit_min, mins),
             ctx.getString(R.string.tvl_avg) to "$avg km/h",
             ctx.getString(R.string.tvl_max) to "${trip.maxKmh} km/h",
         )

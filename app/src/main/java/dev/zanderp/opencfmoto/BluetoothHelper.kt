@@ -38,11 +38,14 @@ object BluetoothHelper {
         }
 
         /** Short line for the mapping screen header. */
-        fun shortLine(): String = when {
-            !supported -> "Bluetooth: not available"
-            !enabled -> "Bluetooth: off — tap to open settings"
-            connected -> "BT connected: ${deviceName ?: "audio device"}"
-            else -> "BT: on, no audio device connected — tap to pair"
+        fun shortLine(context: Context): String = when {
+            !supported -> context.getString(R.string.f1_bt_short_none)
+            !enabled -> context.getString(R.string.f1_bt_short_off)
+            connected -> context.getString(
+                R.string.f1_bt_short_connected,
+                deviceName ?: context.getString(R.string.setup_bt_audio_device),
+            )
+            else -> context.getString(R.string.f1_bt_short_no_device)
         }
     }
 

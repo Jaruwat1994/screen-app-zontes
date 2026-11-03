@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             log("QR parse FAILED — missing ssid/pwd?" + (hint?.let { " ($it)" } ?: ""))
             Toast.makeText(
                 this,
-                hint ?: getString(R.string.main_invalid_qr),
+                QrData.parseFailureHint(raw, this) ?: getString(R.string.main_invalid_qr),
                 Toast.LENGTH_LONG,
             ).show()
             return@registerForActivityResult
@@ -1026,6 +1026,7 @@ class MainActivity : AppCompatActivity() {
             maybeResumeFromParked(intent)
             maybeStartFromBtTrigger(intent)
             maybeStartFromWidget(intent)
+            maybeOpenReport(intent)
         } catch (e: Exception) {
             log("startup failed (UI still up): $e")
             CrashGuard.persistSession(this)
@@ -1049,6 +1050,7 @@ class MainActivity : AppCompatActivity() {
         maybeResumeFromParked(intent)
         maybeStartFromBtTrigger(intent)
         maybeStartFromWidget(intent)
+        maybeOpenReport(intent)
         if (intent.getBooleanExtra(EXTRA_RECONNECT, false)) {
             intent.removeExtra(EXTRA_RECONNECT)
             log("→ Fit to dash: restarting Android Auto with the new panel shape")
@@ -2678,7 +2680,7 @@ class MainActivity : AppCompatActivity() {
 
             val send = Intent(if (uris.size > 1) Intent.ACTION_SEND_MULTIPLE else Intent.ACTION_SEND).apply {
                 type = if (uris.size > 1) "*/*" else "text/plain"
-                putExtra(Intent.EXTRA_SUBJECT, "RideScreen AA log $stamp")
+                putExtra(Intent.EXTRA_SUBJECT, "ZRide Screen log $stamp")
                 if (uris.size > 1) putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
                 else putExtra(Intent.EXTRA_STREAM, uris[0])
                 // Some apps (Claude among them) only read the shared file through ClipData; without it
@@ -2738,6 +2740,13 @@ class MainActivity : AppCompatActivity() {
         // Headings/bullets/bold come from [ReleaseNotes]; make markdown links tappable too.
         dialog.findViewById<TextView>(android.R.id.message)?.movementMethod =
             LinkMovementMethod.getInstance()
+    }
+
+    /** About → "Report a problem" lands here: the same dialog as Help → Report a problem. */
+    private fun maybeOpenReport(intent: Intent) {
+        if (!intent.getBooleanExtra(EXTRA_REPORT, false)) return
+        intent.removeExtra(EXTRA_REPORT)
+        reportProblem()
     }
 
     private fun reportProblem() {
@@ -2904,6 +2913,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_START_GPX = "start_gpx"
+        const val EXTRA_REPORT = "open_report"
         const val EXTRA_BT_TRIGGER = "bt_trigger"
         const val EXTRA_WIDGET_CONNECT = "widget_connect"
         private const val ENGINE_ON_V = 13.2f

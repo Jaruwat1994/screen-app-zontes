@@ -36,7 +36,7 @@
     <string name="hc_dash_tts_dir_fork_right">ชิดขวาที่ทางแยก</string>
     <string name="hc_dash_tts_dir_arrive">ถึงจุดหมายแล้ว</string>
     <string name="hc_dash_tts_dir_straight">ตรงไป</string>
-    <string name="hc_dash_tts_in_dist">อีก %1$s %2$s</string>
+    <string name="hc_dash_tts_in_dist">%2$s ในอีก %1$s</string>
     <string name="hc_dash_tts_waypoint">จุดแวะ</string>
     <string name="hc_dash_tts_approaching">ใกล้ถึง %1$s</string>
     <string name="hc_dash_alt_ft">ความสูง ft</string>

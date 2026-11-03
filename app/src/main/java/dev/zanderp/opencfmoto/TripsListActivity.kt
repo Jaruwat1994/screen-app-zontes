@@ -131,7 +131,7 @@ class TripsListActivity : AppCompatActivity() {
             .sortedByDescending { it.start }
             .map { TripStore.get(this, it.id) ?: it }
 
-        dayLabel.text = DAY_FMT.format(Date(dayStartMs))
+        dayLabel.text = ThaiDate.format(DAY_FMT, dayStartMs)
         val today = startOfDay(System.currentTimeMillis())
         todayBtn.visibility = if (dayStartMs == today) View.GONE else View.VISIBLE
 

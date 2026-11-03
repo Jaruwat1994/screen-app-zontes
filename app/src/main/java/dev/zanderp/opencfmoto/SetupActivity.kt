@@ -478,7 +478,7 @@ class SetupActivity : AppCompatActivity() {
     private fun setProfileOverride(ov: ProfileOverride) {
         ProfilePrefs.set(this, ov)
         refreshOptions()
-        toast("Bike profile: ${ov.shortLabel}")
+        toast(getString(R.string.setup_bike_profile_toast, ov.shortLabel))
     }
 
     private fun setTransport(t: WifiTransport) {

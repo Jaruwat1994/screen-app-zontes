@@ -10,7 +10,7 @@
     <string name="supported_bikes_confirmed_title">Confirmed by the OpenCfMoto community</string>
     <string name="supported_bikes_confirmed">CFMoto: 800MT (MT‑X / Explore / Explore GT / Ibex 800) · 1000 MT‑X · 800NK (US CRCP) · 800NK Advanced · 675NK · 675SR‑R · 700MT Adventure · 450MT · 450SR (+ SR‑S / TC) · 450CL‑C / CL‑C450 · 450NK · 150SC scooter · CFORCE 850 / 1000 · GOES Terrox 1000 / Gladiator G3 1000\nOther: Voge DS800 Rally / DS900X · Moto Morini X-Cape 649 / 700 / Seiemmezzo · Benelli TRK 702 / 702X · Rieju 307 · Morbidelli T1002VX / T352X · QJ Motor SRK800RR / SRK450RR / SRK250RD / SRT 600 / SRV600</string>
     <string name="supported_bikes_other_title">Other brands (Carbit / EasyConnect)</string>
-    <string name="supported_bikes_other">Same Carbit QR path — try Connect if the dash shows a pairing QR. Report results in Discord.\nVoge (DS800 Rally / DS900X confirmed) · Moto Morini (X-Cape 649 / 700 / Seiemmezzo confirmed; 1200 SoftAP experimental; MotoFun) · Zontes (125X / 125V / 368 G·K·E confirmed; 125M, 350D in testing) · Benelli (e.g. TRK 702 / 702X) · Rieju (307 confirmed) · QJ Motor (SRK800RR / SRK250RD / SRK450RR / SRT/SRV 600 confirmed; 600SX / 550SX testing; Fort 4.0) · Morbidelli / MBP (T1002VX / T352X confirmed) · Longjia (e.g. V-Bob 650; MotoFUN / Carbit Ride — unconfirmed) · Kove (Thinkerride SoftAP experimental — no dash video yet)</string>
+    <string name="supported_bikes_other">Same Carbit QR path — try Connect if the dash shows a pairing QR. Report results with Help → Report a problem.\nVoge (DS800 Rally / DS900X confirmed) · Moto Morini (X-Cape 649 / 700 / Seiemmezzo confirmed; 1200 SoftAP experimental; MotoFun) · Zontes (125X / 125V / 368 G·K·E confirmed; 125M, 350D in testing) · Benelli (e.g. TRK 702 / 702X) · Rieju (307 confirmed) · QJ Motor (SRK800RR / SRK250RD / SRK450RR / SRT/SRV 600 confirmed; 600SX / 550SX testing; Fort 4.0) · Morbidelli / MBP (T1002VX / T352X confirmed) · Longjia (e.g. V-Bob 650; MotoFUN / Carbit Ride — unconfirmed) · Kove (Thinkerride SoftAP experimental — no dash video yet)</string>
     <string name="supported_bikes_full_title">Full list — known CFMoto EasyConnect / MotoPlay dashes</string>
     <string name="supported_bikes_full">Naked:  125NK · 450NK · 675NK · 800NK · 800NK Advanced · 800NK Sport · 800NK (US CRCP)\nSport:  300SR · 450SR · 450SR‑S · 450SR TC · 500SR VOOM · 675SR · 675SR‑R\nTouring / Adv:  450MT · 700MT · 700MT Adventure · 800MT‑X · 800MT Explore · 800MT Explore GT · 1000 MT‑X\nCruiser:  450CL‑C · CL‑C450\nScooter:  150SC\nATV / SSV (TFT):  CFORCE 800 · CFORCE 850 Touring · CFORCE 1000 · CFORCE 1000 Touring · GOES Terrox 1000 / Gladiator G3 1000\nOther:  U10 Pro (where the dash offers the QR)</string>
     <string name="supported_bikes_unlikely_title">Usually no projection QR</string>
@@ -19,8 +19,8 @@
     <string name="about_about">About</string>
     <string name="about_wireless_android_auto_for_carbit_easyconnect_das">Wireless Android Auto for Carbit / EasyConnect dashes (CFMoto MotoPlay and siblings).</string>
     <string name="about_community_support">Community &amp; support</string>
-    <string name="about_questions_logs_or_a_new_bike_join_discord_tips_k">Questions, logs, or a new bike? Join Discord. Tips keep the project moving.</string>
-    <string name="about_discord">Discord</string>
+    <string name="about_questions_logs_or_a_new_bike_join_discord_tips_k">Questions, a problem or a new bike? Tap Report a problem: the log (personal data removed) goes to the ZRide team through LINE, e-mail or any app you pick.</string>
+    <string name="about_discord">Report a problem</string>
     <string name="about_donate">Donate</string>
     <string name="about_copyright_2">Copyright</string>
     <string name="about_website_alexandru_rocks">Website — alexandru.rocks</string>
@@ -383,7 +383,7 @@
     <string name="setup_bluetooth_clock">Set dash clock over Bluetooth (experimental)</string>
     <string name="setup_bluetooth_clock_desc">Some dashes ask for the time over Bluetooth, not Wi-Fi, and sit at 00:00 without it. Pair the bike in Android Bluetooth settings first. Off by default — we only reply after the dash speaks its own protocol.</string>
     <string name="setup_clock_lab">Clock lab (EXPERIMENTAL)</string>
-    <string name="setup_clock_lab_desc">One tester pack for every clock experiment — Wi‑Fi query/sync, Bluetooth listen (ZT / EC-BTP), stay-on-bike-Wi‑Fi. Defaults match Latest 2.0.13 (empty 0x10451, echo 0x10600, BLE off). Pick a combo, Connect once, Share Logs in Discord #clock-issue. Do not leave a combo on for daily riding.</string>
+    <string name="setup_clock_lab_desc">One tester pack for every clock experiment — Wi‑Fi query/sync, Bluetooth listen (ZT / EC-BTP), stay-on-bike-Wi‑Fi. Defaults match Latest 2.0.13 (empty 0x10451, echo 0x10600, BLE off). Pick a combo, Connect once, then send the log with Help → Report a problem. Do not leave a combo on for daily riding.</string>
     <string name="setup_clock_lab_bt">Bluetooth listen</string>
     <string name="setup_clock_lab_presets">Presets (fill the knobs only)</string>
     <string name="setup_clock_lab_preset_latest">Latest</string>
@@ -438,7 +438,7 @@
     <string name="setup_secrets_on_desc">On — passwords/serials stay in shared logs</string>
     <string name="setup_off_passwords_and_serials_are_redacted_recommend">Off — passwords and serials are redacted (recommended)</string>
     <string name="setup_share_settings">Share settings</string>
-    <string name="setup_export_bike_tuning_only_profile_resolution_fit_m">Export bike tuning only — profile, resolution, fit, margins, buttons, Wi‑Fi transport (no passwords, no personal prefs). Share on Discord so others can Import.</string>
+    <string name="setup_export_bike_tuning_only_profile_resolution_fit_m">Export bike tuning only — profile, resolution, fit, margins, buttons, Wi‑Fi transport (no passwords, no personal prefs). Share it (LINE, e-mail…) so others can Import.</string>
     <string name="setup_share_json">Share JSON</string>
     <string name="setup_import">Import…</string>
     <string name="setup_supported_bikes">Supported bikes</string>

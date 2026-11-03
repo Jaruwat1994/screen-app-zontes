@@ -73,6 +73,13 @@ object CrashDetector : SensorEventListener {
 
     data class Contact(val name: String, val number: String)
 
+    /** Emergency medical number: 1669 in Thailand (สพฉ.), 112 elsewhere. Only dialled by the rider. */
+    fun emergencyNumber(): String = if (Maintenance.isThailand()) "1669" else "112"
+
+    /** Opens the dialer on [emergencyNumber] (the rider presses call: never dialled automatically). */
+    fun dialEmergencyIntent(): Intent =
+        Intent(Intent.ACTION_DIAL, android.net.Uri.parse("tel:" + emergencyNumber())).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
     private val main = Handler(Looper.getMainLooper())
     private lateinit var app: Context
     private var sensorOn = false
@@ -362,6 +369,8 @@ object CrashDetector : SensorEventListener {
                 .setContentTitle(ctx.getString(R.string.crash_sent_title))
                 .setContentText(text)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+                .addAction(0, ctx.getString(R.string.crash_call_emergency, emergencyNumber()),
+                    PendingIntent.getActivity(ctx, 3, dialEmergencyIntent(), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
                 .build())
         } catch (_: Exception) {}
     }
@@ -376,7 +385,7 @@ object CrashDetector : SensorEventListener {
         } else ctx.getString(R.string.crash_sms_no_location)
         val time = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
         val body = ctx.getString(
-            if (followUp) R.string.crash_sms_followup else R.string.crash_sms_body, name, COUNTDOWN_S, where, time,
+            if (followUp) R.string.crash_sms_followup else R.string.crash_sms_body, name, COUNTDOWN_S, where, time, emergencyNumber(),
         )
         val speed = lastImpactKmh?.takeIf { !test && !followUp }?.let { " " + ctx.getString(R.string.crash_sms_speed, it.toInt()) } ?: ""
         return if (test) ctx.getString(R.string.crash_sms_test_prefix) + " " + body else body + speed

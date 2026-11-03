@@ -141,11 +141,13 @@ class QrScanActivity : AppCompatActivity() {
                 }
                 .addOnFailureListener {
                     handled.set(false)
-                    Toast.makeText(this, it.message ?: getString(R.string.hc_act_qr_photo_failed), Toast.LENGTH_LONG).show()
+                    LogBus.log("[QR] photo scan failed: ${it.message}")
+                    Toast.makeText(this, getString(R.string.hc_act_qr_photo_failed), Toast.LENGTH_LONG).show()
                 }
         } catch (e: Exception) {
             handled.set(false)
-            Toast.makeText(this, e.message ?: getString(R.string.hc_act_qr_photo_failed), Toast.LENGTH_LONG).show()
+            LogBus.log("[QR] photo scan failed: ${e.message}")
+            Toast.makeText(this, getString(R.string.hc_act_qr_photo_failed), Toast.LENGTH_LONG).show()
         }
     }
 

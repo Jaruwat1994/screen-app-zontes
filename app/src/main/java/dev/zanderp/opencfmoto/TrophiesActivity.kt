@@ -122,7 +122,7 @@ class TrophiesActivity : AppCompatActivity() {
         })
         if (t.unlocked) {
             col.addView(TextView(this).apply {
-                text = getString(R.string.tr_earned_on, DateFormat.getMediumDateFormat(context).format(Date(t.unlockedAt!!)))
+                text = getString(R.string.tr_earned_on, ThaiDate.format(DateFormat.getMediumDateFormat(context), t.unlockedAt!!))
                 textSize = 12f
                 setTextColor(gold)
                 setPadding(0, dp(4), 0, 0)

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- F1 "Thai 100%": QR hints, network errors and other text built in Kotlin. -->
+<resources>
+    <!-- QrData.parseFailureHint -->
+    <string name="f1_qr_hint_morini">QR ของ Moto Morini นี้ไม่มีข้อมูล Wi‑Fi — เปิด QR เชื่อมโทรศัพท์ / MotoFun บนหน้าจอรถ</string>
+    <string name="f1_qr_hint_bike_info">QR นี้เป็นข้อมูลรถ (สี/เลขตัวถัง) ไม่ใช่ QR จับคู่ Wi‑Fi — เปิด QR ของ MotoPlay / EasyConnect / MotoFun</string>
+    <string name="f1_qr_hint_carbit_download">QR นี้ใช้ดาวน์โหลดแอป Carbit ไม่ใช่ QR จับคู่ — เปิด MotoPlay / EasyConnect ค้างไว้ให้ QR Wi‑Fi (SSID + รหัส) แสดงบนจอ</string>
+    <string name="f1_qr_hint_phone_hotspot">หน้าจอรถนี้เชื่อมผ่านฮอตสปอตโทรศัพท์ — เปิดฮอตสปอตด้วย SSID/รหัสที่แสดงบนจอรถ แล้วกดเชื่อมต่อ</string>
+    <string name="f1_qr_hint_carbit_id">QR รหัส Carbit — เปิดฮอตสปอตโทรศัพท์ด้วย SSID/รหัสบนจอรถ แล้วกดเชื่อมต่อ</string>
+    <string name="f1_qr_hint_kove">Kove/Thinkerride — ต้องใช้ QR จับคู่ SoftAP (SSID + รหัสบนจอรถ) ถ้า QR มีแค่ “download KOVE APP” ให้ใส่ SSID/รหัสเองในโรงรถ</string>
+    <string name="f1_qr_hint_url">QR ลิงก์เว็บไม่มี SSID/รหัส — สแกน QR จับคู่บนจอรถ (Carbit / EasyConnect / MotoFun / Thinkerride) หรือเปิดฮอตสปอตถ้าจอรถขอ</string>
+
+    <!-- AppHttp.userMessage -->
+    <string name="f1_net_busy">บริการแผนที่ไม่ว่าง — ลองใหม่อีกสักครู่</string>
+    <string name="f1_net_down">บริการแผนที่ใช้งานไม่ได้ชั่วคราว (HTTP %1$d)</string>
+    <string name="f1_net_http">คำขอล้มเหลว (HTTP %1$d)</string>
+    <string name="f1_net_offline">ไม่มีอินเทอร์เน็ต</string>
+    <string name="f1_net_timeout">หมดเวลาเชื่อมต่อ — ลองใหม่</string>
+    <string name="f1_net_failed">เครือข่ายขัดข้อง — ลองใหม่</string>
+    <string name="f1_route_failed">หาเส้นทางไม่สำเร็จ</string>
+    <string name="f1_search_failed">ค้นหาไม่สำเร็จ</string>
+    <string name="f1_poi_failed">โหลดสถานที่ตามเส้นทางไม่ได้</string>
+
+    <!-- Saved places (default names) -->
+    <string name="f1_place_parked">จุดจอดรถ</string>
+    <string name="f1_place_parked_here">จอดไว้ที่นี่</string>
+
+    <!-- BluetoothHelper.shortLine (button mapping header) -->
+    <string name="f1_bt_short_none">Bluetooth: ไม่รองรับ</string>
+    <string name="f1_bt_short_off">Bluetooth: ปิดอยู่ — แตะเพื่อเปิดการตั้งค่า</string>
+    <string name="f1_bt_short_connected">BT เชื่อมต่อแล้ว: %1$s</string>
+    <string name="f1_bt_short_no_device">BT: เปิดอยู่ แต่ยังไม่มีอุปกรณ์เสียง — แตะเพื่อจับคู่</string>
+
+    <!-- Trip video cards -->
+    <string name="f1_unit_min">%1$d นาที</string>
+
+    <!-- Map dash status line (GpxNav.formatHud) -->
+    <string name="f1_hud_route">เส้นทาง</string>
+    <string name="f1_hud_off">นอกเส้นทาง</string>
+    <string name="f1_hud_avg">เฉลี่ย</string>
+    <string name="setup_bike_profile_toast">โปรไฟล์รถ: %1$s</string>
+</resources>

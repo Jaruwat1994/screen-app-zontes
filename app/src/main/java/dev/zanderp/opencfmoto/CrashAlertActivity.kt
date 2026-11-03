@@ -81,6 +81,19 @@ class CrashAlertActivity : AppCompatActivity() {
         root.addView(sendBtn, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
             topMargin = (24 * dp).toInt()
         })
+        // Injured but conscious: one tap to the emergency line (1669 in Thailand). Opens the dialer only.
+        root.addView(MaterialButton(this).apply {
+            text = getString(R.string.crash_call_emergency, CrashDetector.emergencyNumber())
+            textSize = 20f
+            setTextColor(Color.WHITE)
+            setBackgroundColor(Color.rgb(110, 0, 0))
+            cornerRadius = (28 * dp).toInt()
+            setOnClickListener {
+                try { startActivity(CrashDetector.dialEmergencyIntent()) } catch (_: Exception) {}
+            }
+        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (64 * dp).toInt()).apply {
+            topMargin = (16 * dp).toInt()
+        })
         setContentView(root)
         if (!CrashDetector.alarmActive) finish()
     }

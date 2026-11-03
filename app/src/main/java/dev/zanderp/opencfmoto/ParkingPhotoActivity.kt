@@ -53,7 +53,7 @@ class ParkingPhotoActivity : AppCompatActivity() {
             setOnClickListener { finish() }
         }, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.TOP or Gravity.END))
         root.addView(TextView(this).apply {
-            text = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(f.lastModified()))
+            text = ThaiDate.format(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT), f.lastModified())
             textSize = 14f
             setTextColor(Color.WHITE)
             setShadowLayer(6f, 0f, 2f, Color.BLACK)

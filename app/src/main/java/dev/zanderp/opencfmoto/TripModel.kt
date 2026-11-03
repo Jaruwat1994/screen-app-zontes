@@ -34,7 +34,7 @@ data class Trip(
 
     fun distanceText(): String = String.format(Locale.US, "%.2f km", distanceKm)
 
-    fun dateText(): String = DATE_FMT.format(Date(start))
+    fun dateText(): String = ThaiDate.format(DATE_FMT, start)
 
     fun timeRangeText(): String {
         val s = TIME_FMT.format(Date(start))
