@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DashLayout.Style.PRO gauge cluster (ProDashView) and its settings. -->
+<resources>
+    <string name="dl_style">Screen style</string>
+    <string name="dl_style_grid">Widgets</string>
+    <string name="dl_style_pro">Pro gauges</string>
+    <string name="dl_pro_hint">The bike doesn\'t send rpm, gear, coolant, fuel level or tyre pressure to the phone. The ring shows km/h, the right gauge the bike battery (needs your keyless code in Help → Battery) and fuel is an estimate from your refuels.</string>
+    <string name="dl_tank">Tank size (litres, for the fuel estimate)</string>
+    <string name="pro_tab_sport">SPORT</string>
+    <string name="pro_tab_road">ROAD</string>
+    <string name="pro_tab_eco">ECO</string>
+    <string name="pro_tyre">Tyres F / R</string>
+    <string name="pro_phone">Phone</string>
+    <string name="pro_battery">Bike battery</string>
+    <string name="pro_heading">HEADING</string>
+    <string name="pro_trip">TRIP</string>
+    <string name="pro_odo">ODO</string>
+    <string name="pro_ride">THIS RIDE</string>
+    <string name="pro_range">estimated range</string>
+    <string name="pro_avg">avg km/h</string>
+    <string name="pro_time">ride time</string>
+    <string name="pro_max">max km/h</string>
+    <string name="pro_maint">Maintenance</string>
+</resources>

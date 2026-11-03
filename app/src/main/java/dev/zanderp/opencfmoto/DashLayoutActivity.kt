@@ -83,10 +83,43 @@ class DashLayoutActivity : AppCompatActivity() {
             ui.root.scaleY = s
         }
 
+        // Screen style: widget tiles or the Pro gauge cluster.
+        body.addView(section(getString(R.string.dl_style)))
+        val styles = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        for ((st, label) in listOf(DashLayout.Style.GRID to R.string.dl_style_grid, DashLayout.Style.PRO to R.string.dl_style_pro)) {
+            styles.addView(MaterialButton(this).apply {
+                text = getString(label)
+                alpha = if (this@DashLayoutActivity.layout.style == st) 1f else 0.45f
+                setOnClickListener { update(this@DashLayoutActivity.layout.copy(style = st)) }
+            }, LinearLayout.LayoutParams(0, WRAP_CONTENT, 1f).apply { marginEnd = dp(8) })
+        }
+        body.addView(styles)
+        if (layout.style == DashLayout.Style.PRO) {
+            body.addView(text(getString(R.string.dl_pro_hint), 13f, R.color.text_secondary).apply { setPadding(0, dp(8), 0, 0) })
+            body.addView(section(getString(R.string.dl_tank)))
+            body.addView(android.widget.EditText(this).apply {
+                inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+                val tank = this@DashLayoutActivity.layout.tankLiters
+                setText(if (tank > 0f) tank.toString().removeSuffix(".0") else "")
+                setTextColor(color(R.color.text_primary))
+                hint = "0"
+                // Saved as typed, without re-rendering (that would drop the keyboard); preview updates next time.
+                addTextChangedListener(object : android.text.TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
+                    override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
+                    override fun afterTextChanged(e: android.text.Editable?) {
+                        val a = this@DashLayoutActivity
+                        a.layout = a.layout.copy(tankLiters = e?.toString()?.replace(',', '.')?.toFloatOrNull()?.coerceIn(0f, 60f) ?: 0f)
+                        DashLayout.save(a, a.layout)
+                    }
+                })
+            })
+        }
+
         // Widgets: shown ones in dash order (first = large), then the hidden ones.
-        body.addView(section(getString(R.string.dl_widgets)))
+        if (layout.style == DashLayout.Style.GRID) body.addView(section(getString(R.string.dl_widgets)))
         val shown = layout.widgets
-        for ((i, w) in (shown + Widget.entries.filter { it !in shown }).withIndex()) {
+        for ((i, w) in (if (layout.style == DashLayout.Style.GRID) shown + Widget.entries.filter { it !in shown } else emptyList()).withIndex()) {
             val on = w in shown
             val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
             row.addView(CheckBox(this).apply {

@@ -24,6 +24,22 @@ class DashLayoutTest {
         assertEquals(DashLayout.DEFAULT.widgets, DashLayout.parse("NOT_A_WIDGET", null).widgets)
     }
 
+    @Test fun pro_style_and_tank_round_trip() {
+        val l = DashLayout.parse("SPEED", null, "PRO", 12.5f)
+        assertEquals(DashLayout.Style.PRO, l.style)
+        assertEquals(12.5f, l.tankLiters)
+        assertEquals(DashLayout.Style.GRID, DashLayout.parse(null, null, "NOPE", null).style)
+        assertEquals(60f, DashLayout.parse(null, null, null, 500f).tankLiters)
+    }
+
+    @Test fun fuel_estimate() {
+        assertEquals(null, ProDashView.fuelLeft(0f, 3.0, 100.0))       // tank unknown
+        assertEquals(null, ProDashView.fuelLeft(12f, 3.0, null))       // never refuelled
+        assertEquals(9.0, ProDashView.fuelLeft(12f, 3.0, 100.0)!!, 1e-9)
+        assertEquals(0.0, ProDashView.fuelLeft(12f, 3.0, 1000.0)!!, 1e-9)  // never negative
+        assertEquals(300, ProDashView.rangeKm(9.0, 3.0))
+    }
+
     @Test fun compass_points() {
         assertEquals("N 0°", CustomDashUi.compass(0f))
         assertEquals("N 0°", CustomDashUi.compass(360f))

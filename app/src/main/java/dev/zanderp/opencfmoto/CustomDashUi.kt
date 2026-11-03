@@ -53,6 +53,13 @@ class CustomDashUi(
     private var maintAt = 0L
     private var running = false
     private var phoneHot = false
+    private var phoneTempC: Int? = null
+    private var pro: ProDashView? = null
+    private var photo: android.graphics.Bitmap? = null
+    private var book: Pair<Long, ProBook>? = null
+
+    /** What the PRO gauges need from the maintenance book, re-read every 30 s. */
+    private class ProBook(val odoKm: Double?, val appKm: Double, val lastFillKm: Double?, val lPer100: Double?)
 
     private val listener = LocationListener { loc ->
         lastLoc = loc
@@ -100,6 +107,11 @@ class CustomDashUi(
 
     private fun build() {
         root.setBackgroundColor(Color.BLACK)
+        if (dash.style == DashLayout.Style.PRO) {
+            photo = BikeMemory.selected(ctx)?.photoPath?.let { decodePhoto(it) }
+            pro = ProDashView(ctx, dash.accent).also { root.addView(it, FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)) }
+            return
+        }
         val row = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL }
         root.addView(row, FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT))
         val ws = dash.widgets
@@ -168,6 +180,7 @@ class CustomDashUi(
 
     private fun refresh() {
         val snap = TripLogger.current?.snapshot()?.takeIf { it.recording }
+        pro?.let { it.data = if (projected) proLive(snap) else proSample(); return }
         for ((w, tv) in values) {
             tv.text = if (projected) live(w, snap) else sample(w)
             if (w == Widget.PHONE) tv.setTextColor(if (phoneHot) ContextCompat.getColor(ctx, R.color.status_error) else Color.WHITE)
@@ -198,6 +211,65 @@ class CustomDashUi(
         Widget.MAINTENANCE -> maintenance()
     }
 
+    // ---------------------------------------------------------------- PRO gauges
+
+    private fun proLive(snap: TripRecorder.Stats?): ProDashView.Data {
+        phone()
+        val tripKm = snap?.let { it.distanceMeters / 1000.0 }
+        val b = proBook()
+        val sinceFill = b.lastFillKm?.let { b.appKm + (tripKm ?: 0.0) - it }
+        val l100 = b.lPer100 ?: TYPICAL_L_PER_100
+        val left = ProDashView.fuelLeft(dash.tankLiters, l100, sinceFill)
+        val volts = PkeBattery.last(ctx)?.takeIf { System.currentTimeMillis() - it.atMs < 10 * 60_000L }?.volts
+        return ProDashView.Data(
+            speedKmh = lastLoc?.let { (it.speed * 3.6f).roundToInt() },
+            clock = clock(),
+            bikeName = BikeMemory.selected(ctx)?.name.orEmpty(),
+            photo = photo,
+            bikeVolts = volts,
+            phoneTempC = phoneTempC,
+            phoneHot = phoneHot,
+            fuel = left?.let { (it / dash.tankLiters).toFloat() },
+            rangeKm = left?.let { ProDashView.rangeKm(it, l100) },
+            odoKm = b.odoKm?.let { it + (tripKm ?: 0.0) },
+            tripKm = tripKm,
+            heading = heading?.let { compass(it).substringBefore(' ') },
+            avgKmh = snap?.takeIf { it.movingTimeMs > 60_000L }?.let { (it.distanceMeters / (it.movingTimeMs / 1000.0) * 3.6).roundToInt() },
+            rideTime = snap?.let { hm(it.movingTimeMs) },
+            maxKmh = snap?.let { (it.maxSpeedMs * 3.6f).roundToInt() },
+            maintenance = maintenance().takeIf { it != "—" },
+            bluetoothOn = bluetoothOn(),
+        )
+    }
+
+    private fun proSample() = ProDashView.Data(
+        speedKmh = 72, clock = clock(), bikeName = BikeMemory.selected(ctx)?.name ?: "Zontes 368G", photo = photo,
+        bikeVolts = 13.7f, phoneTempC = 36, fuel = 0.6f, rangeKm = 270, odoKm = 4863.0, tripKm = 92.4,
+        heading = "NE", avgKmh = 54, rideTime = "1:42", maxKmh = 108, maintenance = maintenance().takeIf { it != "—" },
+        bluetoothOn = true,
+    )
+
+    private fun proBook(): ProBook {
+        val now = System.currentTimeMillis()
+        book?.takeIf { now - it.first < 30_000L }?.let { return it.second }
+        val b = Maintenance.load(ctx)
+        val lastFill = b.log.filter { it.kind == "fuel" }.maxByOrNull { it.at }?.km
+        return ProBook(b.odometer, b.appKm, lastFill, Maintenance.consumption(b)?.first).also { book = now to it }
+    }
+
+    private fun bluetoothOn(): Boolean = try {
+        (ctx.getSystemService(Context.BLUETOOTH_SERVICE) as android.bluetooth.BluetoothManager).adapter?.isEnabled == true
+    } catch (_: Exception) { false }
+
+    /** Garage photo, downsampled to about the dash panel's size. */
+    private fun decodePhoto(path: String): android.graphics.Bitmap? = try {
+        val o = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        android.graphics.BitmapFactory.decodeFile(path, o)
+        var sample = 1
+        while (o.outWidth / (sample * 2) >= 480) sample *= 2
+        android.graphics.BitmapFactory.decodeFile(path, android.graphics.BitmapFactory.Options().apply { inSampleSize = sample })
+    } catch (_: Exception) { null }
+
     private fun clock() = android.text.format.DateFormat.getTimeFormat(ctx).format(Date())
 
     private fun phone(): String {
@@ -206,6 +278,7 @@ class CustomDashUi(
         val scale = b.getIntExtra(BatteryManager.EXTRA_SCALE, 100).coerceAtLeast(1)
         val tempC = b.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) / 10
         phoneHot = tempC >= HOT_C
+        phoneTempC = tempC
         return "${level * 100 / scale}% · ${tempC}°C"
     }
 
@@ -221,6 +294,10 @@ class CustomDashUi(
     companion object {
         /** Battery temperature that turns the phone widget red (Thai sun on a handlebar mount). */
         const val HOT_C = 42
+
+        // ponytail: one typical figure until the rider logs two full-tank refuels; per-model table if riders ask.
+        /** Small-cc scooter/ADV consumption used until the refuel log gives the real one. */
+        const val TYPICAL_L_PER_100 = 3.3
 
         private val POINTS = listOf("N", "NE", "E", "SE", "S", "SW", "W", "NW")
 

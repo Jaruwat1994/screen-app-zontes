@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dl_style">รูปแบบหน้าจอ</string>
+    <string name="dl_style_grid">ช่องข้อมูล</string>
+    <string name="dl_style_pro">หน้าปัด Pro</string>
+    <string name="dl_pro_hint">รถไม่ส่งรอบเครื่อง เกียร์ อุณหภูมิน้ำหล่อเย็น ระดับน้ำมัน และลมยางให้มือถือ วงใหญ่จึงแสดงความเร็ว km/h เกจขวาแสดงแบตเตอรี่รถ (ต้องใส่รหัส keyless ใน ช่วยเหลือ → แบตเตอรี่) และน้ำมันเป็นค่าประมาณจากบันทึกการเติม</string>
+    <string name="dl_tank">ความจุถังน้ำมัน (ลิตร สำหรับประมาณน้ำมัน)</string>
+    <string name="pro_tab_sport">SPORT</string>
+    <string name="pro_tab_road">ROAD</string>
+    <string name="pro_tab_eco">ECO</string>
+    <string name="pro_tyre">ลมยาง หน้า / หลัง</string>
+    <string name="pro_phone">โทรศัพท์</string>
+    <string name="pro_battery">แบตเตอรี่รถ</string>
+    <string name="pro_heading">ทิศทาง</string>
+    <string name="pro_trip">ทริป</string>
+    <string name="pro_odo">ODO</string>
+    <string name="pro_ride">ทริปนี้</string>
+    <string name="pro_range">วิ่งได้อีกโดยประมาณ</string>
+    <string name="pro_avg">เฉลี่ย km/h</string>
+    <string name="pro_time">เวลาขับ</string>
+    <string name="pro_max">สูงสุด km/h</string>
+    <string name="pro_maint">บำรุงรักษา</string>
+</resources>
