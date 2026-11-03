@@ -121,6 +121,11 @@
         <item name="fontFamily">@font/archivo_black</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">@dimen/btn_icon_padding</item>
+        <!-- Black & gold: polished gold bar with dark text. -->
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/bg_connect_gold</item>
+        <item name="android:textColor">@color/on_brand</item>
+        <item name="iconTint">@color/on_brand</item>
     </style>
 
     <!-- Secondary actions: tonal. Icon beside text (not above) so labels stay horizontal. -->
