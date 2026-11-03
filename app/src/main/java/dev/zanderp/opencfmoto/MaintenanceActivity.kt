@@ -104,7 +104,7 @@ class MaintenanceActivity : AppCompatActivity() {
             }
         }
         body.addView(button(getString(R.string.maint_add_task)) { editTask(null, book) })
-        body.addView(button(getString(R.string.maint_plan_125)) { askPlan125() })
+        body.addView(button(getString(R.string.maint_plan_pick)) { askPlan() })
 
         // Fuel.
         body.addView(section(getString(R.string.maint_fuel)))
@@ -135,6 +135,18 @@ class MaintenanceActivity : AppCompatActivity() {
                 body.addView(text("${ThaiDate.format(df, e.at)} — $what", 13f, R.color.text_secondary))
             }
         }
+    }
+
+    /** "every 8,000 km · 24 months" for the plan preview (no "first at" when it equals the step). */
+    private fun planInterval(t: Maintenance.Task): String {
+        val parts = ArrayList<String>()
+        val first = t.firstKm?.takeIf { it != t.everyKm }
+        first?.let { parts += getString(R.string.maint_first_at, Maintenance.fmtKm(it.toDouble())) }
+        t.everyKm?.let {
+            parts += getString(if (first != null) R.string.maint_then_every_km else R.string.maint_every_km, Maintenance.fmtKm(it.toDouble()))
+        }
+        t.everyMonths?.let { parts += getString(R.string.maint_every_months, it) }
+        return parts.joinToString(" · ")
     }
 
     private fun intervalText(t: Maintenance.Task): String {
@@ -180,12 +192,26 @@ class MaintenanceActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun askPlan125() {
+    /** Pick the model (pre-selected from the Garage), then confirm what the manual's plan contains. */
+    private fun askPlan() {
+        val plans = Maintenance.Plan.entries
+        var chosen = plans.indexOf(Maintenance.planFor(BikePicker.selected(this))).coerceAtLeast(0)
         MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.maint_plan_125)
-            .setMessage(R.string.maint_plan_125_msg)
+            .setTitle(R.string.maint_plan_pick)
+            .setSingleChoiceItems(plans.map { it.label }.toTypedArray(), chosen) { _, i -> chosen = i }
+            .setPositiveButton(R.string.maint_plan_next) { _, _ -> confirmPlan(plans[chosen]) }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun confirmPlan(p: Maintenance.Plan) {
+        val tasks = Maintenance.planTasks(this, p)
+        MaterialAlertDialogBuilder(this)
+            .setTitle(p.label)
+            .setMessage(getString(R.string.maint_plan_msg, p.label, String.format(Locale.getDefault(), "%,d", p.cycleKm), p.source,
+                tasks.joinToString("\n") { "• " + it.name + "  —  " + planInterval(it) }))
             .setPositiveButton(R.string.maint_plan_apply) { _, _ ->
-                Maintenance.applyPlan(this, Maintenance.zontes125Plan(this))
+                Maintenance.applyPlan(this, tasks)
                 render()
             }
             .setNegativeButton(android.R.string.cancel, null)

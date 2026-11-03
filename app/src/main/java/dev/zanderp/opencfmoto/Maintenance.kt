@@ -135,6 +135,95 @@ object Maintenance {
     val currency: String get() = if (isThailand()) "฿" else "€"
 
     /**
+     * Owner's-manual plans per Zontes model. Intervals are copied from each manual's maintenance
+     * table (Thai owner manuals from zontes.co.th, 2025–2026; 125X from its owner's manual):
+     * regular service every [cycleKm] km or 15 months after the 1,000 km first service.
+     */
+    enum class Plan(val label: String, val cycleKm: Int, val source: String, val models: Set<BikePicker.Model>) {
+        Z125X("Zontes 125X / 125V", 6000, "125X", setOf(BikePicker.Model.Z125X, BikePicker.Model.Z125V)),
+        Z150X("Zontes 150X", 4000, "150X 2026", setOf(BikePicker.Model.Z150X)),
+        Z368G("Zontes 368G / 368E", 4000, "368G 2026 · 368E ETC", setOf(BikePicker.Model.Z368G, BikePicker.Model.Z368E)),
+        Z368K("Zontes 368K", 4000, "368K", setOf(BikePicker.Model.Z368K)),
+        Z368D("Zontes 368D", 4000, "368D", setOf(BikePicker.Model.Z368D)),
+        Z350("Zontes 350D / 350E", 4000, "350D · 350E", emptySet()),
+    }
+
+    /** The plan for the bike model picked in the Garage, if we have its manual. */
+    fun planFor(model: BikePicker.Model?): Plan? = model?.let { m -> Plan.entries.firstOrNull { m in it.models } }
+
+    fun planTasks(ctx: Context, p: Plan): List<Task> {
+        fun t(id: String, name: Int, km: Int?, months: Int?, first: Int? = km) =
+            Task(id, ctx.getString(name), km, months, null, null, firstKm = first)
+        val service = listOf(
+            t("service", R.string.maint_service, p.cycleKm, 15, 1000),
+            t("oil", R.string.maint_oil_engine, p.cycleKm, 15, 1000),
+            t("oil_filter", R.string.maint_oil_filter, 8000, null, 1000),
+            t("gear_oil", R.string.maint_gear_oil, 8000, null, 1000),
+            t("brakes", R.string.maint_brakes, 4000, 12),
+            t("tyres", R.string.maint_tyres, 4000, 12),
+        )
+        val parts = when (p) {
+            Plan.Z125X -> return zontes125Plan(ctx)
+            // 150X: air + CVT filters 12,000; belt 24,000; valves 12,000; plug 16,000; coolant 2 y / 24,000.
+            Plan.Z150X -> listOf(
+                t("air", R.string.maint_air, 12000, null),
+                t("cvt_filter", R.string.maint_cvt_filter, 12000, null),
+                t("spark", R.string.maint_spark, 16000, null),
+                t("valves", R.string.maint_valves, 12000, null),
+                t("belt", R.string.maint_belt, 24000, null),
+                t("pulleys", R.string.maint_pulleys, 8000, null),
+                t("steer_lock", R.string.maint_steer_lock, 8000, null),
+                t("steer_bearing", R.string.maint_steer_bearing, 15000, null),
+                t("fork_oil", R.string.maint_fork_oil, 16000, null),
+                t("brake_fluid", R.string.maint_brake_fluid, null, 24),
+                t("coolant", R.string.maint_coolant, 24000, 24),
+            )
+            // 368G 2026 / 368E ETC: air + CVT filters 8,000; belt 28,000; valves 40,000.
+            Plan.Z368G -> listOf(
+                t("air", R.string.maint_air, 8000, null),
+                t("cvt_filter", R.string.maint_cvt_filter, 8000, null),
+                t("spark", R.string.maint_spark, 16000, null),
+                t("valves", R.string.maint_valves, 40000, null),
+                t("belt", R.string.maint_belt, 28000, null),
+                t("pulleys", R.string.maint_pulleys, 8000, null),
+                t("steer_lock", R.string.maint_steer_lock, 8000, null),
+                t("steer_bearing", R.string.maint_steer_bearing, 15000, null),
+                t("fork_oil", R.string.maint_fork_oil, 16000, null),
+                t("brake_fluid", R.string.maint_brake_fluid, null, 24),
+                t("coolant", R.string.maint_coolant, 24000, 24),
+            )
+            // 368K / 368D: plug + air 8,000; belt 28,000 or 2 y; valves 20,000; brake hose 4 y;
+            // brake fluid inspected yearly. 368D adds coolant 3 y / 30,000 and the lock every 10,000.
+            Plan.Z368K, Plan.Z368D -> listOfNotNull(
+                t("air", R.string.maint_air, 8000, null),
+                t("spark", R.string.maint_spark, 8000, null),
+                t("valves", R.string.maint_valves, 20000, null),
+                t("belt", R.string.maint_belt, 28000, 24),
+                t("pulleys", R.string.maint_pulleys, 10000, null),
+                if (p == Plan.Z368K) t("cvt_filter", R.string.maint_cvt_filter_check, 4000, null) else null,
+                t("steer_lock", R.string.maint_steer_lock, if (p == Plan.Z368D) 10000 else 4000, null),
+                t("shocks", R.string.maint_shocks, 8000, null),
+                t("brake_hose", R.string.maint_brake_hose, null, 48),
+                t("brake_fluid", R.string.maint_brake_fluid_check, null, 12),
+                if (p == Plan.Z368D) t("coolant", R.string.maint_coolant, 30000, 36)
+                else t("coolant", R.string.maint_coolant_check, 4000, null, 1000),
+            )
+            // 350D / 350E: air 8,000 or 30 months; plug 16,000; belt 28,000; coolant 3 y / 30,000.
+            Plan.Z350 -> listOf(
+                t("air", R.string.maint_air, 8000, 30),
+                t("spark", R.string.maint_spark, 16000, null),
+                t("belt", R.string.maint_belt, 28000, null),
+                t("pulleys", R.string.maint_pulleys, 10000, null),
+                t("shocks", R.string.maint_shocks, 8000, null),
+                t("brake_hose", R.string.maint_brake_hose, null, 48),
+                t("brake_fluid", R.string.maint_brake_fluid, null, 24),
+                t("coolant", R.string.maint_coolant, 30000, 36),
+            )
+        }
+        return service + parts + paperworkTasks(ctx)
+    }
+
+    /**
      * Yearly paperwork. Thailand: compulsory insurance (พ.ร.บ.) and road tax are renewed together;
      * bikes over 5 years old need an inspection (ตรอ.) first, so riders of newer bikes can delete it.
      */

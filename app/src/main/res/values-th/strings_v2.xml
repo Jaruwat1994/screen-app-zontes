@@ -105,8 +105,6 @@
     <string name="maint_first_km">ครั้งแรกที่ … km (ไม่บังคับ)</string>
     <string name="maint_first_at">ครั้งแรกที่ %1$s</string>
     <string name="maint_then_every_km">จากนั้นทุก %1$s ตามเลขไมล์</string>
-    <string name="maint_plan_125">📖 แผนตามคู่มือ Zontes 125X</string>
-    <string name="maint_plan_125_msg">แทนที่รายการด้วยตารางในคู่มือ Zontes 125X: เช็กระยะครั้งแรกที่ 1,000 km ครั้งที่สองที่ 6,000 แล้วทุก 6,000 (หรือ 15 เดือน) พร้อมไส้กรองน้ำมันเครื่อง น้ำมันเฟืองท้าย วาล์ว สายพาน บูชพูลเลย์ ล็อกคอ หัวเทียน น้ำมันเบรก และน้ำหล่อเย็น ตามรอบของแต่ละรายการ\n\nข้อมูลที่บันทึกไว้แล้วและรายการที่คุณสร้างเองจะยังอยู่\n\nขี่ในที่ชื้นหรือมีฝุ่น? คู่มือแนะนำให้ลดระยะลง</string>
     <string name="maint_plan_apply">ใช้</string>
     <string name="maint_oil_engine">น้ำมันเครื่อง</string>
     <string name="maint_oil_filter">ไส้กรองน้ำมันเครื่อง</string>

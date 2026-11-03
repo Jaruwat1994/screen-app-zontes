@@ -105,8 +105,6 @@
     <string name="maint_first_km">First time at … km (optional)</string>
     <string name="maint_first_at">first at %1$s</string>
     <string name="maint_then_every_km">then every %1$s on the odometer</string>
-    <string name="maint_plan_125">📖 Zontes 125X manual plan</string>
-    <string name="maint_plan_125_msg">Replaces the tasks with the Zontes 125X manual table: first service at 1,000 km, the second at 6,000 and then every 6,000 (or 15 months), plus oil filter, gearbox oil, valves, belt, pulley bushings, steering lock, spark plug, brake fluid and coolant on their own cycles.\n\nWhat you have already logged and your own tasks are kept.\n\nRiding in humidity or dust? The manual says to shorten the intervals.</string>
     <string name="maint_plan_apply">Apply</string>
     <string name="maint_oil_engine">Engine oil</string>
     <string name="maint_oil_filter">Oil filter</string>
