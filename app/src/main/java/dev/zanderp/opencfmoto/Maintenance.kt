@@ -129,8 +129,8 @@ object Maintenance {
         LogBus.log("[MAINT] plan applied: ${plan.size} tasks (+${custom.size} custom)")
     }
 
-    /** Thai phone (country or language): Thai paperwork and baht instead of Spain's ITV and euros. */
-    fun isThailand(locale: Locale = Locale.getDefault()) = locale.country == "TH" || locale.language == "th"
+    /** Thai paperwork and baht by default (ZRide Screen is for Thai riders); Spain's ITV and euros only on a Spanish / Catalan phone. */
+    fun isThailand(locale: Locale = Locale.getDefault()) = locale.country != "ES" && locale.language !in setOf("es", "ca")
 
     val currency: String get() = if (isThailand()) "฿" else "€"
 

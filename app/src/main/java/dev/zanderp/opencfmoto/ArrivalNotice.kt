@@ -112,7 +112,7 @@ object ArrivalNotice {
         val country = try {
             (activity.getSystemService(Context.TELEPHONY_SERVICE) as? android.telephony.TelephonyManager)
                 ?.let { it.simCountryIso.ifBlank { it.networkCountryIso } }?.uppercase()
-        } catch (_: Exception) { null }?.ifBlank { null } ?: java.util.Locale.getDefault().country.ifBlank { "ES" }
+        } catch (_: Exception) { null }?.ifBlank { null } ?: java.util.Locale.getDefault().country.ifBlank { "TH" }
         val e164 = android.telephony.PhoneNumberUtils.formatNumberToE164(c.number, country)
             ?: c.number.filter { it.isDigit() || it == '+' }
         val digits = e164.filter { it.isDigit() }

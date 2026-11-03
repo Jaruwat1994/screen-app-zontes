@@ -101,7 +101,7 @@
     <!-- v2.2 home (proposal A) -->
     <string name="home_tile_trips">Rides</string>
     <string name="home_tile_fuel">Petrol</string>
-    <string name="home_tile_fuel_sub">SP95 nearby</string>
+    <string name="home_tile_fuel_sub">Gasohol 95 nearby</string>
     <string name="home_tile_maint">Maintenance</string>
     <string name="home_tile_tl">Traffic lights</string>
     <string name="home_tile_live">Live route</string>

@@ -9,7 +9,8 @@ import kotlin.math.cos
 import kotlin.math.floor
 
 /**
- * Petrol stations near the rider with their Gasolina 95 (SP95, E5) price, Spain only.
+ * Petrol stations near the rider with their 95 price: Thailand through [ThaiFuel], else the
+ * Spanish Gasolina 95 (SP95, E5) list.
  *
  * Prices are the Ministerio's open data, cut into 0.25° tiles (~25 km) every hour by the Pages
  * workflow (scripts/fuel_tiles.py) and served from GitHub Pages, so the phone downloads a few KB
@@ -25,7 +26,11 @@ object FuelStations {
         val distanceM: Float,
     )
 
-    class Result(val stations: List<Station>, val radiusKm: Int, val sourceTime: String, val outsideSpain: Boolean)
+    /** [thai]: Thailand source ([ThaiFuel]); every station carries the national [referenceBaht] price. */
+    class Result(
+        val stations: List<Station>, val radiusKm: Int, val sourceTime: String, val outsideSpain: Boolean,
+        val thai: Boolean = false, val referenceBaht: Double? = null,
+    )
 
     private class Tile(val at: Long, val time: String, val rows: List<DoubleArrayWithText>?)
     private class DoubleArrayWithText(val lat: Double, val lon: Double, val price: Double, val text: Array<String>)
@@ -48,6 +53,7 @@ object FuelStations {
      * Sorted cheapest first; the caller re-sorts by distance if the rider wants that.
      */
     fun near(here: Location): Result {
+        if (ThaiFuel.covers(here.latitude, here.longitude)) return ThaiFuel.near(here)
         var time = ""
         var anyTile = false
         for (radius in intArrayOf(5, 10, 20)) {

@@ -38,12 +38,13 @@ class MaintenanceScheduleTest {
         assertNull(next(1000, 6000, null, 9000.0))             // far past: ask instead of "overdue by 8,000"
     }
 
-    @Test fun thailand_by_country_or_language() {
+    @Test fun thailand_unless_spanish_phone() {
         assertEquals(true, Maintenance.isThailand(java.util.Locale.forLanguageTag("th-TH")))
         assertEquals(true, Maintenance.isThailand(java.util.Locale.forLanguageTag("en-TH")))  // English UI, Thai region
         assertEquals(true, Maintenance.isThailand(java.util.Locale.forLanguageTag("th")))
         assertEquals(false, Maintenance.isThailand(java.util.Locale.forLanguageTag("es-ES")))
-        assertEquals(false, Maintenance.isThailand(java.util.Locale.forLanguageTag("en-US")))
+        assertEquals(false, Maintenance.isThailand(java.util.Locale.forLanguageTag("ca-ES")))
+        assertEquals(true, Maintenance.isThailand(java.util.Locale.forLanguageTag("en-US")))   // ZRide default: Thai
     }
 
     @Test fun plain_interval_unchanged() {

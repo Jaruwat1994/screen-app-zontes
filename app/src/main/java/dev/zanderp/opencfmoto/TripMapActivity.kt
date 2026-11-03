@@ -173,7 +173,8 @@ class TripMapActivity : AppCompatActivity() {
     private fun renderRoute(trip: Trip) {
         val pts = trip.points
         if (pts.isEmpty()) {
-            map.controller.setZoom(4.0)
+            map.controller.setZoom(5.5)
+            map.controller.setCenter(GeoPoint(13.0, 101.0)) // Thailand
             return
         }
         val geo = pts.map { GeoPoint(it.lat, it.lon) }

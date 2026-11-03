@@ -31,7 +31,7 @@ import com.google.android.material.card.MaterialCardView
 import java.util.Locale
 import java.util.concurrent.Executors
 
-/** ⛽ Nearby petrol stations with their SP95 price (Spain). Tap one → navigation, shown on the dash. */
+/** ⛽ Nearby petrol stations with their 95 price (Thailand, or Spain). Tap one → navigation, shown on the dash. */
 class FuelActivity : AppCompatActivity() {
 
     private lateinit var list: LinearLayout
@@ -138,6 +138,14 @@ class FuelActivity : AppCompatActivity() {
         list.removeAllViews()
         if (r.outsideSpain) { sub.setText(R.string.fuel_only_spain); return }
         if (r.stations.isEmpty()) { sub.text = getString(R.string.fuel_none, r.radiusKm); return }
+        if (r.thai) {
+            // One national price for all pumps: no "cheapest", nearest first.
+            btnCheap.visibility = View.GONE; btnNear.visibility = View.GONE
+            sub.text = r.referenceBaht?.let { getString(R.string.fuel_subtitle_th, r.radiusKm, it, r.sourceTime) }
+                ?: getString(R.string.fuel_subtitle_th_noprice, r.radiusKm)
+            r.stations.take(20).forEach { list.addView(card(it, false)) }
+            return
+        }
         sub.text = getString(R.string.fuel_subtitle, r.radiusKm, r.sourceTime.substringAfter(' ').substringBeforeLast(':').ifBlank { r.sourceTime })
         val cheapest = r.stations.minOf { it.price }
         val shown = (if (byDistance) r.stations.sortedBy { it.distanceM } else r.stations).take(15)
@@ -175,7 +183,11 @@ class FuelActivity : AppCompatActivity() {
         row.addView(col, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         val right = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; gravity = Gravity.END }
         right.addView(TextView(this).apply {
-            text = String.format(Locale.getDefault(), "%.3f €", s.price)
+            text = when {
+                s.price.isNaN() -> "—"
+                result?.thai == true -> String.format(Locale.getDefault(), "≈ %.2f ฿", s.price)
+                else -> String.format(Locale.getDefault(), "%.3f €", s.price)
+            }
             textSize = 20f
             setTextColor(gold)
             typeface = ResourcesCompat.getFont(context, R.font.archivo_black)

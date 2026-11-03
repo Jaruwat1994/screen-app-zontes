@@ -63,7 +63,9 @@ class TrafficLightsActivity : AppCompatActivity() {
             setMultiTouchControls(true)
             setUseDataConnection(true)
             controller.setZoom(13.0)
-            controller.setCenter(GeoPoint(41.3874, 2.1686))
+            // Where the rider last was, else Bangkok (the trips recentre it once they load).
+            val last = RideExtras.lastLocation(this@TrafficLightsActivity, 30L * 24 * 3600_000L)
+            controller.setCenter(last?.let { GeoPoint(it.latitude, it.longitude) } ?: GeoPoint(13.7563, 100.5018))
         }
         // The map scrolls itself; don't let the page steal its drags.
         map.setOnTouchListener { v, e ->

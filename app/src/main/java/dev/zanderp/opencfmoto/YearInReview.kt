@@ -108,7 +108,7 @@ object YearInReview {
         out += Card(arrayOf("🌅", "☀️", "🌙")[s.timeOfDay], ctx.getString(tod), ctx.getString(R.string.yir_tod), "")
         if (s.liters != null) {
             out += Card("⛽", String.format(loc, "%.0f L", s.liters), ctx.getString(R.string.yir_fuel),
-                s.euros?.let { String.format(loc, "%.0f €", it) } ?: "")
+                s.euros?.let { String.format(loc, "%.0f %s", it, Maintenance.currency) } ?: "")
         }
         out += Card(ZONE, "", ctx.getString(R.string.yir_zone), ctx.getString(R.string.yir_zone_sub))
         return out

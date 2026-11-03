@@ -101,7 +101,7 @@
     <!-- v2.2 home (proposal A) -->
     <string name="home_tile_trips">ทริป</string>
     <string name="home_tile_fuel">น้ำมัน</string>
-    <string name="home_tile_fuel_sub">SP95 ใกล้ ๆ</string>
+    <string name="home_tile_fuel_sub">แก๊สโซฮอล์ 95 ใกล้ ๆ</string>
     <string name="home_tile_maint">การบำรุงรักษา</string>
     <string name="home_tile_tl">ไฟจราจร</string>
     <string name="home_tile_live">เส้นทางสด</string>
