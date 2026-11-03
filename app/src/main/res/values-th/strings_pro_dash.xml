@@ -20,4 +20,6 @@
     <string name="pro_time">เวลาขับ</string>
     <string name="pro_max">สูงสุด km/h</string>
     <string name="pro_maint">บำรุงรักษา</string>
+    <string name="pro_fuel">น้ำมัน (ประมาณ)</string>
+    <string name="pro_alt">ความสูง</string>
 </resources>

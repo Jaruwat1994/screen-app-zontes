@@ -30,8 +30,13 @@ object DashLayout {
         0xFFFF8A65.toInt(), 0xFFFF6B5E.toInt(), 0xFFF1F4EC.toInt(),
     )
 
-    /** GRID = the widget tiles below; PRO = the full gauge cluster ([ProDashView]). */
-    enum class Style { GRID, PRO }
+    /** GRID = the widget tiles below; the rest are looks of the full gauge cluster ([ProDashView]). */
+    enum class Style(val label: Int) {
+        GRID(R.string.dl_style_grid), PRO(R.string.dl_style_pro), CYBER(R.string.dl_style_cyber),
+        DRAGON(R.string.dl_style_dragon), RACING(R.string.dl_style_racing), NEON(R.string.dl_style_neon),
+        NEONCITY(R.string.dl_style_neoncity), ADVENTURE(R.string.dl_style_adventure), TOURING(R.string.dl_style_touring);
+        val isPro get() = this != GRID
+    }
 
     /**
      * [tankLiters] feeds the PRO fuel estimate (0 = unknown → no fuel gauge). The bike never

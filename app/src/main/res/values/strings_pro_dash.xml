@@ -21,4 +21,13 @@
     <string name="pro_time">ride time</string>
     <string name="pro_max">max km/h</string>
     <string name="pro_maint">Maintenance</string>
+    <string name="dl_style_cyber" translatable="false">Cyberpunk</string>
+    <string name="dl_style_dragon" translatable="false">Fantasy Dragon</string>
+    <string name="dl_style_racing" translatable="false">Tech Racing</string>
+    <string name="dl_style_neon" translatable="false">Neon Fantasy</string>
+    <string name="dl_style_neoncity" translatable="false">Cyber Neon</string>
+    <string name="dl_style_adventure" translatable="false">Adventure</string>
+    <string name="dl_style_touring" translatable="false">Sport Touring</string>
+    <string name="pro_fuel">Fuel (est.)</string>
+    <string name="pro_alt">Altitude</string>
 </resources>

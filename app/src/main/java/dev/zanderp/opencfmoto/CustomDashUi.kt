@@ -107,9 +107,9 @@ class CustomDashUi(
 
     private fun build() {
         root.setBackgroundColor(Color.BLACK)
-        if (dash.style == DashLayout.Style.PRO) {
+        if (dash.style.isPro) {
             photo = BikeMemory.selected(ctx)?.photoPath?.let { decodePhoto(it) }
-            pro = ProDashView(ctx, dash.accent).also { root.addView(it, FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)) }
+            pro = ProDashView(ctx, dash.accent, dash.style).also { root.addView(it, FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)) }
             return
         }
         val row = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL }
@@ -239,6 +239,7 @@ class CustomDashUi(
             maxKmh = snap?.let { (it.maxSpeedMs * 3.6f).roundToInt() },
             maintenance = maintenance().takeIf { it != "—" },
             bluetoothOn = bluetoothOn(),
+            altitudeM = lastLoc?.takeIf { it.hasAltitude() }?.altitude?.roundToInt(),
         )
     }
 
@@ -246,7 +247,7 @@ class CustomDashUi(
         speedKmh = 72, clock = clock(), bikeName = BikeMemory.selected(ctx)?.name ?: "Zontes 368G", photo = photo,
         bikeVolts = 13.7f, phoneTempC = 36, fuel = 0.6f, rangeKm = 270, odoKm = 4863.0, tripKm = 92.4,
         heading = "NE", avgKmh = 54, rideTime = "1:42", maxKmh = 108, maintenance = maintenance().takeIf { it != "—" },
-        bluetoothOn = true,
+        bluetoothOn = true, altitudeM = 214,
     )
 
     private fun proBook(): ProBook {

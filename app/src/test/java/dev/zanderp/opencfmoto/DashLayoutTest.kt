@@ -29,6 +29,8 @@ class DashLayoutTest {
         assertEquals(DashLayout.Style.PRO, l.style)
         assertEquals(12.5f, l.tankLiters)
         assertEquals(DashLayout.Style.GRID, DashLayout.parse(null, null, "NOPE", null).style)
+        assertEquals(DashLayout.Style.NEON, DashLayout.parse(null, null, "NEON", null).style)
+        assertEquals(true, DashLayout.Style.RACING.isPro)
         assertEquals(60f, DashLayout.parse(null, null, null, 500f).tankLiters)
     }
 

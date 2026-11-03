@@ -68,7 +68,8 @@ class DashLayoutActivity : AppCompatActivity() {
         body.addView(text(getString(R.string.dl_hint), 13f, R.color.text_secondary))
 
         // Preview: the real dash view at the panel's pixel size, scaled down to the screen width.
-        val (pw, ph) = PREVIEW_W to PREVIEW_H
+        // The rider's own panel when the bike is known (368 1024×425, 125X 800×416), else the 368.
+        val (pw, ph) = KnownDashes.panelFor(null, this) ?: (PREVIEW_W to PREVIEW_H)
         preview?.release()
         val ui = CustomDashUi(this, layout, ph, projected = false).also { preview = it; it.bind() }
         val frame = FrameLayout(this)
@@ -85,16 +86,19 @@ class DashLayoutActivity : AppCompatActivity() {
 
         // Screen style: widget tiles or the Pro gauge cluster.
         body.addView(section(getString(R.string.dl_style)))
-        val styles = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        for ((st, label) in listOf(DashLayout.Style.GRID to R.string.dl_style_grid, DashLayout.Style.PRO to R.string.dl_style_pro)) {
-            styles.addView(MaterialButton(this).apply {
-                text = getString(label)
-                alpha = if (this@DashLayoutActivity.layout.style == st) 1f else 0.45f
-                setOnClickListener { update(this@DashLayoutActivity.layout.copy(style = st)) }
-            }, LinearLayout.LayoutParams(0, WRAP_CONTENT, 1f).apply { marginEnd = dp(8) })
+        for (chunk in DashLayout.Style.entries.chunked(3)) {
+            val styles = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            for (st in chunk) {
+                styles.addView(MaterialButton(this).apply {
+                    text = getString(st.label)
+                    textSize = 12f
+                    alpha = if (this@DashLayoutActivity.layout.style == st) 1f else 0.45f
+                    setOnClickListener { update(this@DashLayoutActivity.layout.copy(style = st)) }
+                }, LinearLayout.LayoutParams(0, WRAP_CONTENT, 1f).apply { marginEnd = dp(8) })
+            }
+            body.addView(styles)
         }
-        body.addView(styles)
-        if (layout.style == DashLayout.Style.PRO) {
+        if (layout.style.isPro) {
             body.addView(text(getString(R.string.dl_pro_hint), 13f, R.color.text_secondary).apply { setPadding(0, dp(8), 0, 0) })
             body.addView(section(getString(R.string.dl_tank)))
             body.addView(android.widget.EditText(this).apply {

@@ -18,6 +18,9 @@ object BikePicker {
         Z368G("Zontes 368G", "368"),
         Z368K("Zontes 368K", "368"),
         Z368E("Zontes 368E", "368"),
+        Z368D("Zontes 368D", "368"),
+        // Screen size not logged yet: automatic until a 150X log gives its panel.
+        Z150X("Zontes 150X", null),
         OTHER("", null),
     }
 
