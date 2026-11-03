@@ -15,8 +15,8 @@
     <string name="crash_close">Cerrar</string>
     <string name="crash_sms_someone">El motorista</string>
     <string name="crash_sms_no_location">ubicación desconocida</string>
-    <string name="crash_sms_body">🆘 RideScreen AA: %1$s puede haber sufrido una caída en moto y no responde desde hace %2$d s. Ubicación: %3$s (%4$s). Mensaje automático.</string>
-    <string name="crash_sms_followup">🆘 RideScreen AA, actualización: %1$s sigue sin responder (primer aviso tras %2$d s). Ubicación ahora: %3$s (%4$s). Mensaje automático.</string>
+    <string name="crash_sms_body">🆘 ZRide Screen: %1$s puede haber sufrido una caída en moto y no responde desde hace %2$d s. Ubicación: %3$s (%4$s). Mensaje automático.</string>
+    <string name="crash_sms_followup">🆘 ZRide Screen, actualización: %1$s sigue sin responder (primer aviso tras %2$d s). Ubicación ahora: %3$s (%4$s). Mensaje automático.</string>
     <string name="crash_sms_test_prefix">[PRUEBA, ignóralo]</string>
     <string name="crash_title">Detector de caídas (experimental)</string>
     <string name="crash_how">Mientras vas en moto, el móvil vigila si hay un golpe fuerte y después la moto y el móvil se quedan quietos. Entonces suena una alarma de 60 s en el móvil y en el reloj. Si nadie pulsa «Estoy bien», envía un SMS a hasta 3 contactos con un enlace al mapa de dónde estás, y otro 5 minutos después. Nunca llama a emergencias por su cuenta.</string>
@@ -77,7 +77,7 @@
     <string name="tv_speed_fast">Rápido ×4 (sin sonido)</string>
     <string name="tv_make">Crear el vídeo</string>
     <string name="tv_making">Creando el vídeo… puedes salir de esta pantalla: te aviso con una notificación cuando esté listo.</string>
-    <string name="tv_done">Listo: guardado en Películas/RideScreen AA</string>
+    <string name="tv_done">Listo: guardado en Películas/ZRide Screen</string>
     <string name="tv_save_failed">El vídeo se ha creado pero no se ha podido guardar en la galería.</string>
     <string name="tv_failed">No se ha podido crear el vídeo (%1$s).</string>
     <string name="tv_open">Ver</string>
@@ -98,7 +98,7 @@
     <string name="qr_camera_failed">La cámara no arranca en este móvil. Usa «Importar QR desde una foto» con una captura o foto del QR de la pantalla.</string>
     <!-- Was only in English (and Catalan) since v2: Spanish users saw "Connect when a Bluetooth device joins". -->
     <string name="setup_bt_trigger">Conectar cuando se conecte un dispositivo Bluetooth</string>
-    <string name="setup_bt_trigger_desc">Opcional. Elige el Bluetooth del cuadro (en Zontes empieza por «ZT»), el mando del casco o el reloj; emparéjalo antes en Android. Cuando se conecte, RideScreen AA conectará sola con la moto guardada.</string>
+    <string name="setup_bt_trigger_desc">Opcional. Elige el Bluetooth del cuadro (en Zontes empieza por «ZT»), el mando del casco o el reloj; emparéjalo antes en Android. Cuando se conecte, ZRide Screen conectará sola con la moto guardada.</string>
     <string name="setup_bt_trigger_pick">Elige un dispositivo emparejado</string>
     <string name="setup_bt_trigger_none">Desactivado</string>
     <string name="setup_bt_trigger_set">Activador: %1$s</string>
@@ -134,10 +134,10 @@
         <item quantity="other">%1$d hoy</item>
     </plurals>
     <string name="bt_trigger_wifi_off_title">%1$s encendida, pero el Wi‑Fi del móvil está apagado</string>
-    <string name="bt_trigger_wifi_off_text">Toca para activar el Wi‑Fi: RideScreen AA conectará sola.</string>
+    <string name="bt_trigger_wifi_off_text">Toca para activar el Wi‑Fi: ZRide Screen conectará sola.</string>
     <string name="help_update_watch">⌚ Actualizar la app del reloj</string>
     <string name="wear_update_title">Actualizar la app del reloj</string>
-    <string name="wear_update_body">El móvil envía la app nueva al reloj por Bluetooth y tú confirmas la instalación en el reloj. El reloj tiene que estar conectado y tener RideScreen AA 2.2 o posterior (las versiones anteriores hay que instalarlas a mano una última vez).</string>
+    <string name="wear_update_body">El móvil envía la app nueva al reloj por Bluetooth y tú confirmas la instalación en el reloj. El reloj tiene que estar conectado y tener ZRide Screen 2.2 o posterior (las versiones anteriores hay que instalarlas a mano una última vez).</string>
     <string name="wear_update_latest">Última versión</string>
     <string name="wear_update_pick">Elegir APK…</string>
     <string name="wear_update_downloading">Descargando la app del reloj…</string>

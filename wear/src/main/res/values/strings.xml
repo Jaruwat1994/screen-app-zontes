@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">RideScreen AA</string>
+    <string name="app_name">ZRide Screen</string>
     <string name="status_no_phone">No data from phone</string>
     <string name="status_streaming">● Connected to dash</string>
     <string name="status_reconnecting">● Reconnecting…</string>
@@ -39,6 +39,6 @@
     <string name="tile_tap_directions">Tap: open, then 🅿️ for directions</string>
     <string name="tile_last_ride">LAST RIDE</string>
     <string name="tile_no_data">No rides yet</string>
-    <string name="complication_label">RideScreen · km</string>
+    <string name="complication_label">ZRide Screen · km</string>
     <string name="complication_desc">ride km</string>
 </resources>

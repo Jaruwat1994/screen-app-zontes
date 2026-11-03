@@ -15,8 +15,8 @@
     <string name="crash_close">Chiudi</string>
     <string name="crash_sms_someone">Il motociclista</string>
     <string name="crash_sms_no_location">posizione sconosciuta</string>
-    <string name="crash_sms_body">🆘 RideScreen AA: %1$s potrebbe essere caduto con la moto e non risponde da %2$d s. Posizione: %3$s (%4$s). Messaggio automatico.</string>
-    <string name="crash_sms_followup">🆘 RideScreen AA, aggiornamento: %1$s non ha ancora risposto (primo avviso dopo %2$d s). Posizione ora: %3$s (%4$s). Messaggio automatico.</string>
+    <string name="crash_sms_body">🆘 ZRide Screen: %1$s potrebbe essere caduto con la moto e non risponde da %2$d s. Posizione: %3$s (%4$s). Messaggio automatico.</string>
+    <string name="crash_sms_followup">🆘 ZRide Screen, aggiornamento: %1$s non ha ancora risposto (primo avviso dopo %2$d s). Posizione ora: %3$s (%4$s). Messaggio automatico.</string>
     <string name="crash_sms_test_prefix">[PROVA, ignora]</string>
     <string name="crash_title">Rilevamento cadute (sperimentale)</string>
     <string name="crash_how">Mentre guidi, il telefono controlla se c\'è un urto forte seguito dalla moto e dal telefono fermi. In quel caso fa suonare un allarme per 60 s sul telefono e sull\'orologio. Se nessuno tocca \"Sto bene\", invia un SMS a fino a 3 contatti con un link alla mappa di dove sei, e di nuovo 5 minuti dopo. Non chiama mai da solo i servizi di emergenza.</string>
@@ -77,7 +77,7 @@
     <string name="tv_speed_fast">Veloce ×4 (senza audio)</string>
     <string name="tv_make">Crea il video</string>
     <string name="tv_making">Creazione del video… puoi uscire da questa schermata, una notifica ti avvisa quando è pronto.</string>
-    <string name="tv_done">Fatto: salvato in Movies/RideScreen AA</string>
+    <string name="tv_done">Fatto: salvato in Movies/ZRide Screen</string>
     <string name="tv_save_failed">Il video è stato creato ma non è stato possibile salvarlo nella galleria.</string>
     <string name="tv_failed">Impossibile creare il video (%1$s).</string>
     <string name="tv_open">Guarda</string>
@@ -127,10 +127,10 @@
         <item quantity="other">%1$d oggi</item>
     </plurals>
     <string name="bt_trigger_wifi_off_title">%1$s è accesa, ma il Wi‑Fi del telefono è spento</string>
-    <string name="bt_trigger_wifi_off_text">Tocca per attivare il Wi‑Fi: RideScreen AA si collegherà da sola.</string>
+    <string name="bt_trigger_wifi_off_text">Tocca per attivare il Wi‑Fi: ZRide Screen si collegherà da sola.</string>
     <string name="help_update_watch">⌚ Aggiorna l\'app dell\'orologio</string>
     <string name="wear_update_title">Aggiorna l\'app dell\'orologio</string>
-    <string name="wear_update_body">Il telefono invia la nuova app dell\'orologio via Bluetooth e tu confermi l\'installazione sull\'orologio. L\'orologio deve essere collegato e avere RideScreen AA 2.2 o successiva (le versioni più vecchie vanno ancora installate a mano una volta).</string>
+    <string name="wear_update_body">Il telefono invia la nuova app dell\'orologio via Bluetooth e tu confermi l\'installazione sull\'orologio. L\'orologio deve essere collegato e avere ZRide Screen 2.2 o successiva (le versioni più vecchie vanno ancora installate a mano una volta).</string>
     <string name="wear_update_latest">Ultima versione</string>
     <string name="wear_update_pick">Scegli APK…</string>
     <string name="wear_update_downloading">Download dell\'app dell\'orologio…</string>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">RideScreen AA</string>
+    <string name="app_name">ZRide Screen</string>
     <string name="about_copyright">© 2026 Alexandru</string>
     <string name="about_copyright_body">ดูแลโดย Alexandru (zanderp) ซอฟต์แวร์เสรีภายใต้ GNU AGPL v3 หรือใหม่กว่า — ดู LICENSE และ NOTICE ในรีโพสิทอรีสำหรับข้อความลิขสิทธิ์และการระบุที่มาฉบับเต็ม</string>
     <string name="about_license_body">คุณสามารถใช้ ศึกษา แบ่งปัน และแก้ไขแอปนี้ได้ภายใต้ AGPL หากคุณเผยแพร่เวอร์ชันที่แก้ไขแล้ว (รวมถึงในรูปแบบบริการผ่านเครือข่าย) คุณต้องเปิดเผยซอร์สโค้ดที่สอดคล้องกันทั้งหมดภายใต้สัญญาอนุญาตเดียวกัน</string>
     <string name="about_credits">สร้างต่อยอดจากผลงานของชุมชน open-cfmoto:\n\n• dcoletto / coletz — งาน QR &amp; EasyConn ต้นฉบับ\n• BojanJ — การผสานตัวรับ Android Auto\n• richardbizik — รองรับ 1000 MT‑X\n• ionutradu252 / open-cflink — ปุ่มที่แฮนด์, ขอบจอ, การเชื่อมต่อใหม่ &amp; การเก็บรายละเอียด\n• eugen0309 — การเชื่อมต่อ Wi‑Fi Direct / CL‑C450\n• Martin Escudero (martinescudero) — การรองรับ head unit server ของ Android Auto 17.4+\n• Glifaus — การรักษาการเชื่อมต่อ Wi‑Fi Direct (keep-alive)\n• sashop2001 — AA DPI, ทริกเกอร์ Bluetooth, ภาษาบัลแกเรีย\n• Authoritt — บันทึกภาคสนามเรื่องข้อมูลการใช้งานของรถ\n• headunit-revived — ระบบฉายภาพ Android Auto (AGPL)\n\nและทุกคนที่ทดสอบรถ แชร์บันทึก (log) และรายงานปัญหา</string>
-    <string name="about_disclaimer">RideScreen AA เป็นโปรเจกต์อิสระของชุมชน ไม่มีส่วนเกี่ยวข้อง ไม่ได้รับการรับรอง และไม่ได้รับการสนับสนุนจาก CFMOTO, Carbit, Google, Android Auto หรือแบรนด์อื่นที่ใช้หน้าปัดแบบ EasyConnect (รวมถึง Voge, Zontes, Moto Morini, Benelli, Rieju, QJ Motor, Morbidelli, Longjia และ Kove) CFMOTO, MotoPlay, EasyConn, Carbit, Android, Android Auto และเครื่องหมายที่เกี่ยวข้องเป็นเครื่องหมายการค้าของเจ้าของแต่ละราย ใช้งานโดยยอมรับความเสี่ยงเอง — ตั้งเส้นทางให้เรียบร้อยก่อนออกขับขี่</string>
-    <string name="supported_bikes_intro">ใช้งานได้กับ CFMoto MotoPlay / EasyConnect และหน้าปัดอื่นที่ใช้เฟรมเวิร์ก Carbit ซึ่งแสดง QR สำหรับจับคู่ ไม่ต้องใช้ T‑BOX ใช้ได้ทั้งในสหรัฐฯ และประเทศอื่น — หากเห็น QR ลองกด เชื่อมต่อ ได้เลย</string>
+    <string name="about_disclaimer">ZRide Screen เป็นโปรเจกต์อิสระของชุมชน ไม่มีส่วนเกี่ยวข้อง ไม่ได้รับการรับรอง และไม่ได้รับการสนับสนุนจาก CFMOTO, Carbit, Google, Android Auto หรือแบรนด์อื่นที่ใช้หน้าปัดแบบ EasyConnect (รวมถึง Voge, Zontes, Moto Morini, Benelli, Rieju, QJ Motor, Morbidelli, Longjia และ Kove) CFMOTO, MotoPlay, EasyConn, Carbit, Android, Android Auto และเครื่องหมายที่เกี่ยวข้องเป็นเครื่องหมายการค้าของเจ้าของแต่ละราย ใช้งานโดยยอมรับความเสี่ยงเอง — ตั้งเส้นทางให้เรียบร้อยก่อนออกขับขี่</string>
+    <string name="supported_bikes_intro">ทำมาสำหรับหน้าปัด Zontes ที่แสดง QR สำหรับจับคู่ (Carbit / EasyConnect) ไม่ต้องใช้ T‑BOX เห็น QR แล้วกด เชื่อมต่อ ได้เลย</string>
     <string name="supported_bikes_confirmed_title">ยืนยันแล้วโดยชุมชน OpenCfMoto</string>
     <string name="supported_bikes_confirmed">CFMoto: 800MT (MT‑X / Explore / Explore GT / Ibex 800) · 1000 MT‑X · 800NK (US CRCP) · 800NK Advanced · 675NK · 675SR‑R · 700MT Adventure · 450MT · 450SR (+ SR‑S / TC) · 450CL‑C / CL‑C450 · 450NK · สกู๊ตเตอร์ 150SC · CFORCE 850 / 1000 · GOES Terrox 1000 / Gladiator G3 1000\nอื่นๆ: Voge DS800 Rally / DS900X · Moto Morini X-Cape 649 / 700 / Seiemmezzo · Benelli TRK 702 / 702X · Rieju 307 · Morbidelli T1002VX / T352X · QJ Motor SRK800RR / SRK450RR / SRK250RD / SRT 600 / SRV600</string>
     <string name="supported_bikes_other_title">แบรนด์อื่น (Carbit / EasyConnect)</string>
@@ -15,7 +15,7 @@
     <string name="supported_bikes_full">เนกเก็ต:  125NK · 450NK · 675NK · 800NK · 800NK Advanced · 800NK Sport · 800NK (US CRCP)\nสปอร์ต:  300SR · 450SR · 450SR‑S · 450SR TC · 500SR VOOM · 675SR · 675SR‑R\nทัวริ่ง / แอดเวนเจอร์:  450MT · 700MT · 700MT Adventure · 800MT‑X · 800MT Explore · 800MT Explore GT · 1000 MT‑X\nครุยเซอร์:  450CL‑C · CL‑C450\nสกู๊ตเตอร์:  150SC\nATV / SSV (TFT):  CFORCE 800 · CFORCE 850 Touring · CFORCE 1000 · CFORCE 1000 Touring · GOES Terrox 1000 / Gladiator G3 1000\nอื่นๆ:  U10 Pro (หากหน้าปัดมี QR)</string>
     <string name="supported_bikes_unlikely_title">มักไม่มี QR สำหรับฉายภาพ</string>
     <string name="supported_bikes_unlikely">800MT Sport · 800MT Touring · 450SR World Champion Edition · 700CL‑X (Adventure / Heritage / Sport) · PAPIO — เว้นแต่หน้าปัดของคุณจะแสดง QR อยู่ดี</string>
-    <string name="supported_bikes_footer">รายการ OpenCfMoto ต้นฉบับ: github.com/zanderp/open-cfmoto → docs/SUPPORTED-BIKES.md รายงานผลและรถรุ่นใหม่สำหรับ RideScreen AA: github.com/mgb1982/ridescreen-aa/issues</string>
+    <string name="supported_bikes_footer">รายการ OpenCfMoto ต้นฉบับ: github.com/zanderp/open-cfmoto → docs/SUPPORTED-BIKES.md รายงานผลและรถรุ่นใหม่สำหรับ ZRide Screen: github.com/Jaruwat1994/screen-app-zontes/issues</string>
     <string name="about_about">เกี่ยวกับ</string>
     <string name="about_wireless_android_auto_for_carbit_easyconnect_das">Android Auto ไร้สายสำหรับหน้าปัด Carbit / EasyConnect (CFMoto MotoPlay และหน้าปัดตระกูลเดียวกัน)</string>
     <string name="about_community_support">ชุมชน &amp; การสนับสนุน</string>
@@ -45,7 +45,7 @@
     <string name="setup_aa_dpi_desc">อัตโนมัติจะใช้โปรไฟล์ของรถ DPI ที่สูงขึ้นทำให้ Maps / ส่วนติดต่อของ AA ใหญ่ขึ้น (มีประโยชน์หากตัวอักษรบนจอ TFT เล็กเกินไป)</string>
     <string name="setup_aa_dpi_auto">อัตโนมัติ</string>
     <string name="setup_bt_trigger">เชื่อมต่อเมื่ออุปกรณ์ Bluetooth เชื่อมต่อเข้ามา</string>
-    <string name="setup_bt_trigger_desc">ไม่บังคับ จับคู่อุปกรณ์ทริกเกอร์ก่อน (รีโมตหมวกกันน็อก นาฬิกา) ครั้งถัดไปที่อุปกรณ์เชื่อมต่อ RideScreen AA จะเริ่มเชื่อมต่อโดยใช้รถที่บันทึกไว้</string>
+    <string name="setup_bt_trigger_desc">ไม่บังคับ จับคู่อุปกรณ์ทริกเกอร์ก่อน (รีโมตหมวกกันน็อก นาฬิกา) ครั้งถัดไปที่อุปกรณ์เชื่อมต่อ ZRide Screen จะเริ่มเชื่อมต่อโดยใช้รถที่บันทึกไว้</string>
     <string name="setup_bt_trigger_pick">เลือกอุปกรณ์ที่จับคู่แล้ว</string>
     <string name="setup_bt_trigger_none">ปิด</string>
     <string name="setup_bt_trigger_set">ทริกเกอร์: %1$s</string>
@@ -197,7 +197,7 @@
     <string name="gpx_downloading_roadside_poi">กำลังดาวน์โหลด POI ริมทาง…</string>
     <string name="gpx_no_roadside_poi_in_corridor">ไม่มี POI ริมทางในแนวเส้นทาง</string>
     <string name="gpx_roadside_poi_count">POI ริมทาง: %1$d (ปั๊มน้ำมัน, ที่จอดรถ, ร้านอาหาร…)</string>
-    <string name="gpx_export_map_subject">ข้อมูลแผนที่ RideScreen AA</string>
+    <string name="gpx_export_map_subject">ข้อมูลแผนที่ ZRide Screen</string>
     <string name="gpx_export_map_chooser">ส่งออกข้อมูลแผนที่</string>
     <string name="gpx_export_failed">ส่งออกไม่สำเร็จ: %1$s</string>
     <string name="gpx_free_ride_place">ขี่อิสระ</string>
@@ -256,7 +256,7 @@
     <string name="main_search_a_place_or_address">ค้นหาสถานที่หรือที่อยู่…</string>
     <string name="main_go">ไป</string>
     <string name="main_rider_tips">เคล็ดลับสำหรับผู้ขับขี่</string>
-    <string name="main_connect_start_android_auto_on_the_dash_becomes_s">• เชื่อมต่อ — เริ่ม Android Auto บนหน้าปัด (เปลี่ยนเป็นหยุดขณะเชื่อมต่ออยู่)\n• แผนที่ — แผนที่ / GPX ของ RideScreen AA (ไม่ใช่ Google Maps) สะท้อนหน้าจอ — แสดงหน้าจอโทรศัพท์\n• ขณะเชื่อมต่อ ปุ่มแผนที่ / สะท้อนหน้าจอ ใช้สลับสิ่งที่แสดงบนหน้าปัด\n• มุมมองหน้าปัด &amp; การควบคุม — HUD บนโทรศัพท์และ D-pad / ปุ่มที่แฮนด์</string>
+    <string name="main_connect_start_android_auto_on_the_dash_becomes_s">• เชื่อมต่อ — เริ่ม Android Auto บนหน้าปัด (เปลี่ยนเป็นหยุดขณะเชื่อมต่ออยู่)\n• แผนที่ — แผนที่ / GPX ของ ZRide Screen (ไม่ใช่ Google Maps) สะท้อนหน้าจอ — แสดงหน้าจอโทรศัพท์\n• ขณะเชื่อมต่อ ปุ่มแผนที่ / สะท้อนหน้าจอ ใช้สลับสิ่งที่แสดงบนหน้าปัด\n• มุมมองหน้าปัด &amp; การควบคุม — HUD บนโทรศัพท์และ D-pad / ปุ่มที่แฮนด์</string>
     <string name="main_about_credits">เกี่ยวกับ &amp; เครดิต</string>
     <string name="main_check_for_update">ตรวจหาอัปเดต</string>
     <string name="main_report_a_problem">รายงานปัญหา</string>
@@ -264,7 +264,7 @@
     <string name="main_report_hint_problem">เกิดปัญหาอะไร</string>
     <string name="main_report_hint_bike_model">รุ่นรถ (เช่น 800NK Advanced)</string>
     <string name="main_report_hint_year">ปี (ไม่บังคับ)</string>
-    <string name="main_mirror_leave_shared_app">เปิดแอปที่แชร์ค้างไว้บนหน้าจอ (RideScreen AA ยังอยู่ในการแจ้งเตือน)</string>
+    <string name="main_mirror_leave_shared_app">เปิดแอปที่แชร์ค้างไว้บนหน้าจอ (ZRide Screen ยังอยู่ในการแจ้งเตือน)</string>
     <string name="main_share_problem_report">แชร์รายงานปัญหา</string>
     <string name="main_diagnostics">การวินิจฉัย</string>
     <string name="main_share">แชร์</string>
@@ -285,10 +285,10 @@
     <string name="margins_summary_profile_default">บน %1$d · ล่าง %2$d · ซ้าย %3$d · ขวา %4$d px (ค่าเริ่มต้นของโปรไฟล์)</string>
     <string name="margins_summary_custom">บน %1$d · ล่าง %2$d · ซ้าย %3$d · ขวา %4$d px</string>
     <string name="setup_setup_settings">การติดตั้ง &amp; การตั้งค่า</string>
-    <string name="setup_a_one_time_setup_so_android_auto_can_project_to_">ตั้งค่าครั้งเดียวเพื่อให้ Android Auto แสดงผลบนหน้าปัด CFMoto ได้ พร้อมตัวเลือกการแสดงผลและแบตเตอรี่</string>
+    <string name="setup_a_one_time_setup_so_android_auto_can_project_to_">ตั้งค่าครั้งเดียวเพื่อให้ Android Auto แสดงผลบนหน้าปัด Zontes ได้ พร้อมตัวเลือกการแสดงผลและแบตเตอรี่</string>
     <string name="setup_get_started">เริ่มต้นใช้งาน</string>
     <string name="setup_1_android_auto">1. Android Auto</string>
-    <string name="setup_android_auto_runs_maps_waze_opencfmoto_relays_it">Android Auto เป็นตัวรัน Maps/Waze ส่วน RideScreen AA จะส่งต่อหน้าจอไปยังรถ</string>
+    <string name="setup_android_auto_runs_maps_waze_opencfmoto_relays_it">Android Auto เป็นตัวรัน Maps/Waze ส่วน ZRide Screen จะส่งต่อหน้าจอไปยังรถ</string>
     <string name="setup_open_android_auto">เปิด Android Auto</string>
     <string name="setup_install_android_auto">ติดตั้ง Android Auto</string>
     <string name="setup_2_permissions">2. สิทธิ์</string>
@@ -326,7 +326,7 @@
     <string name="setup_portrait">แนวตั้ง</string>
     <string name="setup_720_1280">720×1280</string>
     <string name="setup_1080_1920">1080×1920</string>
-    <string name="setup_auto_fits_recognized_cfmoto_dashes_if_your_bike_">โหมดอัตโนมัติจะปรับให้พอดีกับหน้าปัด CFMoto ที่รู้จัก หากหน้าจอของรถมีรูปทรงต่างออกไป (เช่น จอแนวตั้งทรงสูง) หรือระบบไม่รู้จัก ให้เลือกแนวและขนาดที่ตรงกับหน้าจอ Android Auto รองรับเฉพาะขนาดคงที่เหล่านี้ ตัวเลือกการปรับขนาดหน้าจอด้านบนจึงเป็นตัวกำหนดการวางภาพ (เต็มจอ = ครอปภาพ, พอดีจอ = มีแถบขอบ, ยืดเต็มจอ = ภาพผิดสัดส่วน) HD คมชัดกว่าแต่หนักเครื่องกว่า และอาจทำให้จอดำบนหน้าปัดบางรุ่น — หากเป็นเช่นนั้นให้ลดขนาดลงหรือเลือกอัตโนมัติ</string>
+    <string name="setup_auto_fits_recognized_cfmoto_dashes_if_your_bike_">โหมดอัตโนมัติจะปรับให้พอดีกับหน้าปัด Zontes ที่รู้จัก หากหน้าจอของรถมีรูปทรงต่างออกไป (เช่น จอแนวตั้งทรงสูง) หรือระบบไม่รู้จัก ให้เลือกแนวและขนาดที่ตรงกับหน้าจอ Android Auto รองรับเฉพาะขนาดคงที่เหล่านี้ ตัวเลือกการปรับขนาดหน้าจอด้านบนจึงเป็นตัวกำหนดการวางภาพ (เต็มจอ = ครอปภาพ, พอดีจอ = มีแถบขอบ, ยืดเต็มจอ = ภาพผิดสัดส่วน) HD คมชัดกว่าแต่หนักเครื่องกว่า และอาจทำให้จอดำบนหน้าปัดบางรุ่น — หากเป็นเช่นนั้นให้ลดขนาดลงหรือเลือกอัตโนมัติ</string>
     <string name="setup_match_panel_aspect">ปรับตามสัดส่วนจอ…</string>
     <string name="setup_disable_touchscreen">ปิดใช้หน้าจอสัมผัส</string>
     <string name="setup_holds_off_desc">ปิด — ปล่อยปุ่มทุกครั้งนับเป็นการแตะ / ×2 (ใช้คู่กับระยะหน่วงแตะสองครั้งแบบยาว)</string>
@@ -442,7 +442,7 @@
     <string name="setup_share_json">แชร์ JSON</string>
     <string name="setup_import">นำเข้า…</string>
     <string name="setup_supported_bikes">รถที่รองรับ</string>
-    <string name="setup_2026_alexandru_opencfmoto_agpl_3_0">RideScreen AA · พัฒนาต่อจาก OpenCfMoto © 2026 Alexandru · AGPL‑3.0</string>
+    <string name="setup_2026_alexandru_opencfmoto_agpl_3_0">ZRide Screen · พัฒนาต่อจาก RideScreen AA (mgb1982) และ OpenCfMoto © 2026 Alexandru · AGPL‑3.0</string>
     <string name="trip_trip_computer">มาตรวัดทริป</string>
     <string name="trip_saved_trips">ทริปที่บันทึกไว้</string>
     <string name="trip_waiting_for_gps">กำลังรอ GPS…</string>
@@ -585,15 +585,15 @@
 
     <!-- Notifications -->
     <string name="notif_aa_channel">ตัวรับ Android Auto</string>
-    <string name="notif_aa_title">RideScreen AA — Android Auto</string>
+    <string name="notif_aa_title">ZRide Screen — Android Auto</string>
     <string name="notif_aa_reconnecting">กำลังเชื่อมต่อหน้าปัดรถใหม่…</string>
     <string name="notif_aa_receiving">กำลังรับ Android Auto สำหรับหน้าปัดรถ — แตะเพื่อเปิด</string>
     <string name="notif_bike_reconnected">เชื่อมต่อรถใหม่แล้ว</string>
     <string name="notif_tap_resume">แตะเพื่อแสดงบนหน้าปัดต่อ</string>
-    <string name="notif_map_title">แผนที่ RideScreen AA</string>
+    <string name="notif_map_title">แผนที่ ZRide Screen</string>
     <string name="notif_map_text">แผนที่บนหน้าปัด — ปุ่มที่แฮนด์ทำงานตามการตั้งค่าปุ่มของคุณ</string>
     <string name="notif_mirror_channel">สะท้อนหน้าจอ</string>
-    <string name="notif_mirror_title">RideScreen AA</string>
+    <string name="notif_mirror_title">ZRide Screen</string>
     <string name="notif_mirror_text">กำลังสะท้อนหน้าจอไปที่รถ</string>
     <string name="notif_media_channel">ควบคุมด้วยปุ่มบนรถ</string>
     <string name="notif_media_title">ควบคุม Android Auto</string>
@@ -633,7 +633,7 @@
     <!-- Privacy / anonymous telemetry -->
     <string name="setup_privacy">ความเป็นส่วนตัว</string>
     <string name="setup_anonymous_telemetry">ข้อมูลการใช้งาน &amp; รายงานข้อขัดข้องแบบไม่ระบุตัวตน</string>
-    <string name="setup_anonymous_telemetry_desc">ส่ง ID อุปกรณ์แบบสุ่ม เวอร์ชันแอป และข้อความข้อขัดข้อง/ข้อผิดพลาด (ถ้ามี) ไปยังโปรเจกต์ RideScreen AA เพื่อให้เราทราบว่ามีโทรศัพท์ใช้แอปกี่เครื่องและแก้ไขข้อขัดข้องได้ ไม่มีบัญชี ไม่มีเส้นทาง GPS ไม่มีรหัสผ่าน Wi‑Fi ไม่มีชื่อรถ ปิด = ไม่อัปโหลดอะไรเลย</string>
+    <string name="setup_anonymous_telemetry_desc">ส่ง ID อุปกรณ์แบบสุ่ม เวอร์ชันแอป และข้อความข้อขัดข้อง/ข้อผิดพลาด (ถ้ามี) ไปยังโปรเจกต์ ZRide Screen เพื่อให้เราทราบว่ามีโทรศัพท์ใช้แอปกี่เครื่องและแก้ไขข้อขัดข้องได้ ไม่มีบัญชี ไม่มีเส้นทาง GPS ไม่มีรหัสผ่าน Wi‑Fi ไม่มีชื่อรถ ปิด = ไม่อัปโหลดอะไรเลย</string>
     <string name="setup_anonymous_telemetry_on">เปิด — ส่งสัญญาณ &amp; รายงานข้อขัดข้องแบบไม่ระบุตัวตน</string>
     <string name="setup_anonymous_telemetry_off">ปิด — ไม่อัปโหลดอะไรเลย</string>
     <string name="setup_anonymous_id">ID ไม่ระบุตัวตน: %1$s</string>

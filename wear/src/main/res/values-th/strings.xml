@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">RideScreen AA</string>
+    <string name="app_name">ZRide Screen</string>
     <string name="status_no_phone">ไม่มีข้อมูลจากมือถือ</string>
     <string name="status_streaming">● เชื่อมต่อหน้าปัดแล้ว</string>
     <string name="status_reconnecting">● กำลังเชื่อมต่อใหม่…</string>
@@ -39,6 +39,6 @@
     <string name="tile_tap_directions">แตะเพื่อเปิด แล้วกด 🅿️ เพื่อดูทาง</string>
     <string name="tile_last_ride">ทริปล่าสุด</string>
     <string name="tile_no_data">ยังไม่มีทริป</string>
-    <string name="complication_label">RideScreen · km</string>
+    <string name="complication_label">ZRide Screen · km</string>
     <string name="complication_desc">ระยะทางขับขี่ km</string>
 </resources>

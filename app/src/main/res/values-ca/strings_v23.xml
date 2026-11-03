@@ -31,8 +31,8 @@ Avui: %2$d min de porta a porta · l\'habitual: %3$d min.</string>
     <string name="week_line_fuel_eur">Benzina: uns %1$s € (%2$s L)</string>
     <string name="week_line_fuel_l">Benzina: uns %1$s L</string>
     <string name="week_line_streak">🔥 Ratxa: %1$d dies seguits</string>
-    <string name="arrive_sms_home">Vaig cap a casa, arribaré cap a les %1$s (uns %2$d min). — Missatge automàtic de RideScreen AA</string>
-    <string name="arrive_sms_work">Vaig cap a la feina, arribaré cap a les %1$s (uns %2$d min). — Missatge automàtic de RideScreen AA</string>
+    <string name="arrive_sms_home">Vaig cap a casa, arribaré cap a les %1$s (uns %2$d min). — Missatge automàtic de ZRide Screen</string>
+    <string name="arrive_sms_work">Vaig cap a la feina, arribaré cap a les %1$s (uns %2$d min). — Missatge automàtic de ZRide Screen</string>
     <string name="arrive_sent">📨 %1$s ja sap que arribes cap a les %2$s</string>
     <string name="arrive_who">📨 Avisar en sortir: %1$s</string>
     <string name="arrive_none">📨 Avisar algú en sortir…</string>
@@ -102,7 +102,7 @@ Avui: %2$d min de porta a porta · l\'habitual: %3$d min.</string>
     <string name="tv_style">Estil</string>
     <string name="tv_map">Mapa</string>
     <string name="tv_cards">Portada i tancament (títol, mapa i resum)</string>
-    <string name="tv_watermark">«Fet amb RideScreen AA» al tancament</string>
+    <string name="tv_watermark">«Fet amb ZRide Screen» al tancament</string>
     <string name="tv_speed_title">Velocitat</string>
     <string name="tv_sync_title">Sincronització de les dades</string>
     <string name="tv_sync_help">Si la velocitat o el mapa van avançats o endarrerits respecte a la imatge, ajusta\'ls aquí. S\'aplica a tots els clips i la previsualització en mostra el resultat.</string>
@@ -124,7 +124,7 @@ Avui: %2$d min de porta a porta · l\'habitual: %3$d min.</string>
     <string name="tvl_time">TEMPS</string>
     <string name="tvl_avg">MITJANA</string>
     <string name="tvl_max">MÀXIMA</string>
-    <string name="tvl_watermark">Fet amb RideScreen AA</string>
+    <string name="tvl_watermark">Fet amb ZRide Screen</string>
     <string name="tv_made_title">Vídeos que has creat d\'aquest viatge</string>
     <string name="tv_button_made">🎬 Vídeo · %1$d creat(s)</string>
     <string name="conn_detail_hus_wedged">Android Auto s\'ha quedat penjat al mòbil: accepta la connexió però no respon. Reinicia\'n el servidor (botó de sota: ⋮ → Stop head unit server i després Start head unit server) i torna a Connectar.</string>
@@ -161,9 +161,9 @@ Avui: %2$d min de porta a porta · l\'habitual: %3$d min.</string>
     <string name="bike_picker_other">Una altra moto (ajust automàtic)</string>
     <string name="bike_picker_menu">Model de moto…</string>
     <string name="stat_speed_now">ara mateix</string>
-    <string name="remote_service_label">RideScreen AA · comandament del manillar</string>
+    <string name="remote_service_label">ZRide Screen · comandament del manillar</string>
     <string name="remote_service_summary">Permet que el comandament del manillar que triïs controli Android Auto al quadre.</string>
-    <string name="remote_service_desc">Només llegeix les tecles del comandament que vas triar a RideScreen AA → Controls, i només mentre Android Auto és al quadre. No llegeix la pantalla, el que escrius ni altres apps. Els altres comandaments, la moto i l’intercomunicador continuen funcionant com sempre.</string>
+    <string name="remote_service_desc">Només llegeix les tecles del comandament que vas triar a ZRide Screen → Controls, i només mentre Android Auto és al quadre. No llegeix la pantalla, el que escrius ni altres apps. Els altres comandaments, la moto i l’intercomunicador continuen funcionant com sempre.</string>
     <string name="remote_dedicated_title">Comandament només per a Android Auto</string>
     <string name="remote_dedicated_desc">Tria un comandament Bluetooth de manillar: mentre Android Auto és al quadre, els seus botons es mouen per Android Auto (+/− amunt/avall, ‹/› esquerra/dreta, central = OK, mantenir = inici, doble = enrere) i mai toquen la música ni el volum. L’intercomunicador continua controlant la música.</string>
     <string name="remote_dedicated_pick">Triar comandament…</string>
@@ -173,7 +173,7 @@ Avui: %2$d min de porta a porta · l\'habitual: %3$d min.</string>
     <string name="remote_dedicated_ready">✓ %1$s controla Android Auto.</string>
     <string name="remote_dedicated_no_devices">No hi ha cap comandament connectat. Aparella’l als ajustos de Bluetooth d’Android, prem qualsevol botó i torna-ho a provar. (Els intercomunicadors i auriculars no surten aquí: continuen controlant la música).</string>
     <string name="remote_dedicated_remove">Treure</string>
-    <string name="remote_dedicated_service_explain">Perquè el comandament funcioni amb el mòbil bloquejat, activa «RideScreen AA · comandament del manillar» a Accessibilitat. Només llegeix les tecles d’aquest comandament mentre Android Auto és al quadre.</string>
+    <string name="remote_dedicated_service_explain">Perquè el comandament funcioni amb el mòbil bloquejat, activa «ZRide Screen · comandament del manillar» a Accessibilitat. Només llegeix les tecles d’aquest comandament mentre Android Auto és al quadre.</string>
     <string name="help_interfaces">💡 Quadre original sense desconnectar</string>
     <string name="help_interfaces_title">💡 Quadre original sense desconnectar</string>
     <string name="help_interfaces_body">Connecta a la interfície de screen mirroring del quadre com sempre (a la 125X, la 3). Quan ja surti Android Auto al quadre, pots passar a una altra interfície per veure el quadre original: l\'app segueix connectada, registra el viatge i Android Auto continua funcionant per darrere.\n\nEn tornar a la interfície de screen mirroring, Android Auto apareix a l\'instant.\n\nEl quadre només encén la seva Wi‑Fi en aquesta interfície, així que la primera connexió sempre s\'ha de fer allà.</string>
@@ -184,12 +184,12 @@ Avui: %2$d min de porta a porta · l\'habitual: %3$d min.</string>
     <string name="conn_detail_dash_no_media">El quadre no demana la imatge: posa\'l a la interfície de screen mirroring (a la 125X, la 3) i toca Connectar (si continua igual, apaga i encén el contacte)</string>
     <string name="conn_detail_dash_no_media_retry">Esperant el quadre: posa\'l a la interfície de screen mirroring</string>
     <string name="ext_control_title">Comandament amb Key Mapper o Tasker</string>
-    <string name="ext_control_desc">Per a un comandament de manillar que només faci servir Android Auto (i l\'intercomunicador segueixi amb la música): a Key Mapper (Play Store) activa el mode expert amb Shizuku perquè funcioni amb la pantalla apagada, i assigna a cada botó l\'acció Intent → Broadcast receiver amb un d\'aquests noms. RideScreen només els obeeix mentre Android Auto és al quadre. També serveixen Tasker i MacroDroid.</string>
+    <string name="ext_control_desc">Per a un comandament de manillar que només faci servir Android Auto (i l\'intercomunicador segueixi amb la música): a Key Mapper (Play Store) activa el mode expert amb Shizuku perquè funcioni amb la pantalla apagada, i assigna a cada botó l\'acció Intent → Broadcast receiver amb un d\'aquests noms. ZRide Screen només els obeeix mentre Android Auto és al quadre. També serveixen Tasker i MacroDroid.</string>
     <string name="ext_control_switch">Acceptar accions d\'altres apps</string>
     <string name="ext_control_copy">Copiar noms d\'accions</string>
     <string name="ext_control_copied">Copiat</string>
     <string name="xiaomi_autostart_title">Connexió automàtica a Xiaomi</string>
-    <string name="xiaomi_autostart_body">Als mòbils Xiaomi, Redmi i POCO, RideScreen AA només pot arrencar sola quan es connecta el Bluetooth de la moto si té activat l\'«Inici automàtic».\n\nActiva\'l per a RideScreen AA a la pantalla següent. Ja que hi ets, posa l\'estalvi de bateria a «Sense restriccions».</string>
+    <string name="xiaomi_autostart_body">Als mòbils Xiaomi, Redmi i POCO, ZRide Screen només pot arrencar sola quan es connecta el Bluetooth de la moto si té activat l\'«Inici automàtic».\n\nActiva\'l per a ZRide Screen a la pantalla següent. Ja que hi ets, posa l\'estalvi de bateria a «Sense restriccions».</string>
     <string name="xiaomi_autostart_open">Obre la configuració</string>
     <string name="stat_clock_fix">00:00? toca</string>
     <string name="clock_fix_title">Posar en hora el quadre</string>
@@ -201,7 +201,7 @@ Avui: %2$d min de porta a porta · l\'habitual: %3$d min.</string>
     <string name="pke_entry">🔋 Bateria (caixa del keyless)</string>
     <string name="pke_title">Bateria de la moto</string>
     <string name="pke_code_title">Codi del keyless (PKE)</string>
-    <string name="pke_code_body">Per llegir la bateria per Bluetooth, escriu el codi PKE de la teva moto. El tens a l\'app oficial Zontes Smart → gestió de motos, sota la moto. Només lectura: RideScreen no bloqueja, desbloqueja ni canvia res a la moto.</string>
+    <string name="pke_code_body">Per llegir la bateria per Bluetooth, escriu el codi PKE de la teva moto. El tens a l\'app oficial Zontes Smart → gestió de motos, sota la moto. Només lectura: ZRide Screen no bloqueja, desbloqueja ni canvia res a la moto.</string>
     <string name="pke_code_invalid">Escriu el codi PKE (només números)</string>
     <string name="pke_change_code">Canvia el codi</string>
     <string name="pke_reading">Llegint la caixa del keyless per Bluetooth… la moto ha d\'estar a prop.</string>

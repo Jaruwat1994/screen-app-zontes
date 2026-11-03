@@ -36,6 +36,6 @@
     <string name="tile_tap_directions">Toca i després 🅿️ per arribar-hi</string>
     <string name="tile_last_ride">ÚLTIM VIATGE</string>
     <string name="tile_no_data">Encara no hi ha viatges</string>
-    <string name="complication_label">RideScreen · km</string>
+    <string name="complication_label">ZRide Screen · km</string>
     <string name="complication_desc">km del viatge</string>
 </resources>

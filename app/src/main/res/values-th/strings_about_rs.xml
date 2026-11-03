@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="rs_about_tagline">Android Auto ไร้สายบนหน้าปัดรถของคุณ (หน้าปัด Carbit/EasyConnect) พร้อมการแก้ไขและฟีเจอร์เสริมสำหรับ Zontes 125X / ZT125T-X พัฒนาต่อยอดจาก OpenCfMoto</string>
-    <string name="rs_about_community">มีคำถาม บันทึก (log) หรือรถรุ่นใหม่? เปิด issue บน GitHub หรือถามในกลุ่ม เงินสนับสนุนช่วยครอบคลุมค่าใช้จ่าย</string>
+    <string name="rs_about_tagline">Android Auto ไร้สายบนหน้าปัด Zontes ทำมาเพื่อผู้ขับขี่ไทย พัฒนาต่อยอดจาก RideScreen AA และ OpenCfMoto</string>
+    <string name="rs_about_community">มีคำถาม ส่ง log หรือรถมีปัญหา? เปิด issue บน GitHub</string>
     <string name="rs_about_issues">GitHub</string>
-    <string name="rs_about_copyright">© 2026 Alexandru (zanderp), OpenCfMoto\n© 2026 Manel (mgb1982), RideScreen AA</string>
-    <string name="rs_about_copyright_body">RideScreen AA ดูแลโดย Manel (mgb1982) เป็นงานต่อยอดจาก OpenCfMoto, © 2026 Alexandru (zanderp) และเช่นเดียวกับต้นฉบับ เป็นซอฟต์แวร์เสรีภายใต้ GNU AGPL v3 หรือใหม่กว่า: ดู LICENSE และ NOTICE ใน repository</string>
+    <string name="rs_about_copyright">© 2026 Alexandru (zanderp), OpenCfMoto\n© 2026 Manel (mgb1982), RideScreen AA\n© 2026 Chaixi, ZRide Screen</string>
+    <string name="rs_about_copyright_body">ZRide Screen ดูแลโดย Chaixi เป็นงานต่อยอดจาก RideScreen AA, © 2026 Manel (mgb1982) ซึ่งต่อยอดจาก OpenCfMoto, © 2026 Alexandru (zanderp) และเช่นเดียวกับต้นฉบับ เป็นซอฟต์แวร์เสรีภายใต้ GNU AGPL v3 หรือใหม่กว่า: ดู LICENSE และ NOTICE ใน repository</string>
     <string name="rs_about_original">โปรเจกต์ต้นฉบับ: OpenCfMoto (zanderp)</string>
-    <string name="rs_about_source">ซอร์สโค้ดของ RideScreen AA</string>
+    <string name="rs_about_source">ซอร์สโค้ดของ ZRide Screen</string>
     <string name="rs_about_credits">• Alexandru (zanderp) — ผู้สร้าง OpenCfMoto แอปที่ RideScreen AA สร้างต่อยอดขึ้นมา ขอบคุณมาก!\n• Manel (mgb1982) — RideScreen AA: แก้นาฬิกาหน้าปัด แอป Wear OS ดีไซน์ใหม่ ฟีเจอร์เสริมสำหรับทริป\n\nOpenCfMoto เองก็สร้างต่อยอดจากชุมชน open-cfmoto:\n• dcoletto / coletz — งาน QR &amp; EasyConn ต้นฉบับ\n• BojanJ — การผสานตัวรับ Android Auto\n• richardbizik — รองรับ 1000 MT‑X\n• ionutradu252 / open-cflink — ปุ่มที่แฮนด์, ขอบจอ, การเชื่อมต่อใหม่ &amp; การเก็บรายละเอียด\n• eugen0309 — การเชื่อมต่อ Wi‑Fi Direct / CL‑C450\n• Martin Escudero (martinescudero) — การรองรับ head unit server ของ Android Auto 17.4+\n• Glifaus — การรักษาการเชื่อมต่อ Wi‑Fi Direct (keep-alive)\n• sashop2001 — AA DPI, ทริกเกอร์ Bluetooth, ภาษาบัลแกเรีย\n• Authoritt — บันทึกภาคสนามเรื่องข้อมูลการใช้งานของรถ\n• headunit-revived — ระบบฉายภาพ Android Auto (AGPL)\n\nและทุกคนที่ทดสอบรถ แชร์บันทึก (log) และรายงานปัญหา\n\nผู้สนับสนุนบน Ko-fi — ขอบคุณ!\n• Francisco Javier S.\n• José Antonio R.\n• Raul\n• ผู้สนับสนุนที่ไม่ประสงค์ออกนาม 3 ท่าน</string>
     <string name="rs_thanks_title">ขอบคุณ Alexandru</string>
     <string name="rs_thanks_body">RideScreen AA เกิดขึ้นได้เพราะ OpenCfMoto ที่สร้างโดย Alexandru (zanderp) การเชื่อมต่อกับหน้าปัด Android Auto ไร้สาย แผนที่ การควบคุม และแทบทุกอย่างที่แอปนี้ทำได้ เป็นผลงานของเขาและชุมชน open-cfmoto ที่เขารวบรวมขึ้นมา RideScreen AA เพียงเพิ่มบางอย่างต่อยอดเท่านั้น หากแอปนี้มีประโยชน์กับคุณ โปรดสนับสนุนเขาด้วย</string>

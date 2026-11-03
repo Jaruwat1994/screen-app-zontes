@@ -31,8 +31,8 @@ Today: %2$d min door to door · usual: %3$d min.</string>
     <string name="week_line_fuel_eur">Fuel: about %1$s € (%2$s L)</string>
     <string name="week_line_fuel_l">Fuel: about %1$s L</string>
     <string name="week_line_streak">🔥 Streak: %1$d days in a row</string>
-    <string name="arrive_sms_home">On my way home, I\'ll be there around %1$s (about %2$d min). — automatic message from RideScreen AA</string>
-    <string name="arrive_sms_work">On my way to work, I\'ll be there around %1$s (about %2$d min). — automatic message from RideScreen AA</string>
+    <string name="arrive_sms_home">On my way home, I\'ll be there around %1$s (about %2$d min). — automatic message from ZRide Screen</string>
+    <string name="arrive_sms_work">On my way to work, I\'ll be there around %1$s (about %2$d min). — automatic message from ZRide Screen</string>
     <string name="arrive_sent">📨 %1$s knows you\'ll arrive around %2$s</string>
     <string name="arrive_who">📨 Tell when I set off: %1$s</string>
     <string name="arrive_none">📨 Tell someone when I set off…</string>
@@ -102,7 +102,7 @@ Today: %2$d min door to door · usual: %3$d min.</string>
     <string name="tv_style">Style</string>
     <string name="tv_map">Map</string>
     <string name="tv_cards">Opening and closing cards (title, map and summary)</string>
-    <string name="tv_watermark">«Made with RideScreen AA» on the closing card</string>
+    <string name="tv_watermark">«Made with ZRide Screen» on the closing card</string>
     <string name="tv_speed_title">Speed</string>
     <string name="tv_sync_title">Syncing the data</string>
     <string name="tv_sync_help">If the speed or the map run ahead of or behind the picture, shift them here. It applies to every clip and the preview shows the result.</string>
@@ -124,7 +124,7 @@ Today: %2$d min door to door · usual: %3$d min.</string>
     <string name="tvl_time">TIME</string>
     <string name="tvl_avg">AVERAGE</string>
     <string name="tvl_max">TOP SPEED</string>
-    <string name="tvl_watermark">Made with RideScreen AA</string>
+    <string name="tvl_watermark">Made with ZRide Screen</string>
     <string name="tv_made_title">Videos you\'ve made of this trip</string>
     <string name="tv_button_made">🎬 Video · %1$d made</string>
     <string name="conn_detail_hus_wedged">Android Auto on the phone got stuck: it took the connection but doesn\'t answer. Restart its head unit server (button below: ⋮ → Stop head unit server, then Start head unit server) and tap Connect again.</string>
@@ -161,9 +161,9 @@ Today: %2$d min door to door · usual: %3$d min.</string>
     <string name="bike_picker_other">Other bike (automatic setup)</string>
     <string name="bike_picker_menu">Bike model…</string>
     <string name="stat_speed_now">right now</string>
-    <string name="remote_service_label">RideScreen AA · handlebar remote</string>
+    <string name="remote_service_label">ZRide Screen · handlebar remote</string>
     <string name="remote_service_summary">Lets your chosen handlebar remote drive Android Auto on the dash.</string>
-    <string name="remote_service_desc">Only reads the keys of the remote you chose in RideScreen AA → Controls, and only while Android Auto is on the dash. It does not read the screen, what you type or other apps. Other remotes, the bike and your intercom keep working as usual.</string>
+    <string name="remote_service_desc">Only reads the keys of the remote you chose in ZRide Screen → Controls, and only while Android Auto is on the dash. It does not read the screen, what you type or other apps. Other remotes, the bike and your intercom keep working as usual.</string>
     <string name="remote_dedicated_title">Remote only for Android Auto</string>
     <string name="remote_dedicated_desc">Pick a Bluetooth handlebar remote: while Android Auto is on the dash, its buttons move around Android Auto (+/− up/down, ‹/› left/right, centre = OK, hold = home, double = back) and never touch music or volume. Your intercom keeps controlling the music.</string>
     <string name="remote_dedicated_pick">Choose remote…</string>
@@ -173,7 +173,7 @@ Today: %2$d min door to door · usual: %3$d min.</string>
     <string name="remote_dedicated_ready">✓ %1$s drives Android Auto.</string>
     <string name="remote_dedicated_no_devices">No remote connected. Pair it in Android Bluetooth settings, press any of its buttons and try again. (Intercoms and headsets don’t appear here: they keep controlling music.)</string>
     <string name="remote_dedicated_remove">Remove</string>
-    <string name="remote_dedicated_service_explain">For the remote to work with the phone locked, turn on «RideScreen AA · handlebar remote» in Accessibility. It only reads that remote’s keys while Android Auto is on the dash.</string>
+    <string name="remote_dedicated_service_explain">For the remote to work with the phone locked, turn on «ZRide Screen · handlebar remote» in Accessibility. It only reads that remote’s keys while Android Auto is on the dash.</string>
     <string name="help_interfaces">💡 Original dash while connected</string>
     <string name="help_interfaces_title">💡 Original dash while connected</string>
     <string name="help_interfaces_body">Connect on the dash\'s screen mirroring interface as usual (on the 125X, screen 3). Once Android Auto is on the dash you can switch to another interface to see the bike\'s original dash: the app stays connected and keeps logging the ride, and Android Auto keeps running in the background.\n\nGo back to the screen mirroring interface and Android Auto is there straight away.\n\nThe dash only turns on its Wi‑Fi on that interface, so the first connection always has to be made there.</string>
@@ -184,12 +184,12 @@ Today: %2$d min door to door · usual: %3$d min.</string>
     <string name="conn_detail_dash_no_media">The dash isn\'t asking for the picture: put it on its screen mirroring interface (screen 3 on the 125X) and tap Connect (if it still won\'t, switch the ignition off and on)</string>
     <string name="conn_detail_dash_no_media_retry">Waiting for the dash: put it on its screen mirroring interface</string>
     <string name="ext_control_title">Remote with Key Mapper or Tasker</string>
-    <string name="ext_control_desc">For a handlebar remote that only drives Android Auto (the intercom keeps the music): in Key Mapper (Play Store), turn on Expert mode with Shizuku so it works with the screen off, and map each button to the action Intent → Broadcast receiver with one of these names. RideScreen only obeys them while Android Auto is on the dash. Tasker and MacroDroid work too.</string>
+    <string name="ext_control_desc">For a handlebar remote that only drives Android Auto (the intercom keeps the music): in Key Mapper (Play Store), turn on Expert mode with Shizuku so it works with the screen off, and map each button to the action Intent → Broadcast receiver with one of these names. ZRide Screen only obeys them while Android Auto is on the dash. Tasker and MacroDroid work too.</string>
     <string name="ext_control_switch">Accept actions from other apps</string>
     <string name="ext_control_copy">Copy action names</string>
     <string name="ext_control_copied">Copied</string>
     <string name="xiaomi_autostart_title">Connect by itself on Xiaomi</string>
-    <string name="xiaomi_autostart_body">On Xiaomi, Redmi and POCO phones, RideScreen AA can only start by itself when the bike\'s Bluetooth connects if «Autostart» is on.\n\nTurn it on for RideScreen AA on the next screen. While you\'re there, set battery saver to «No restrictions».</string>
+    <string name="xiaomi_autostart_body">On Xiaomi, Redmi and POCO phones, ZRide Screen can only start by itself when the bike\'s Bluetooth connects if «Autostart» is on.\n\nTurn it on for ZRide Screen on the next screen. While you\'re there, set battery saver to «No restrictions».</string>
     <string name="xiaomi_autostart_open">Open settings</string>
     <string name="stat_clock_fix">check ⚠ tap</string>
     <string name="clock_fix_title">Set the dash clock</string>
@@ -201,7 +201,7 @@ Today: %2$d min door to door · usual: %3$d min.</string>
     <string name="pke_entry">🔋 Battery (keyless box)</string>
     <string name="pke_title">Bike battery</string>
     <string name="pke_code_title">Keyless code (PKE)</string>
-    <string name="pke_code_body">To read the battery over Bluetooth, type your bike\'s PKE code. You\'ll find it in the official Zontes Smart app → vehicle management, under the bike. Read only: RideScreen never locks, unlocks or changes anything on the bike.</string>
+    <string name="pke_code_body">To read the battery over Bluetooth, type your bike\'s PKE code. You\'ll find it in the official Zontes Smart app → vehicle management, under the bike. Read only: ZRide Screen never locks, unlocks or changes anything on the bike.</string>
     <string name="pke_code_invalid">Enter the PKE code (digits only)</string>
     <string name="pke_change_code">Change code</string>
     <string name="pke_reading">Reading the keyless box over Bluetooth… the bike must be nearby.</string>

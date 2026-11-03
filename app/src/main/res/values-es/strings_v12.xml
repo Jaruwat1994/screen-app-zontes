@@ -18,7 +18,7 @@
     <string name="parked_pill_dist">🅿️ Tu moto · %1$s · %2$s</string>
     <string name="parked_cleared">Aparcamiento borrado</string>
     <string name="open_failed">No se ha podido abrir</string>
-    <string name="widget_label">RideScreen · Aparcamiento</string>
+    <string name="widget_label">ZRide Screen · Aparcamiento</string>
     <string name="widget_description">Dónde está aparcada tu moto y tu último viaje</string>
     <string name="widget_parked">🅿️ Tu moto</string>
     <string name="widget_last_ride">Último viaje</string>
@@ -33,8 +33,8 @@
     <string name="share_rides">viajes</string>
     <string name="share_hours">horas en moto</string>
     <string name="share_all_title">Todo lo rodado desde %1$s</string>
-    <string name="share_footer">Android Auto en el cuadro · RideScreen AA</string>
-    <string name="share_text">Rodado con RideScreen AA 🏍️</string>
+    <string name="share_footer">Android Auto en el cuadro · ZRide Screen</string>
+    <string name="share_text">Rodado con ZRide Screen 🏍️</string>
     <string name="share_chooser">Compartir viaje</string>
     <string name="all_rides_button">🗺 Todo</string>
     <string name="all_rides_title">Todo lo rodado</string>

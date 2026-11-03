@@ -15,8 +15,8 @@
     <string name="crash_close">Close</string>
     <string name="crash_sms_someone">The rider</string>
     <string name="crash_sms_no_location">location unknown</string>
-    <string name="crash_sms_body">🆘 RideScreen AA: %1$s may have crashed their motorbike and hasn\'t answered for %2$d s. Location: %3$s (%4$s). Automatic message.</string>
-    <string name="crash_sms_followup">🆘 RideScreen AA, update: %1$s still hasn\'t answered (first alert after %2$d s). Location now: %3$s (%4$s). Automatic message.</string>
+    <string name="crash_sms_body">🆘 ZRide Screen: %1$s may have crashed their motorbike and hasn\'t answered for %2$d s. Location: %3$s (%4$s). Automatic message.</string>
+    <string name="crash_sms_followup">🆘 ZRide Screen, update: %1$s still hasn\'t answered (first alert after %2$d s). Location now: %3$s (%4$s). Automatic message.</string>
     <string name="crash_sms_test_prefix">[TEST, ignore]</string>
     <string name="crash_title">Crash detection (experimental)</string>
     <string name="crash_how">While you ride, the phone watches for a hard impact followed by the bike and the phone staying still. Then it sounds an alarm for 60 s on the phone and the watch. If nobody taps \"I\'m OK\", it texts up to 3 contacts with a map link to where you are, and again 5 minutes later. It never calls emergency services by itself.</string>
@@ -77,7 +77,7 @@
     <string name="tv_speed_fast">Fast ×4 (no sound)</string>
     <string name="tv_make">Make the video</string>
     <string name="tv_making">Making the video… you can leave this screen, a notification tells you when it\'s ready.</string>
-    <string name="tv_done">Done: saved in Movies/RideScreen AA</string>
+    <string name="tv_done">Done: saved in Movies/ZRide Screen</string>
     <string name="tv_save_failed">The video was made but couldn\'t be saved to the gallery.</string>
     <string name="tv_failed">Couldn\'t make the video (%1$s).</string>
     <string name="tv_open">Watch</string>
@@ -128,10 +128,10 @@
         <item quantity="other">%1$d today</item>
     </plurals>
     <string name="bt_trigger_wifi_off_title">%1$s is on, but your phone\'s Wi‑Fi is off</string>
-    <string name="bt_trigger_wifi_off_text">Tap to switch Wi‑Fi on: RideScreen AA will connect by itself.</string>
+    <string name="bt_trigger_wifi_off_text">Tap to switch Wi‑Fi on: ZRide Screen will connect by itself.</string>
     <string name="help_update_watch">⌚ Update the watch app</string>
     <string name="wear_update_title">Update the watch app</string>
-    <string name="wear_update_body">The phone sends the new watch app over Bluetooth, and you confirm the install on the watch. The watch must be connected and have RideScreen AA 2.2 or newer (older versions still need to be installed by hand once).</string>
+    <string name="wear_update_body">The phone sends the new watch app over Bluetooth, and you confirm the install on the watch. The watch must be connected and have ZRide Screen 2.2 or newer (older versions still need to be installed by hand once).</string>
     <string name="wear_update_latest">Latest version</string>
     <string name="wear_update_pick">Pick APK…</string>
     <string name="wear_update_downloading">Downloading the watch app…</string>

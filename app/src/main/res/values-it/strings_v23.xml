@@ -31,8 +31,8 @@ Oggi: %2$d min porta a porta · di solito: %3$d min.</string>
     <string name="week_line_fuel_eur">Carburante: circa %1$s € (%2$s L)</string>
     <string name="week_line_fuel_l">Carburante: circa %1$s L</string>
     <string name="week_line_streak">🔥 Serie: %1$d giorni di fila</string>
-    <string name="arrive_sms_home">Sto tornando a casa, arrivo verso le %1$s (circa %2$d min). — messaggio automatico di RideScreen AA</string>
-    <string name="arrive_sms_work">Sto andando al lavoro, arrivo verso le %1$s (circa %2$d min). — messaggio automatico di RideScreen AA</string>
+    <string name="arrive_sms_home">Sto tornando a casa, arrivo verso le %1$s (circa %2$d min). — messaggio automatico di ZRide Screen</string>
+    <string name="arrive_sms_work">Sto andando al lavoro, arrivo verso le %1$s (circa %2$d min). — messaggio automatico di ZRide Screen</string>
     <string name="arrive_sent">📨 %1$s sa che arriverai verso le %2$s</string>
     <string name="arrive_who">📨 Avvisa quando parto: %1$s</string>
     <string name="arrive_none">📨 Avvisa qualcuno quando parto…</string>
@@ -102,7 +102,7 @@ Oggi: %2$d min porta a porta · di solito: %3$d min.</string>
     <string name="tv_style">Stile</string>
     <string name="tv_map">Mappa</string>
     <string name="tv_cards">Apertura e chiusura (titolo, mappa e riepilogo)</string>
-    <string name="tv_watermark">«Creato con RideScreen AA» nella chiusura</string>
+    <string name="tv_watermark">«Creato con ZRide Screen» nella chiusura</string>
     <string name="tv_speed_title">Velocità</string>
     <string name="tv_sync_title">Sincronizzazione dei dati</string>
     <string name="tv_sync_help">Se la velocità o la mappa vanno avanti o indietro rispetto all\'immagine, spostale qui. Vale per tutte le clip e l\'anteprima mostra il risultato.</string>
@@ -124,7 +124,7 @@ Oggi: %2$d min porta a porta · di solito: %3$d min.</string>
     <string name="tvl_time">TEMPO</string>
     <string name="tvl_avg">MEDIA</string>
     <string name="tvl_max">VELOCITÀ MAX</string>
-    <string name="tvl_watermark">Creato con RideScreen AA</string>
+    <string name="tvl_watermark">Creato con ZRide Screen</string>
     <string name="tv_made_title">Video che hai creato di questo viaggio</string>
     <string name="tv_button_made">🎬 Video · %1$d creati</string>
     <string name="conn_detail_hus_wedged">Android Auto sul telefono si è bloccato: ha accettato il collegamento ma non risponde. Riavvia il suo server dell\'unità principale (pulsante qui sotto: ⋮ → Arresta server unità principale, poi Avvia server unità principale) e tocca di nuovo Collega.</string>
@@ -161,9 +161,9 @@ Oggi: %2$d min porta a porta · di solito: %3$d min.</string>
     <string name="bike_picker_other">Un\'altra moto (configurazione automatica)</string>
     <string name="bike_picker_menu">Modello di moto…</string>
     <string name="stat_speed_now">adesso</string>
-    <string name="remote_service_label">RideScreen AA · telecomando al manubrio</string>
+    <string name="remote_service_label">ZRide Screen · telecomando al manubrio</string>
     <string name="remote_service_summary">Permette al telecomando al manubrio che hai scelto di controllare Android Auto sul cruscotto.</string>
-    <string name="remote_service_desc">Legge solo i tasti del telecomando che hai scelto in RideScreen AA → Comandi, e solo mentre Android Auto è sul cruscotto. Non legge lo schermo, quello che scrivi né le altre app. Gli altri telecomandi, la moto e l\'interfono continuano a funzionare come sempre.</string>
+    <string name="remote_service_desc">Legge solo i tasti del telecomando che hai scelto in ZRide Screen → Comandi, e solo mentre Android Auto è sul cruscotto. Non legge lo schermo, quello che scrivi né le altre app. Gli altri telecomandi, la moto e l\'interfono continuano a funzionare come sempre.</string>
     <string name="remote_dedicated_title">Telecomando solo per Android Auto</string>
     <string name="remote_dedicated_desc">Scegli un telecomando Bluetooth al manubrio: mentre Android Auto è sul cruscotto, i suoi pulsanti si muovono in Android Auto (+/− su/giù, ‹/› sinistra/destra, centro = OK, tenere premuto = home, doppio = indietro) e non toccano mai musica né volume. L\'interfono continua a controllare la musica.</string>
     <string name="remote_dedicated_pick">Scegli il telecomando…</string>
@@ -173,7 +173,7 @@ Oggi: %2$d min porta a porta · di solito: %3$d min.</string>
     <string name="remote_dedicated_ready">✓ %1$s controlla Android Auto.</string>
     <string name="remote_dedicated_no_devices">Nessun telecomando collegato. Abbinalo nelle impostazioni Bluetooth di Android, premi uno dei suoi pulsanti e riprova. (Interfoni e auricolari non compaiono qui: continuano a controllare la musica.)</string>
     <string name="remote_dedicated_remove">Rimuovi</string>
-    <string name="remote_dedicated_service_explain">Perché il telecomando funzioni con il telefono bloccato, attiva «RideScreen AA · telecomando al manubrio» in Accessibilità. Legge solo i tasti di quel telecomando mentre Android Auto è sul cruscotto.</string>
+    <string name="remote_dedicated_service_explain">Perché il telecomando funzioni con il telefono bloccato, attiva «ZRide Screen · telecomando al manubrio» in Accessibilità. Legge solo i tasti di quel telecomando mentre Android Auto è sul cruscotto.</string>
     <string name="help_interfaces">💡 Cruscotto originale mentre sei collegato</string>
     <string name="help_interfaces_title">💡 Cruscotto originale mentre sei collegato</string>
     <string name="help_interfaces_body">Collegati come sempre sull\'interfaccia di screen mirroring del cruscotto (sulla 125X, la schermata 3). Quando Android Auto è sul cruscotto puoi passare a un\'altra interfaccia per vedere il cruscotto originale della moto: l\'app resta collegata e continua a registrare il viaggio, e Android Auto continua a funzionare in background.\n\nTorna all\'interfaccia di screen mirroring e Android Auto è subito lì.\n\nIl cruscotto accende il Wi‑Fi solo su quell\'interfaccia, quindi il primo collegamento va sempre fatto lì.</string>
@@ -184,12 +184,12 @@ Oggi: %2$d min porta a porta · di solito: %3$d min.</string>
     <string name="conn_detail_dash_no_media">Il cruscotto non chiede l\'immagine: mettilo sull\'interfaccia di screen mirroring (la schermata 3 sulla 125X) e tocca Collega (se ancora non va, spegni e riaccendi il quadro)</string>
     <string name="conn_detail_dash_no_media_retry">In attesa del cruscotto: mettilo sull\'interfaccia di screen mirroring</string>
     <string name="ext_control_title">Telecomando con Key Mapper o Tasker</string>
-    <string name="ext_control_desc">Per un telecomando al manubrio che controlli solo Android Auto (l\'interfono tiene la musica): in Key Mapper (Play Store), attiva la modalità Expert con Shizuku così funziona a schermo spento, e assegna a ogni pulsante l\'azione Intent → Broadcast receiver con uno di questi nomi. RideScreen li esegue solo mentre Android Auto è sul cruscotto. Funzionano anche Tasker e MacroDroid.</string>
+    <string name="ext_control_desc">Per un telecomando al manubrio che controlli solo Android Auto (l\'interfono tiene la musica): in Key Mapper (Play Store), attiva la modalità Expert con Shizuku così funziona a schermo spento, e assegna a ogni pulsante l\'azione Intent → Broadcast receiver con uno di questi nomi. ZRide Screen li esegue solo mentre Android Auto è sul cruscotto. Funzionano anche Tasker e MacroDroid.</string>
     <string name="ext_control_switch">Accetta azioni da altre app</string>
     <string name="ext_control_copy">Copia i nomi delle azioni</string>
     <string name="ext_control_copied">Copiato</string>
     <string name="xiaomi_autostart_title">Collegamento automatico su Xiaomi</string>
-    <string name="xiaomi_autostart_body">Sui telefoni Xiaomi, Redmi e POCO, RideScreen AA può avviarsi da sola quando si collega il Bluetooth della moto solo se «Avvio automatico» è attivo.\n\nAttivalo per RideScreen AA nella schermata successiva. Già che ci sei, imposta il risparmio batteria su «Nessuna restrizione».</string>
+    <string name="xiaomi_autostart_body">Sui telefoni Xiaomi, Redmi e POCO, ZRide Screen può avviarsi da sola quando si collega il Bluetooth della moto solo se «Avvio automatico» è attivo.\n\nAttivalo per ZRide Screen nella schermata successiva. Già che ci sei, imposta il risparmio batteria su «Nessuna restrizione».</string>
     <string name="xiaomi_autostart_open">Apri le impostazioni</string>
     <string name="stat_clock_fix">00:00? tocca</string>
     <string name="clock_fix_title">Regola l\'orologio del cruscotto</string>
@@ -201,7 +201,7 @@ Oggi: %2$d min porta a porta · di solito: %3$d min.</string>
     <string name="pke_entry">🔋 Batteria (scatola keyless)</string>
     <string name="pke_title">Batteria della moto</string>
     <string name="pke_code_title">Codice keyless (PKE)</string>
-    <string name="pke_code_body">Per leggere la batteria via Bluetooth, scrivi il codice PKE della tua moto. Lo trovi nell\'app ufficiale Zontes Smart → gestione moto, sotto la moto. Sola lettura: RideScreen non blocca, sblocca né cambia nulla sulla moto.</string>
+    <string name="pke_code_body">Per leggere la batteria via Bluetooth, scrivi il codice PKE della tua moto. Lo trovi nell\'app ufficiale Zontes Smart → gestione moto, sotto la moto. Sola lettura: ZRide Screen non blocca, sblocca né cambia nulla sulla moto.</string>
     <string name="pke_code_invalid">Scrivi il codice PKE (solo numeri)</string>
     <string name="pke_change_code">Cambia il codice</string>
     <string name="pke_reading">Lettura della scatola keyless via Bluetooth… la moto deve essere vicina.</string>

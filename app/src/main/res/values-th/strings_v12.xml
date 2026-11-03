@@ -18,7 +18,7 @@
     <string name="parked_pill_dist">🅿️ รถของคุณ · %1$s · %2$s</string>
     <string name="parked_cleared">ล้างจุดจอดรถแล้ว</string>
     <string name="open_failed">เปิดไม่ได้</string>
-    <string name="widget_label">RideScreen · จุดจอดรถ</string>
+    <string name="widget_label">ZRide Screen · จุดจอดรถ</string>
     <string name="widget_description">ตำแหน่งที่จอดรถไว้ และทริปล่าสุด</string>
     <string name="widget_parked">🅿️ รถของคุณ</string>
     <string name="widget_last_ride">ทริปล่าสุด</string>
@@ -33,8 +33,8 @@
     <string name="share_rides">ทริป</string>
     <string name="share_hours">ชั่วโมงขับขี่</string>
     <string name="share_all_title">ทุกเส้นทางที่ฉันขับขี่ตั้งแต่ %1$s</string>
-    <string name="share_footer">Android Auto บนหน้าปัด · RideScreen AA</string>
-    <string name="share_text">ขับขี่ด้วย RideScreen AA 🏍️</string>
+    <string name="share_footer">Android Auto บนหน้าปัด · ZRide Screen</string>
+    <string name="share_text">ขับขี่ด้วย ZRide Screen 🏍️</string>
     <string name="share_chooser">แชร์ทริป</string>
     <string name="all_rides_button">🗺 ทั้งหมด</string>
     <string name="all_rides_title">ทุกเส้นทางที่ฉันขับขี่</string>

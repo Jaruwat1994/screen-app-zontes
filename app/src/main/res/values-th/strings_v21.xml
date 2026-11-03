@@ -9,7 +9,7 @@
     <string name="conn_detail_bike_wifi_not_found">หา Wi‑Fi ของรถไม่พบ: เปิดรถและตั้งหน้าปัดไปที่หน้าสะท้อนหน้าจอ (หน้าจอ 3 บน 125X) แล้วกด เชื่อมต่อ</string>
     <string name="wifi_picker_hint">หาก Android ขอให้เชื่อมต่อกับ %1$s ให้แตะ เชื่อมต่อ: นั่นคือ Wi‑Fi ของรถคุณ</string>
     <string name="wifi_off_title">เปิด Wi‑Fi</string>
-    <string name="wifi_off_message">RideScreen AA เชื่อมต่อกับรถผ่าน Wi‑Fi แต่ Wi‑Fi ของโทรศัพท์ปิดอยู่ ให้เปิดไว้ (ไม่ต้องเข้าร่วมเครือข่ายใด) แล้ว เชื่อมต่อ จะทำงานต่อเอง</string>
+    <string name="wifi_off_message">ZRide Screen เชื่อมต่อกับรถผ่าน Wi‑Fi แต่ Wi‑Fi ของโทรศัพท์ปิดอยู่ ให้เปิดไว้ (ไม่ต้องเข้าร่วมเครือข่ายใด) แล้ว เชื่อมต่อ จะทำงานต่อเอง</string>
     <string name="wifi_off_turn_on">เปิด Wi‑Fi</string>
     <string name="fuel_title">ปั๊มน้ำมันใกล้เคียง</string>
     <string name="fuel_pill">⛽ ปั๊มน้ำมันใกล้เคียง (ราคา 95)</string>
@@ -17,7 +17,7 @@
     <string name="fuel_sort_distance">ใกล้ที่สุด</string>
     <string name="fuel_locating">กำลังหาตำแหน่งของคุณ…</string>
     <string name="fuel_loading">กำลังโหลดราคา…</string>
-    <string name="fuel_no_location">ยังไม่มีตำแหน่ง: อนุญาตตำแหน่งให้ RideScreen AA และเปิด GPS</string>
+    <string name="fuel_no_location">ยังไม่มีตำแหน่ง: อนุญาตตำแหน่งให้ ZRide Screen และเปิด GPS</string>
     <string name="fuel_offline">โหลดราคาไม่ได้ ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง</string>
     <string name="fuel_only_spain">ขณะนี้มีราคาน้ำมันเฉพาะในสเปนเท่านั้น</string>
     <string name="fuel_none">ไม่มีปั๊มที่มี 95 ในระยะ %1$d km</string>
@@ -78,7 +78,7 @@
     <string name="bt_trigger_title">%1$s เปิดอยู่</string>
     <string name="bt_trigger_text">แตะเพื่อเชื่อมต่อกับหน้าปัด</string>
     <string name="mic_perm_title">ไมโครโฟนสำหรับคำสั่งเสียง</string>
-    <string name="mic_perm_message">หากต้องการใช้ \"Ok Google\" ปุ่มเสียงของอินเตอร์คอม หรือนาฬิกาขณะเชื่อมต่อ RideScreen AA ต้องใช้ไมโครโฟน\n\nเลือก \"ขณะใช้แอป\" หากเลือก \"เฉพาะครั้งนี้\" หรือ \"ถามทุกครั้ง\" คำสั่งเสียงอาจหยุดทำงานระหว่างขี่</string>
+    <string name="mic_perm_message">หากต้องการใช้ \"Ok Google\" ปุ่มเสียงของอินเตอร์คอม หรือนาฬิกาขณะเชื่อมต่อ ZRide Screen ต้องใช้ไมโครโฟน\n\nเลือก \"ขณะใช้แอป\" หากเลือก \"เฉพาะครั้งนี้\" หรือ \"ถามทุกครั้ง\" คำสั่งเสียงอาจหยุดทำงานระหว่างขี่</string>
     <string name="mic_perm_allow">อนุญาต</string>
     <string name="mic_perm_settings">เปิดการตั้งค่า</string>
     <string name="mic_perm_not_now">ไม่ใช่ตอนนี้</string>

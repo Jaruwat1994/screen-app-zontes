@@ -13,7 +13,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "dev.zanderp.opencfmoto"
+        applicationId = "th.co.chaixi.zridescreen"
         minSdk = 30          // Wear OS 3 (Galaxy Watch 4 and newer)
         targetSdk = 36
         versionCode = 1
@@ -30,10 +30,13 @@ android {
         }
         create("play") {
             dimension = "store"
-            applicationId = "io.github.mgb1982.ridescreen"
         }
     }
 
+    // ZRide Screen release key: -PzrideKeystore=/path/zride-release.jks -PzrideKeystorePassword=…
+    // (kept outside the repo, e.g. in $GRADLE_USER_HOME/gradle.properties; CI writes it from secrets).
+    // Without it, release builds fall back to the debug key.
+    val zrideKeystore = (project.findProperty("zrideKeystore") as String?)?.takeIf { file(it).exists() }
     signingConfigs {
         create("debugRelease") {
             storeFile = file("${System.getProperty("user.home")}/.android/debug.keystore")
@@ -41,12 +44,18 @@ android {
             keyAlias = "androiddebugkey"
             keyPassword = "android"
         }
+        if (zrideKeystore != null) create("zride") {
+            storeFile = file(zrideKeystore)
+            storePassword = project.findProperty("zrideKeystorePassword") as String
+            keyAlias = "zride"
+            keyPassword = project.findProperty("zrideKeystorePassword") as String
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("debugRelease")
+            signingConfig = signingConfigs.getByName(if (zrideKeystore != null) "zride" else "debugRelease")
         }
     }
     compileOptions {

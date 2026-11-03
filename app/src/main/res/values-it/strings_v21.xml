@@ -9,7 +9,7 @@
     <string name="conn_detail_bike_wifi_not_found">Non trovo il Wi‑Fi della moto: accendi la moto e metti il cruscotto sull\'interfaccia di screen mirroring (la schermata 3 sulla 125X), poi tocca Collega</string>
     <string name="wifi_picker_hint">Se Android chiede di collegarsi a %1$s, tocca Collega: è il Wi‑Fi della tua moto</string>
     <string name="wifi_off_title">Attiva il Wi‑Fi</string>
-    <string name="wifi_off_message">RideScreen AA si collega alla moto via Wi‑Fi e il Wi‑Fi del telefono è spento. Attivalo (non serve collegarsi a nessuna rete) e Collega prosegue da solo.</string>
+    <string name="wifi_off_message">ZRide Screen si collega alla moto via Wi‑Fi e il Wi‑Fi del telefono è spento. Attivalo (non serve collegarsi a nessuna rete) e Collega prosegue da solo.</string>
     <string name="wifi_off_turn_on">Attiva il Wi‑Fi</string>
     <string name="fuel_title">Benzina vicino</string>
     <string name="fuel_pill">⛽ Benzina vicino (prezzo 95)</string>
@@ -17,7 +17,7 @@
     <string name="fuel_sort_distance">Più vicina</string>
     <string name="fuel_locating">Ricerca della tua posizione…</string>
     <string name="fuel_loading">Recupero dei prezzi…</string>
-    <string name="fuel_no_location">Ancora nessuna posizione: consenti la posizione a RideScreen AA e attiva il GPS.</string>
+    <string name="fuel_no_location">Ancora nessuna posizione: consenti la posizione a ZRide Screen e attiva il GPS.</string>
     <string name="fuel_offline">Impossibile ottenere i prezzi. Controlla la connessione e riprova.</string>
     <string name="fuel_only_spain">Per ora i prezzi dei carburanti sono disponibili solo in Spagna.</string>
     <string name="fuel_none">Nessun distributore con la 95 entro %1$d km.</string>
@@ -78,7 +78,7 @@
     <string name="bt_trigger_title">%1$s è accesa</string>
     <string name="bt_trigger_text">Tocca per collegarti al cruscotto</string>
     <string name="mic_perm_title">Microfono per i comandi vocali</string>
-    <string name="mic_perm_message">Per usare \"Ok Google\", il pulsante vocale dell\'interfono o l\'orologio mentre sei collegato, RideScreen AA ha bisogno del microfono.\n\nScegli \"Mentre usi l\'app\". Con \"Solo questa volta\" o \"Chiedi ogni volta\" la voce può smettere di funzionare a metà viaggio.</string>
+    <string name="mic_perm_message">Per usare \"Ok Google\", il pulsante vocale dell\'interfono o l\'orologio mentre sei collegato, ZRide Screen ha bisogno del microfono.\n\nScegli \"Mentre usi l\'app\". Con \"Solo questa volta\" o \"Chiedi ogni volta\" la voce può smettere di funzionare a metà viaggio.</string>
     <string name="mic_perm_allow">Consenti</string>
     <string name="mic_perm_settings">Apri le impostazioni</string>
     <string name="mic_perm_not_now">Non ora</string>

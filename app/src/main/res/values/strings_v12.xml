@@ -18,7 +18,7 @@
     <string name="parked_pill_dist">🅿️ Your bike · %1$s · %2$s</string>
     <string name="parked_cleared">Parking spot cleared</string>
     <string name="open_failed">Couldn\'t open it</string>
-    <string name="widget_label">RideScreen · Parking</string>
+    <string name="widget_label">ZRide Screen · Parking</string>
     <string name="widget_description">Where your bike is parked, and your last ride</string>
     <string name="widget_parked">🅿️ Your bike</string>
     <string name="widget_last_ride">Last ride</string>
@@ -33,8 +33,8 @@
     <string name="share_rides">rides</string>
     <string name="share_hours">hours riding</string>
     <string name="share_all_title">Everything I\'ve ridden since %1$s</string>
-    <string name="share_footer">Android Auto on the dash · RideScreen AA</string>
-    <string name="share_text">Ridden with RideScreen AA 🏍️</string>
+    <string name="share_footer">Android Auto on the dash · ZRide Screen</string>
+    <string name="share_text">Ridden with ZRide Screen 🏍️</string>
     <string name="share_chooser">Share ride</string>
     <string name="all_rides_button">🗺 All</string>
     <string name="all_rides_title">Everything I\'ve ridden</string>

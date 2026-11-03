@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="support_button">❤ สนับสนุนโปรเจกต์</string>
-    <string name="support_title">สนับสนุน RideScreen AA</string>
+    <string name="support_title">สนับสนุน ZRide Screen</string>
     <string name="support_title_play">เลี้ยงฉัน…</string>
-    <string name="support_body">RideScreen AA ใช้ฟรีและไม่มีโฆษณา หากแอปช่วยให้ทริปของคุณดีขึ้น คุณเลี้ยงกาแฟฉันสักแก้วเพื่อช่วยค่าใช้จ่ายได้ (เช่น บัญชีนักพัฒนา Google Play) ขอบคุณ!</string>
+    <string name="support_body">ZRide Screen ใช้ฟรีและไม่มีโฆษณา หากแอปช่วยให้ทริปของคุณดีขึ้น คุณเลี้ยงกาแฟฉันสักแก้วเพื่อช่วยค่าใช้จ่ายได้ (เช่น บัญชีนักพัฒนา Google Play) ขอบคุณ!</string>
     <string name="support_kofi">เลี้ยงกาแฟฉัน (Ko-fi)</string>
     <string name="support_original">สนับสนุนผู้สร้าง OpenCfMoto</string>
     <string name="support_later">ไว้ทีหลัง</string>

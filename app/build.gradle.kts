@@ -16,7 +16,7 @@ android {
     val abiFilter = (project.findProperty("abi") as String?)?.trim().orEmpty()
 
     defaultConfig {
-        applicationId = "dev.zanderp.opencfmoto"
+        applicationId = "th.co.chaixi.zridescreen"
         minSdk = 29
         targetSdk = 36
         versionCode = 77
@@ -60,9 +60,9 @@ android {
     }
 
     // Two distribution channels (see docs/PLAY-STORE.md):
-    //  github — what the groups install from GitHub Releases: original applicationId, in-app
+    //  github — what riders install from GitHub Releases: applicationId th.co.chaixi.zridescreen, in-app
     //           update check, Ko-fi link. One ABI (APK size).
-    //  play   — Google Play: own applicationId, no self-update (Play policy), donations through
+    //  play   — Google Play: same applicationId, no self-update (Play policy), donations through
     //           Google Play Billing (Play forbids external payment links), all ABIs (the AAB is split by Play).
     flavorDimensions += "store"
     productFlavors {
@@ -80,19 +80,28 @@ android {
         }
         create("play") {
             dimension = "store"
-            applicationId = "io.github.mgb1982.ridescreen"
             buildConfigField("String", "STORE", "\"play\"")
             buildConfigField("boolean", "SELF_UPDATE", "false")
             buildConfigField("boolean", "EXTERNAL_DONATIONS", "false")
         }
     }
 
+    // ZRide Screen release key: -PzrideKeystore=/path/zride-release.jks -PzrideKeystorePassword=…
+    // (kept outside the repo, e.g. in $GRADLE_USER_HOME/gradle.properties; CI writes it from secrets).
+    // Without it, release builds fall back to the debug key.
+    val zrideKeystore = (project.findProperty("zrideKeystore") as String?)?.takeIf { file(it).exists() }
     signingConfigs {
         create("debugRelease") {
             storeFile = file("${System.getProperty("user.home")}/.android/debug.keystore")
             storePassword = "android"
             keyAlias = "androiddebugkey"
             keyPassword = "android"
+        }
+        if (zrideKeystore != null) create("zride") {
+            storeFile = file(zrideKeystore)
+            storePassword = project.findProperty("zrideKeystorePassword") as String
+            keyAlias = "zride"
+            keyPassword = project.findProperty("zrideKeystorePassword") as String
         }
     }
 
@@ -101,7 +110,7 @@ android {
             isMinifyEnabled = slimApk
             isShrinkResources = slimApk
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("debugRelease")
+            signingConfig = signingConfigs.getByName(if (zrideKeystore != null) "zride" else "debugRelease")
         }
     }
     compileOptions {

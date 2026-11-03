@@ -15,8 +15,8 @@
     <string name="crash_close">Tanca</string>
     <string name="crash_sms_someone">El motorista</string>
     <string name="crash_sms_no_location">ubicació desconeguda</string>
-    <string name="crash_sms_body">🆘 RideScreen AA: %1$s pot haver patit una caiguda amb moto i no respon des de fa %2$d s. Ubicació: %3$s (%4$s). Missatge automàtic.</string>
-    <string name="crash_sms_followup">🆘 RideScreen AA, actualització: %1$s encara no respon (primer avís després de %2$d s). Ubicació ara: %3$s (%4$s). Missatge automàtic.</string>
+    <string name="crash_sms_body">🆘 ZRide Screen: %1$s pot haver patit una caiguda amb moto i no respon des de fa %2$d s. Ubicació: %3$s (%4$s). Missatge automàtic.</string>
+    <string name="crash_sms_followup">🆘 ZRide Screen, actualització: %1$s encara no respon (primer avís després de %2$d s). Ubicació ara: %3$s (%4$s). Missatge automàtic.</string>
     <string name="crash_sms_test_prefix">[PROVA, ignora-ho]</string>
     <string name="crash_title">Detector de caigudes (experimental)</string>
     <string name="crash_how">Mentre vas amb moto, el mòbil vigila si hi ha un cop fort i després la moto i el mòbil es queden quiets. Llavors sona una alarma de 60 s al mòbil i al rellotge. Si ningú prem «Estic bé», envia un SMS a fins a 3 contactes amb un enllaç al mapa d\'on ets, i un altre 5 minuts després. Mai no truca a emergències pel seu compte.</string>
@@ -77,7 +77,7 @@
     <string name="tv_speed_fast">Ràpid ×4 (sense so)</string>
     <string name="tv_make">Crea el vídeo</string>
     <string name="tv_making">Creant el vídeo… pots sortir d\'aquesta pantalla: t\'avisaré amb una notificació quan estigui llest.</string>
-    <string name="tv_done">Fet: desat a Pel·lícules/RideScreen AA</string>
+    <string name="tv_done">Fet: desat a Pel·lícules/ZRide Screen</string>
     <string name="tv_save_failed">El vídeo s\'ha creat però no s\'ha pogut desar a la galeria.</string>
     <string name="tv_failed">No s\'ha pogut crear el vídeo (%1$s).</string>
     <string name="tv_open">Mira\'l</string>
@@ -128,10 +128,10 @@
         <item quantity="other">%1$d avui</item>
     </plurals>
     <string name="bt_trigger_wifi_off_title">%1$s engegada, però la Wi‑Fi del mòbil està apagada</string>
-    <string name="bt_trigger_wifi_off_text">Toca per activar la Wi‑Fi: RideScreen AA connectarà sola.</string>
+    <string name="bt_trigger_wifi_off_text">Toca per activar la Wi‑Fi: ZRide Screen connectarà sola.</string>
     <string name="help_update_watch">⌚ Actualitza l\'app del rellotge</string>
     <string name="wear_update_title">Actualitza l\'app del rellotge</string>
-    <string name="wear_update_body">El mòbil envia l\'app nova al rellotge per Bluetooth i tu confirmes la instal·lació al rellotge. El rellotge ha d\'estar connectat i tenir RideScreen AA 2.2 o posterior (les versions anteriors s\'han d\'instal·lar a mà una última vegada).</string>
+    <string name="wear_update_body">El mòbil envia l\'app nova al rellotge per Bluetooth i tu confirmes la instal·lació al rellotge. El rellotge ha d\'estar connectat i tenir ZRide Screen 2.2 o posterior (les versions anteriors s\'han d\'instal·lar a mà una última vegada).</string>
     <string name="wear_update_latest">Última versió</string>
     <string name="wear_update_pick">Tria l\'APK…</string>
     <string name="wear_update_downloading">Baixant l\'app del rellotge…</string>
