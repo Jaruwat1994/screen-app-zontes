@@ -34,6 +34,23 @@ class DashLayoutTest {
         assertEquals(60f, DashLayout.parse(null, null, null, 500f).tankLiters)
     }
 
+    @Test fun gradient_and_custom_colour_round_trip() {
+        val l = DashLayout.parse("SPEED", 0xFFFF2E88.toInt(), "CYBER", 0f, 0xFF22E5FF.toInt(), customColor = true)
+        assertEquals(0xFF22E5FF.toInt(), l.accent2)
+        assertEquals(true, l.customColor)
+        assertEquals(null, DashLayout.parse("SPEED", null).accent2)
+        assertEquals(true, DashLayout.Style.CYBER.themed)
+        assertEquals(false, DashLayout.Style.PRO.themed)
+    }
+
+    @Test fun hex_parsing() {
+        assertEquals(0xFFFDC052.toInt(), ColorPicker.parseHex("#FDC052"))
+        assertEquals(0xFFFDC052.toInt(), ColorPicker.parseHex("fdc052"))
+        assertEquals(null, ColorPicker.parseHex("#FDC05"))
+        assertEquals(null, ColorPicker.parseHex("#GGC052"))
+        assertEquals("#FDC052", ColorPicker.hex(0xFFFDC052.toInt()))
+    }
+
     @Test fun fuel_estimate() {
         assertEquals(null, ProDashView.fuelLeft(0f, 3.0, 100.0))       // tank unknown
         assertEquals(null, ProDashView.fuelLeft(12f, 3.0, null))       // never refuelled

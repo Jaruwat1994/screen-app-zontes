@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cp_title">Pick a colour</string>
+    <string name="cp_solid">Colour</string>
+    <string name="cp_gradient">Gradient</string>
+    <string name="cp_apply">Use this</string>
+    <string name="cp_eyedropper">Pick a colour from the photo</string>
+    <string name="cp_eyedropper_hint">Tap the photo to take its colour</string>
+    <string name="cp_saved">My colours</string>
+    <string name="cp_add">Save this colour</string>
+    <string name="cp_delete">Delete the selected colour</string>
+    <string name="cp_theme">Theme</string>
+    <string name="cp_custom">Custom</string>
+</resources>

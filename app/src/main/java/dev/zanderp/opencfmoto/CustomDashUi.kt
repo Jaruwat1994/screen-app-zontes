@@ -109,7 +109,7 @@ class CustomDashUi(
         root.setBackgroundColor(Color.BLACK)
         if (dash.style.isPro) {
             photo = BikeMemory.selected(ctx)?.photoPath?.let { decodePhoto(it) }
-            pro = ProDashView(ctx, dash.accent, dash.style).also { root.addView(it, FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)) }
+            pro = ProDashView(ctx, dash.accent, dash.style, dash.accent2, dash.customColor).also { root.addView(it, FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)) }
             return
         }
         val row = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL }
@@ -148,6 +148,7 @@ class CustomDashUi(
             setTextSize(TypedValue.COMPLEX_UNIT_PX, px(if (hero) 0.07f else 0.052f))
             gravity = Gravity.CENTER
             maxLines = 1
+            ellipsize = android.text.TextUtils.TruncateAt.END
         }
         val value = TextView(ctx).apply {
             setTextColor(Color.WHITE)
@@ -160,6 +161,7 @@ class CustomDashUi(
             setTextSize(TypedValue.COMPLEX_UNIT_PX, px(size))
             gravity = Gravity.CENTER
             maxLines = if (w == Widget.MAINTENANCE) 2 else 1
+            ellipsize = android.text.TextUtils.TruncateAt.END
             includeFontPadding = false
         }
         box.addView(label)

@@ -140,19 +140,32 @@ class DashLayoutActivity : AppCompatActivity() {
         }
 
         body.addView(section(getString(R.string.dl_accent)))
-        val swatches = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        for (c in DashLayout.ACCENTS) {
-            swatches.addView(View(this).apply {
-                background = GradientDrawable().apply {
-                    shape = GradientDrawable.OVAL
-                    setColor(c)
-                    if (c == layout.accent) setStroke(dp(3), Color.WHITE)
-                }
-                contentDescription = String.format("#%06X", c and 0xFFFFFF)
-                setOnClickListener { update(layout.copy(accent = c)) }
-            }, LinearLayout.LayoutParams(dp(40), dp(40)).apply { marginEnd = dp(12) })
+        // Theme colours (themed templates) · "custom" → full picker with gradients · presets.
+        val swatches = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
+        val themeColours = layout.style.themed && !layout.customColor
+        fun swatch(bg: android.graphics.drawable.Drawable, label: String?, desc: String, onClick: () -> Unit) {
+            val box = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER_HORIZONTAL }
+            box.addView(View(this).apply { background = bg; contentDescription = desc; setOnClickListener { onClick() } },
+                LinearLayout.LayoutParams(dp(40), dp(40)))
+            if (label != null) box.addView(text(label, 10f, R.color.text_secondary))
+            swatches.addView(box, LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply { marginEnd = dp(10) })
         }
-        body.addView(swatches)
+        fun ring(d: GradientDrawable, on: Boolean) = d.apply { if (on) setStroke(dp(3), Color.WHITE) }
+        if (layout.style.themed) {
+            swatch(ring(GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(0xFF2A2A30.toInt(), 0xFF8F8A80.toInt())).apply { shape = GradientDrawable.OVAL }, themeColours),
+                getString(R.string.cp_theme), getString(R.string.cp_theme)) { update(layout.copy(customColor = false, accent2 = null)) }
+        }
+        val customOn = !themeColours && (layout.accent2 != null || layout.accent !in DashLayout.ACCENTS)
+        val customBg = if (customOn) GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(layout.accent, layout.accent2 ?: layout.accent))
+            else GradientDrawable().apply { gradientType = GradientDrawable.SWEEP_GRADIENT; colors = intArrayOf(Color.RED, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.MAGENTA, Color.RED) }
+        swatch(ring(customBg.apply { shape = GradientDrawable.OVAL }, customOn), getString(R.string.cp_custom), getString(R.string.cp_title)) {
+            ColorPicker.show(this, layout.accent, layout.accent2) { c, c2 -> update(layout.copy(accent = c, accent2 = c2, customColor = true)) }
+        }
+        for (c in DashLayout.ACCENTS) {
+            swatch(ring(GradientDrawable().apply { shape = GradientDrawable.OVAL; setColor(c) }, !themeColours && c == layout.accent && layout.accent2 == null),
+                null, ColorPicker.hex(c)) { update(layout.copy(accent = c, accent2 = null, customColor = true)) }
+        }
+        body.addView(android.widget.HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; addView(swatches) })
 
         body.addView(MaterialButton(this).apply {
             text = getString(R.string.dl_send)

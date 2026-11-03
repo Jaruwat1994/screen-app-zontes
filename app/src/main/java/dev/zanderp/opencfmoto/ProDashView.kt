@@ -30,10 +30,16 @@ import kotlin.math.sin
  * gear, coolant, fuel level or tyre pressure, so the big ring is km/h, the right gauge is the
  * bike battery (keyless box) and fuel is an estimate from the refuel log. Missing value = "—".
  */
-class ProDashView(ctx: Context, private val accent: Int, private val style: DashLayout.Style = DashLayout.Style.PRO) : View(ctx) {
+class ProDashView(
+    ctx: Context, private val accent: Int, private val style: DashLayout.Style = DashLayout.Style.PRO,
+    /** Gradient end colour picked by the rider (null = single colour). */
+    accent2: Int? = null,
+    /** Rider's colours win over a themed template's own palette. */
+    customColor: Boolean = false,
+) : View(ctx) {
 
     /** Look of one template: [main] replaces the gold, [second] is the low end of the speed arc and the volts gauge. */
-    private class Theme(val main: Int, val second: Int, val bg: Int, val cardTop: Int, val cardBottom: Int, val tabs: List<String>?, val framed: Boolean = true, val art: Int = 0, val scene: Int = 0, val fuelRow: Boolean = false)
+    private data class Theme(val main: Int, val second: Int, val bg: Int, val cardTop: Int, val cardBottom: Int, val tabs: List<String>?, val framed: Boolean = true, val art: Int = 0, val scene: Int = 0, val fuelRow: Boolean = false)
 
     data class Data(
         val speedKmh: Int? = null,
@@ -62,7 +68,7 @@ class ProDashView(ctx: Context, private val accent: Int, private val style: Dash
     var data = Data()
         set(v) { field = v; invalidate() }
 
-    private val theme = when (style) {
+    private val base = when (style) {
         DashLayout.Style.CYBER -> Theme(0xFFFF2BD6.toInt(), 0xFF22E5FF.toInt(), 0xFF1C0B2A.toInt(), 0xFF1D0F33.toInt(), 0xFF0A0614.toInt(), listOf("CYBERPUNK", "ROAD", "ECO"), art = R.drawable.dash_art_cyber, scene = R.drawable.dash_scene_cyber)
         DashLayout.Style.DRAGON -> Theme(0xFFE8B04A.toInt(), 0xFFB5652B.toInt(), 0xFF241807.toInt(), 0xFF261B0C.toInt(), 0xFF120C05.toInt(), listOf("DRAGON", "GUARDIAN", "EXPLORER"), art = R.drawable.dash_art_dragon, scene = R.drawable.dash_scene_dragon)
         DashLayout.Style.RACING -> Theme(0xFFFF2A2A.toInt(), 0xFFC9CDD3.toInt(), 0xFF200A0A.toInt(), 0xFF1F1213.toInt(), 0xFF0E0909.toInt(), listOf("RACE", "SPORT", "TOURING"), art = R.drawable.dash_art_racing, scene = R.drawable.dash_scene_racing)
@@ -72,6 +78,9 @@ class ProDashView(ctx: Context, private val accent: Int, private val style: Dash
         DashLayout.Style.TOURING -> Theme(0xFFFFB81C.toInt(), 0xFFFF7A1A.toInt(), 0xFF0F1A2A.toInt(), 0xFF13233A.toInt(), 0xFF0A121E.toInt(), listOf("SPORT", "TOURING", "CITY", "ECO"), framed = false, art = R.drawable.dash_art_touring, scene = R.drawable.dash_scene_touring)
         else -> Theme(accent, 0xFF4FC3F7.toInt(), 0xFF1A1A1F.toInt(), 0xFF13202E.toInt(), 0xFF0B1118.toInt(), null, framed = false)
     }
+    private val theme = if (customColor || !style.themed) base.copy(main = accent, second = accent2 ?: base.second) else base
+    /** Speed arc drawn as a gradient (themed looks, or the rider picked a gradient). */
+    private val gradientArc = theme.framed || accent2 != null
     private val gold = theme.main
     /** Template artwork (cut from the ZRide mockup); the plain Pro look shows the Garage photo instead. */
     private val art = theme.art.takeIf { it != 0 }?.let { android.graphics.BitmapFactory.decodeResource(resources, it) }
@@ -252,7 +261,7 @@ class ProDashView(ctx: Context, private val accent: Int, private val style: Dash
                 pump?.let { d -> val s = (h * 0.05f).toInt(); val x = (l + w * 0.025f - s / 2).toInt(); val yy = (y + rowH * 0.22f).toInt(); d.setBounds(x, yy, x + s, yy + s); d.draw(c) }
                 fuelBar(c, l + w * 0.06f, y + rowH * 0.18f, r - w * 0.01f, y + rowH * 0.56f, h)
                 text.textAlign = Paint.Align.LEFT; text.typeface = Typeface.DEFAULT; text.textSize = h * 0.034f; text.color = dim
-                c.drawText(row.third, l + w * 0.06f, y + rowH * 0.88f, text)
+                c.drawText(ellipsize(row.third, r - l - w * 0.06f), l + w * 0.06f, y + rowH * 0.88f, text)
                 continue
             }
             text.textAlign = Paint.Align.CENTER; text.typeface = bold
@@ -263,7 +272,7 @@ class ProDashView(ctx: Context, private val accent: Int, private val style: Dash
             text.color = if (i == 1 && data.phoneHot) red else white
             c.drawText(row.second, l + w * 0.06f, y + rowH * 0.55f, text)
             text.typeface = Typeface.DEFAULT; text.textSize = h * 0.034f; text.color = dim
-            c.drawText(row.third, l + w * 0.06f, y + rowH * 0.88f, text)
+            c.drawText(ellipsize(row.third, r - l - w * 0.06f), l + w * 0.06f, y + rowH * 0.88f, text)
             if (i < rows.size - 1) {
                 stroke.color = 0xFF2A2A30.toInt(); stroke.strokeWidth = 1f
                 c.drawLine(l + w * 0.01f, y + rowH, r, y + rowH, stroke)
@@ -307,7 +316,7 @@ class ProDashView(ctx: Context, private val accent: Int, private val style: Dash
         c.drawArc(rect, start + sweep * RED_KMH / MAX_KMH, sweep * (MAX_KMH - RED_KMH) / MAX_KMH, false, stroke)
         if (speed > 0) {
             stroke.color = if (speed >= RED_KMH) red else gold
-            if (theme.framed && speed < RED_KMH) stroke.shader = SweepGradient(cx, cy, intArrayOf(second, gold, gold), floatArrayOf(0f, 0.4f, 1f))
+            if (gradientArc && speed < RED_KMH) stroke.shader = SweepGradient(cx, cy, intArrayOf(second, gold, gold), floatArrayOf(0f, 0.4f, 1f))
                 .apply { setLocalMatrix(Matrix().apply { setRotate(start, cx, cy) }) }
             c.drawArc(rect, start, sweep * speed / MAX_KMH, false, stroke)
             stroke.shader = null
@@ -350,7 +359,7 @@ class ProDashView(ctx: Context, private val accent: Int, private val style: Dash
         text.typeface = boldItalic; text.textSize = h * 0.07f; text.color = gold
         c.drawText(data.heading ?: "—", cx, bt + (bb - bt) * 0.58f, text)
         text.typeface = bold; text.textSize = h * 0.03f; text.color = white
-        c.drawText(labels.heading, cx, bb - (bb - bt) * 0.08f, text)
+        c.drawText(ellipsize(labels.heading, bw * 1.6f), cx, bb - (bb - bt) * 0.08f, text)
 
         // Side gauges: fuel (left, F at top) and bike battery (right, 11.5–14.5 V).
         val sideR = rad * 1.17f
@@ -421,7 +430,7 @@ class ProDashView(ctx: Context, private val accent: Int, private val style: Dash
         val pad = w * 0.014f
         text.textAlign = Paint.Align.LEFT
         text.typeface = bold; text.textSize = h * 0.038f; text.color = gold
-        c.drawText(labels.ride, l + pad, rect.top + h * 0.07f, text)
+        c.drawText(ellipsize(labels.ride, rect.width() * 0.6f), l + pad, rect.top + h * 0.07f, text)
         if (style == DashLayout.Style.ADVENTURE || style == DashLayout.Style.TOURING) {
             // Altitude chip, top right of the card (GPS height).
             text.textAlign = Paint.Align.RIGHT; text.color = white
@@ -432,7 +441,7 @@ class ProDashView(ctx: Context, private val accent: Int, private val style: Dash
         // Big line: estimated range, else the most urgent maintenance.
         val big = data.rangeKm?.let { "≈ $it km" }
         text.textSize = h * 0.095f; text.color = white; text.typeface = boldItalic
-        c.drawText(big ?: (data.maintenance?.substringBefore('\n') ?: "—"), l + pad, rect.top + h * 0.19f, text)
+        c.drawText(ellipsize(big ?: (data.maintenance?.substringBefore('\n') ?: "—"), rect.width() - 2 * pad), l + pad, rect.top + h * 0.19f, text)
         text.typeface = Typeface.DEFAULT; text.textSize = h * 0.035f; text.color = dim
         val sub = if (big != null) labels.range else data.maintenance?.substringAfter('\n', "")?.let { "${labels.maint} · $it" } ?: labels.maint
         c.drawText(ellipsize(sub, rect.width() - 2 * pad), l + pad, rect.top + h * 0.245f, text)
@@ -460,7 +469,7 @@ class ProDashView(ctx: Context, private val accent: Int, private val style: Dash
             text.typeface = bold; text.textSize = h * 0.065f; text.color = white
             c.drawText(col.first, x, rowTop + h * 0.095f, text)
             text.typeface = Typeface.DEFAULT; text.textSize = h * 0.032f; text.color = dim
-            c.drawText(col.second, x, rowTop + h * 0.15f, text)
+            c.drawText(ellipsize(col.second, cw - pad), x, rowTop + h * 0.15f, text)
         }
     }
 
@@ -474,9 +483,9 @@ class ProDashView(ctx: Context, private val accent: Int, private val style: Dash
         val right = "${labels.trip}  $trip"
         text.typeface = bold; text.textSize = h * 0.05f; text.color = white
         text.textAlign = Paint.Align.RIGHT
-        c.drawText(left, w / 2 - h * 0.04f, y, text)
+        c.drawText(ellipsize(left, w * 0.45f), w / 2 - h * 0.04f, y, text)
         text.textAlign = Paint.Align.LEFT
-        c.drawText(right, w / 2 + h * 0.04f, y, text)
+        c.drawText(ellipsize(right, w * 0.45f), w / 2 + h * 0.04f, y, text)
         stroke.color = dim; stroke.strokeWidth = 1.5f
         c.drawLine(w / 2, y - h * 0.045f, w / 2, y + h * 0.005f, stroke)
     }
@@ -559,7 +568,7 @@ class ProDashView(ctx: Context, private val accent: Int, private val style: Dash
         rim(c, rect, rad, h)
 
         text.textAlign = Paint.Align.LEFT; text.typeface = boldItalic; text.textSize = h * 0.038f; text.color = white
-        c.drawText(labels.rideMode, w * 0.28f, h * 0.215f, text)
+        c.drawText(ellipsize(labels.rideMode, w * 0.33f), w * 0.28f, h * 0.215f, text)
         tabs(c, h, w * 0.28f, h * 0.235f, w * 0.33f, fromLeft = true)
 
         // Curved speed bar: from the bottom left, sweeping up to the right.
@@ -609,7 +618,7 @@ class ProDashView(ctx: Context, private val accent: Int, private val style: Dash
         fill.color = 0xE60D1420.toInt(); c.drawPath(path, fill)
         stroke.color = (gold and 0x00FFFFFF) or 0x88000000.toInt(); stroke.strokeWidth = h * 0.004f; c.drawPath(path, stroke)
         text.textAlign = Paint.Align.CENTER; text.typeface = bold; text.textSize = h * 0.028f; text.color = white
-        c.drawText(labels.heading, (bl + br) / 2, bt + h * 0.035f, text)
+        c.drawText(ellipsize(labels.heading, br - bl - h * 0.03f), (bl + br) / 2, bt + h * 0.035f, text)
         text.typeface = boldItalic; text.textSize = h * 0.07f; text.color = gold
         c.drawText(data.heading ?: "—", (bl + br) / 2, bb - h * 0.02f, text)
 

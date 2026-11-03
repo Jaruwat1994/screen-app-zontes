@@ -24,10 +24,13 @@ object DashLayout {
         MAINTENANCE(R.string.dl_w_maintenance),
     }
 
-    /** ARGB accents the rider can pick; the first is the app's brand gold. */
+    /** ARGB accents the rider can pick; the first is the app's brand gold. Keep the first three in place (they pick the mode tab). */
     val ACCENTS = intArrayOf(
         0xFFD1A955.toInt(), 0xFF5BD47A.toInt(), 0xFF4FC3F7.toInt(),
         0xFFFF8A65.toInt(), 0xFFFF6B5E.toInt(), 0xFFF1F4EC.toInt(),
+        0xFFF5B80C.toInt(), 0xFFFF2A2A.toInt(), 0xFFFF2E88.toInt(),
+        0xFFB066FF.toInt(), 0xFF5B7CFF.toInt(), 0xFF22E5FF.toInt(),
+        0xFF1DE9B6.toInt(), 0xFFC9CDD3.toInt(),
     )
 
     /** GRID = the widget tiles below; the rest are looks of the full gauge cluster ([ProDashView]). */
@@ -36,6 +39,8 @@ object DashLayout {
         DRAGON(R.string.dl_style_dragon), RACING(R.string.dl_style_racing), NEON(R.string.dl_style_neon),
         NEONCITY(R.string.dl_style_neoncity), ADVENTURE(R.string.dl_style_adventure), TOURING(R.string.dl_style_touring);
         val isPro get() = this != GRID
+        /** A template with its own palette (Cyberpunk, Dragon…), unless the rider picks colours. */
+        val themed get() = this != GRID && this != PRO
     }
 
     /**
@@ -47,6 +52,10 @@ object DashLayout {
         val accent: Int,
         val style: Style = Style.GRID,
         val tankLiters: Float = 0f,
+        /** End colour of a gradient from [accent]; null = a single colour. */
+        val accent2: Int? = null,
+        /** The rider chose colours: themed templates use [accent] / [accent2] instead of their own. */
+        val customColor: Boolean = false,
     )
 
     val DEFAULT = Layout(
@@ -55,13 +64,15 @@ object DashLayout {
     )
 
     /** Stored form → layout. Unknown names (from a newer/older app) are dropped, never crash. */
-    internal fun parse(widgets: String?, accent: Int?, style: String? = null, tankLiters: Float? = null): Layout {
+    internal fun parse(
+        widgets: String?, accent: Int?, style: String? = null, tankLiters: Float? = null,
+        accent2: Int? = null, customColor: Boolean = false,
+    ): Layout {
         val st = Style.entries.firstOrNull { it.name == style } ?: Style.GRID
         val tank = (tankLiters ?: 0f).coerceIn(0f, 60f)
-        if (widgets == null) return DEFAULT.copy(style = st, tankLiters = tank, accent = accent ?: DEFAULT.accent)
-        val list = widgets.split(',').mapNotNull { n -> Widget.entries.firstOrNull { it.name == n.trim() } }
-            .distinct().take(MAX_WIDGETS)
-        return Layout(list.ifEmpty { DEFAULT.widgets }, accent ?: DEFAULT.accent, st, tank)
+        val list = widgets?.split(',')?.mapNotNull { n -> Widget.entries.firstOrNull { it.name == n.trim() } }
+            ?.distinct()?.take(MAX_WIDGETS)
+        return Layout(list?.ifEmpty { null } ?: DEFAULT.widgets, accent ?: DEFAULT.accent, st, tank, accent2, customColor)
     }
 
     internal fun format(l: Layout): String = l.widgets.joinToString(",") { it.name }
@@ -71,12 +82,15 @@ object DashLayout {
         return parse(
             p.getString("widgets", null), if (p.contains("accent")) p.getInt("accent", 0) else null,
             p.getString("style", null), p.getFloat("tank", 0f),
+            if (p.contains("accent2")) p.getInt("accent2", 0) else null, p.getBoolean("custom", false),
         )
     }
 
     fun save(ctx: Context, l: Layout) {
         ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
             .putString("widgets", format(l)).putInt("accent", l.accent)
-            .putString("style", l.style.name).putFloat("tank", l.tankLiters).apply()
+            .putString("style", l.style.name).putFloat("tank", l.tankLiters)
+            .apply { if (l.accent2 != null) putInt("accent2", l.accent2) else remove("accent2") }
+            .putBoolean("custom", l.customColor).apply()
     }
 }

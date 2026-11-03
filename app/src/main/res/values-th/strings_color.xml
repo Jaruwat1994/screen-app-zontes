@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cp_title">เลือกสี</string>
+    <string name="cp_solid">สีเดียว</string>
+    <string name="cp_gradient">ไล่สี</string>
+    <string name="cp_apply">ใช้สีนี้</string>
+    <string name="cp_eyedropper">จิ้มสีจากรูป</string>
+    <string name="cp_eyedropper_hint">แตะบนรูปเพื่อเลือกสี</string>
+    <string name="cp_saved">สีของฉัน</string>
+    <string name="cp_add">บันทึกสีนี้</string>
+    <string name="cp_delete">ลบสีที่เลือก</string>
+    <string name="cp_theme">สีธีม</string>
+    <string name="cp_custom">กำหนดเอง</string>
+</resources>
