@@ -79,16 +79,16 @@ class GpxActivity : AppCompatActivity() {
         contentResolver.openInputStream(uri)?.use { input ->
             FileOutputStream(dest).use { output -> input.copyTo(output) }
         } ?: run {
-            Toast.makeText(this, "Could not read file", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_file_read_failed, Toast.LENGTH_SHORT).show()
             return@registerForActivityResult
         }
         val track = runCatching { GpxParser.parse(dest) }.getOrElse {
-            Toast.makeText(this, "Invalid GPX: ${it.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.hc_act_invalid_gpx, it.message.orEmpty()), Toast.LENGTH_LONG).show()
             dest.delete()
             return@registerForActivityResult
         }
         if (track.points.isEmpty() && track.waypoints.isEmpty()) {
-            Toast.makeText(this, "GPX has no track points or waypoints", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.hc_act_gpx_empty, Toast.LENGTH_LONG).show()
             dest.delete()
             return@registerForActivityResult
         }
@@ -99,7 +99,7 @@ class GpxActivity : AppCompatActivity() {
         val nav = GpxNav(track)
         fileLabel.text = buildString {
             append(displayName)
-            append("  ·  ${track.points.size} pts · ${track.waypoints.size} wpt")
+            append("  ·  ").append(getString(R.string.hc_act_gpx_counts, track.points.size, track.waypoints.size))
             if (nav.totalM > 0) {
                 append(" · ").append(GpxNav.formatDistance(nav.totalM, MapPrefs.units(this@GpxActivity)))
             }
@@ -110,15 +110,15 @@ class GpxActivity : AppCompatActivity() {
         corridorBtn.isEnabled = track.points.isNotEmpty()
         offlineTrackBtn.isEnabled = track.points.isNotEmpty() && !offlineBusy
         corridorPois = emptyList()
-        progressLabel.text = "GPX ready — Open on map, or Project to bike when connected."
+        progressLabel.text = getString(R.string.hc_act_gpx_ready)
         progressBar.isVisible = false
         MapPlaces.pushHistory(
             this,
-            MapPlace(displayName, track.points.first().lat, track.points.first().lon, "gpx", "GPX track"),
+            MapPlace(displayName, track.points.first().lat, track.points.first().lon, "gpx", getString(R.string.hc_act_gpx_track)),
         )
         refreshLists()
         LogBus.log("→ GPX loaded: $displayName (${track.points.size} points)")
-        Toast.makeText(this, "GPX loaded — tap Open GPX on map", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, R.string.hc_act_gpx_loaded, Toast.LENGTH_LONG).show()
     }
 
     private val importMapLauncher = registerForActivityResult(
@@ -129,7 +129,7 @@ class GpxActivity : AppCompatActivity() {
             contentResolver.openInputStream(uri)?.bufferedReader()?.readText()
         }.getOrNull()
         if (text.isNullOrBlank()) {
-            Toast.makeText(this, "Could not read file", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_file_read_failed, Toast.LENGTH_SHORT).show()
             return@registerForActivityResult
         }
         val result = MapDataBackup.importJson(this, text)
@@ -194,22 +194,22 @@ class GpxActivity : AppCompatActivity() {
             MapPlaces.clearParked(this)
             refreshSettingsUi()
             refreshLists()
-            Toast.makeText(this, "Parked spot cleared", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_parked_cleared, Toast.LENGTH_SHORT).show()
         }
         findViewById<MaterialButton>(R.id.gpx_set_home_hub).setOnClickListener {
             ensureLocationPermission()
             val near = lastKnown()
             if (near == null) {
-                Toast.makeText(this, "Need a GPS fix to set Home", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.hc_act_need_gps_home, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             MapPlaces.setHome(
                 this,
-                MapPlace("Home", near.first, near.second, "home", "Set from Map hub"),
+                MapPlace("Home", near.first, near.second, "home", getString(R.string.hc_act_set_from_map_hub)),
             )
             refreshSettingsUi()
             refreshLists()
-            Toast.makeText(this, "Home saved", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_home_saved, Toast.LENGTH_SHORT).show()
         }
         findViewById<MaterialButton>(R.id.gpx_go_home_hub).setOnClickListener {
             val home = MapPlaces.home(this) ?: return@setOnClickListener
@@ -226,9 +226,9 @@ class GpxActivity : AppCompatActivity() {
             val key = orsKeyEdit.text?.toString()?.trim().orEmpty()
             MapPrefs.setOrsApiKey(this, key)
             val msg = if (key.isEmpty()) {
-                "ORS key cleared — Avoid still works via free Valhalla routing"
+                getString(R.string.hc_act_ors_cleared)
             } else {
-                "ORS key saved — stricter avoid highways/tolls enabled"
+                getString(R.string.hc_act_ors_saved)
             }
             Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
             currentFocus?.let {
@@ -251,7 +251,7 @@ class GpxActivity : AppCompatActivity() {
         for (chip in NominatimSearch.POI_CHIPS) {
             chips.addView(
                 Chip(this).apply {
-                    text = chip.label
+                    text = getString(chip.labelRes)
                     isClickable = true
                     isCheckable = false
                     setOnClickListener { runPoi(chip) }
@@ -516,7 +516,7 @@ class GpxActivity : AppCompatActivity() {
         val replacing = MapPlaces.parked(this) != null
         MapPlaces.setParked(
             this,
-            MapPlace("Parked", near.first, near.second, "parking", "Marked from Map hub"),
+            MapPlace("Parked", near.first, near.second, "parking", getString(R.string.hc_act_marked_from_map_hub)),
         )
         refreshSettingsUi()
         refreshLists()
@@ -983,7 +983,7 @@ class GpxActivity : AppCompatActivity() {
         }
         resultsBox.removeAllViews()
         resultsBox.addView(TextView(this).apply {
-            text = getString(R.string.gpx_finding_poi, chip.label)
+            text = getString(R.string.gpx_finding_poi, getString(chip.labelRes))
             setTextColor(ContextCompat.getColor(this@GpxActivity, R.color.text_secondary))
         })
         val units = MapPrefs.units(this)

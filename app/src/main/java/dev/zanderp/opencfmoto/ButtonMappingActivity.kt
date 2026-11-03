@@ -60,7 +60,7 @@ class ButtonMappingActivity : AppCompatActivity() {
                 startActivity(NavLauncher.overlayPermissionIntent(this))
             } catch (e: Exception) {
                 LogBus.log("couldn't open the overlay permission screen ($e)")
-                Toast.makeText(this, "Open Settings → Apps → OpenCfMoto → Display over other apps",
+                Toast.makeText(this, R.string.hc_act_overlay_manual_path,
                     Toast.LENGTH_LONG).show()
             }
         }
@@ -89,8 +89,8 @@ class ButtonMappingActivity : AppCompatActivity() {
         for (gesture in ButtonGesture.entries) {
             val row = inflater.inflate(R.layout.row_button_mapping, container, false)
             row.tag = gesture
-            row.findViewById<TextView>(R.id.tv_gesture).text = gesture.label
-            row.findViewById<TextView>(R.id.tv_hint).text = gesture.hint
+            row.findViewById<TextView>(R.id.tv_gesture).text = gesture.displayLabel(this)
+            row.findViewById<TextView>(R.id.tv_hint).text = gesture.displayHint(this)
             row.setOnClickListener { pickAction(gesture) }
             container.addView(row)
         }
@@ -101,18 +101,18 @@ class ButtonMappingActivity : AppCompatActivity() {
         val labels = actions.map { it.displayLabel(this) }.toTypedArray()
         val current = actions.indexOf(ButtonMap.get(this, gesture))
         MaterialAlertDialogBuilder(this)
-            .setTitle(gesture.label)
+            .setTitle(gesture.displayLabel(this))
             .setSingleChoiceItems(labels, current) { dialog, which ->
                 val action = actions[which]
                 ButtonMap.set(this, gesture, action)
                 LogBus.log("→ button mapping: ${gesture.label} = ${action.label}")
                 if (action.isNav && !SavedPlaces.isSet(this, action.navSlot)) {
-                    Toast.makeText(this, "Set that place's address below", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, R.string.hc_act_set_place_address_below, Toast.LENGTH_SHORT).show()
                 }
                 dialog.dismiss()
                 refresh()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
@@ -130,8 +130,8 @@ class ButtonMappingActivity : AppCompatActivity() {
             val query = row.findViewById<EditText>(R.id.et_place_query)
             name.setText(SavedPlaces.name(this, slot))
             query.setText(SavedPlaces.query(this, slot))
-            name.hint = "Name (e.g. Home)"
-            query.hint = "Address or place"
+            name.hint = getString(R.string.hc_act_place_name_hint)
+            query.hint = getString(R.string.hc_act_place_query_hint)
             placeNames += name
             placeQueries += query
             container.addView(row)
@@ -169,12 +169,12 @@ class ButtonMappingActivity : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.btn_reset).isEnabled = !ButtonMap.isAllDefault(this)
         val active = ButtonClusterPreset.active(this)
         findViewById<TextView>(R.id.tv_cluster_active).text =
-            if (active != null) "Active: ${active.title}"
-            else "No preset — shipped defaults / your custom map"
+            if (active != null) getString(R.string.hc_act_cluster_active, active.displayTitle(this))
+            else getString(R.string.buttons_no_preset_shipped_defaults_your_custom_map)
         findViewById<MaterialButton>(R.id.btn_cluster_clear).isEnabled = active != null
         findViewById<TextView>(R.id.tv_bt_status).text = BluetoothHelper.status(this).shortLine()
         findViewById<TextView>(R.id.tv_presence).text =
-            "Handlebar sources: ${ButtonPresencePrefs.summarize(this)}"
+            getString(R.string.hc_act_handlebar_sources, ButtonPresencePrefs.summarize(this))
         highlightOnOff(R.id.remote_pad_on, R.id.remote_pad_off, RemotePad.enabled(this))
     }
 
@@ -194,21 +194,21 @@ class ButtonMappingActivity : AppCompatActivity() {
         refresh()
         Toast.makeText(
             this,
-            if (on) "Remote pad on — HID keys map to handlebar gestures"
-            else "Remote pad off",
+            if (on) R.string.hc_act_remote_pad_on
+            else R.string.hc_act_remote_pad_off,
             Toast.LENGTH_SHORT,
         ).show()
     }
 
     private fun teachRemote() {
         if (!RemotePad.enabled(this)) {
-            Toast.makeText(this, "Turn remote pad on first", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_remote_pad_first, Toast.LENGTH_SHORT).show()
             return
         }
         val gestures = ButtonGesture.entries
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.buttons_teach_remote_pick)
-            .setItems(gestures.map { it.label }.toTypedArray()) { _, which ->
+            .setItems(gestures.map { it.displayLabel(this) }.toTypedArray()) { _, which ->
                 waitForRemoteKey(gestures[which])
             }
             .setNegativeButton(android.R.string.cancel, null)
@@ -218,7 +218,7 @@ class ButtonMappingActivity : AppCompatActivity() {
     private fun waitForRemoteKey(gesture: ButtonGesture) {
         val dlg = MaterialAlertDialogBuilder(this)
             .setTitle(R.string.buttons_teach_remote_wait)
-            .setMessage(gesture.label)
+            .setMessage(gesture.displayLabel(this))
             .setNegativeButton(android.R.string.cancel) { _, _ -> RemotePad.teachListener = null }
             .setOnDismissListener { RemotePad.teachListener = null }
             .create()
@@ -233,7 +233,7 @@ class ButtonMappingActivity : AppCompatActivity() {
                     getString(
                         R.string.buttons_teach_remote_ok,
                         KeyEvent.keyCodeToString(ev.keyCode),
-                        gesture.label,
+                        gesture.displayLabel(this),
                     ),
                     Toast.LENGTH_SHORT,
                 ).show()
@@ -268,14 +268,14 @@ class ButtonMappingActivity : AppCompatActivity() {
                 LogBus.log("→ teach handlebar: volume rocker PRESENT")
                 MediaButtonBridge.instance?.refreshVolumePresencePolicy()
                 refresh()
-                Toast.makeText(this, "▲/▼ marked present — volume pin stays on", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.hc_act_volume_present_toast, Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton(R.string.buttons_teach_volume_absent) { _, _ ->
                 ButtonPresencePrefs.setVolumeRocker(this, ButtonPresence.ABSENT)
                 LogBus.log("→ teach handlebar: volume rocker ABSENT")
                 MediaButtonBridge.instance?.refreshVolumePresencePolicy()
                 refresh()
-                Toast.makeText(this, "▲/▼ absent — phone volume no longer pinned", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.hc_act_volume_absent_toast, Toast.LENGTH_SHORT).show()
             }
             .setNeutralButton(R.string.buttons_teach_reset) { _, _ ->
                 ButtonPresencePrefs.setVolumeRocker(this, ButtonPresence.UNKNOWN)
@@ -283,22 +283,22 @@ class ButtonMappingActivity : AppCompatActivity() {
                 LogBus.log("→ teach handlebar: presence reset to UNKNOWN")
                 MediaButtonBridge.instance?.refreshVolumePresencePolicy()
                 refresh()
-                Toast.makeText(this, "Presence reset — will auto-probe again", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.hc_act_presence_reset_toast, Toast.LENGTH_SHORT).show()
             }
             .show()
     }
 
     private fun pickClusterPreset() {
         val presets = ButtonClusterPreset.entries
-        val labels = presets.map { it.title }.toTypedArray()
+        val labels = presets.map { it.displayTitle(this) }.toTypedArray()
         MaterialAlertDialogBuilder(this)
-            .setTitle("Left switch cluster")
+            .setTitle(R.string.hc_act_left_switch_cluster)
             .setItems(labels) { _, which ->
                 val preset = presets[which]
                 MaterialAlertDialogBuilder(this)
-                    .setTitle(preset.title)
-                    .setMessage(preset.summary + "\n\nReplace the current mapping for this bike? Saved places are kept.")
-                    .setPositiveButton("Apply") { _, _ ->
+                    .setTitle(preset.displayTitle(this))
+                    .setMessage(preset.displaySummary(this) + "\n\n" + getString(R.string.hc_act_cluster_replace_confirm))
+                    .setPositiveButton(R.string.maint_plan_apply) { _, _ ->
                         preset.apply(this)
                         LogBus.log("→ button mapping preset: ${preset.title}")
                         refresh()
@@ -306,49 +306,42 @@ class ButtonMappingActivity : AppCompatActivity() {
                         // (800MT etc. keep touch + bars together — never force Disable touchscreen).
                         Toast.makeText(
                             this,
-                            "Applied: ${preset.title} (handlebar → AA on)",
+                            getString(R.string.hc_act_cluster_applied, preset.displayTitle(this)),
                             Toast.LENGTH_SHORT,
                         ).show()
                     }
-                    .setNegativeButton("Cancel", null)
+                    .setNegativeButton(android.R.string.cancel, null)
                     .show()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
     private fun confirmClearPreset() {
         MaterialAlertDialogBuilder(this)
-            .setTitle("Clear cluster preset?")
-            .setMessage(
-                "Removes the active cluster tag and restores shipped gesture defaults. " +
-                    "Saved places stay. Some bikes work fine with no preset — just tweak rows below if needed."
-            )
-            .setPositiveButton("Clear") { _, _ ->
+            .setTitle(R.string.hc_act_clear_preset_title)
+            .setMessage(R.string.hc_act_clear_preset_msg)
+            .setPositiveButton(R.string.main_clear) { _, _ ->
                 ButtonClusterPreset.clear(this)
                 LogBus.log("→ button mapping preset cleared")
                 refresh()
-                Toast.makeText(this, "Preset cleared", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.hc_act_preset_cleared, Toast.LENGTH_SHORT).show()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
     private fun confirmReset() {
         MaterialAlertDialogBuilder(this)
-            .setTitle("Reset to defaults?")
-            .setMessage(
-                "Every gesture goes back to the shipped defaults: ◀/▶ = knob, " +
-                    "★ = Select, ★ hold = Home, ◀◀/▶▶ = D-pad ←→, ★★ = Back.\n\n" +
-                    "Does not change which cluster preset is active. Use Clear preset to drop the tag."
-            )
-            .setPositiveButton("Reset") { _, _ ->
+            .setTitle(R.string.hc_act_reset_defaults_title)
+            .setMessage(R.string.hc_act_reset_defaults_msg)
+            .setPositiveButton(R.string.trip_reset) { _, _ ->
                 ButtonMap.resetAll(this)
                 LogBus.log("→ button mapping reset to defaults")
                 refresh()
-                Toast.makeText(this, "Reset to defaults", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.buttons_reset_to_defaults, Toast.LENGTH_SHORT).show()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 

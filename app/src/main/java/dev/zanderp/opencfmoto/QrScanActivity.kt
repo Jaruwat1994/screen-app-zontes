@@ -45,7 +45,7 @@ class QrScanActivity : AppCompatActivity() {
         ActivityResultContracts.RequestPermission()
     ) { granted ->
         if (granted) startCamera() else {
-            Toast.makeText(this, "Camera permission required", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.hc_act_camera_permission_required, Toast.LENGTH_LONG).show()
             finish()
         }
     }
@@ -141,11 +141,11 @@ class QrScanActivity : AppCompatActivity() {
                 }
                 .addOnFailureListener {
                     handled.set(false)
-                    Toast.makeText(this, it.message ?: "QR photo failed", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, it.message ?: getString(R.string.hc_act_qr_photo_failed), Toast.LENGTH_LONG).show()
                 }
         } catch (e: Exception) {
             handled.set(false)
-            Toast.makeText(this, e.message ?: "QR photo failed", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, e.message ?: getString(R.string.hc_act_qr_photo_failed), Toast.LENGTH_LONG).show()
         }
     }
 

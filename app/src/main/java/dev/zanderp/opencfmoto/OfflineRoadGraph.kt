@@ -121,9 +121,9 @@ object OfflineRoadGraph {
         south: Double, west: Double, north: Double, east: Double,
         onProgress: (String) -> Unit,
     ) {
-        onProgress("Fetching roads for offline routing…")
+        onProgress(ctx.getString(R.string.hc_dash_offline_fetching_roads))
         val json = fetchRoads(south, west, north, east)
-        onProgress("Building routing graph…")
+        onProgress(ctx.getString(R.string.hc_dash_offline_building_graph))
         val built = parse(json)
         if (built.nodeCount < 2 || built.edgeFrom.isEmpty()) {
             throw IOException("No routable roads found for this area")

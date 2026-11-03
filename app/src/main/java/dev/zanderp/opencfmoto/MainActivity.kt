@@ -708,13 +708,10 @@ class MainActivity : AppCompatActivity() {
         try {
             androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle(R.string.main_crash_title)
-                .setMessage(
-                    "OpenCfMoto closed unexpectedly last time. The log and crash report were saved — " +
-                        "open Logs and tap Share Logs so we can see what happened.",
-                )
-                .setPositiveButton("Share Logs") { _, _ -> shareLog() }
-                .setNegativeButton("Keep logs") { _, _ -> }
-                .setNeutralButton("Dismiss") { _, _ -> CrashGuard.clearCrash(this) }
+                .setMessage(R.string.hc_main_crash_msg)
+                .setPositiveButton(R.string.hc_main_share_logs) { _, _ -> shareLog() }
+                .setNegativeButton(R.string.hc_main_keep_logs) { _, _ -> }
+                .setNeutralButton(R.string.hc_main_dismiss) { _, _ -> CrashGuard.clearCrash(this) }
                 .show()
         } catch (e: Exception) {
             log("crash recovery UI failed: $e")
@@ -747,16 +744,8 @@ class MainActivity : AppCompatActivity() {
                         log("screen-capture armed (FGS up after ${tries * 100}ms) — pick Entire screen or a single app (Android 14+)")
                         androidx.appcompat.app.AlertDialog.Builder(this@MainActivity)
                             .setTitle(R.string.main_mirror_ready_title)
-                            .setMessage(
-                                "Entire screen — best for riding. " +
-                                    "Uses Setup ▸ Screen fit and Setup ▸ Mirror orientation " +
-                                    "(Match dash rotates the phone so the TFT fills).\n\n" +
-                                    "Single app — that app must stay on screen; Android sends no frames " +
-                                    "in the background. Prefer GPX / Tracks or Android Auto for pocket use.\n\n" +
-                                    "Bike touch does not drive mirrored apps. Continue connects and " +
-                                    "sends OpenCfMoto to the background.",
-                            )
-                            .setPositiveButton("Continue") { _, _ -> startMirrorLink() }
+                            .setMessage(R.string.hc_main_mirror_ready_msg)
+                            .setPositiveButton(R.string.hc_main_continue) { _, _ -> startMirrorLink() }
                             .setCancelable(false)
                             .show()
                     } catch (e: Exception) {
@@ -965,7 +954,7 @@ class MainActivity : AppCompatActivity() {
                 } catch (_: Exception) {}
                 Toast.makeText(
                     this,
-                    "Bike search open — type here. Results appear on the dash.",
+                    getString(R.string.hc_main_bike_search_open),
                     Toast.LENGTH_LONG,
                 ).show()
             }
@@ -1802,7 +1791,7 @@ class MainActivity : AppCompatActivity() {
 
         // The bike's link ports are held by the official CFMoto app — offer to close it (see
         // EasyConnProber's bind-conflict path). Show once per error so we don't nag on every redraw.
-        if (phase == Phase.ERROR && detail.contains("CFMoto app", ignoreCase = true)) {
+        if (phase == Phase.ERROR && detail == getString(R.string.hc_main_detail_close_rival)) {
             if (!rivalPromptShown) { rivalPromptShown = true; promptCloseRival() }
         } else {
             rivalPromptShown = false
@@ -1810,7 +1799,7 @@ class MainActivity : AppCompatActivity() {
         // Only a confirmed kill-switch with a live internet VPN — Map↔AA blips can leave a stale
         // "kill-switch" detail without an actual VPN; don't nag in that case.
         if (phase == Phase.ERROR &&
-            detail.contains("kill-switch", ignoreCase = true) &&
+            detail == getString(R.string.hc_main_detail_vpn_kill_switch) &&
             BikeWifi.isVpnActive(this)
         ) {
             if (!vpnPromptShown) { vpnPromptShown = true; promptVpnKillSwitch() }
@@ -1901,26 +1890,21 @@ class MainActivity : AppCompatActivity() {
         val installed = RivalClient.isInstalled(this)
         com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
             .setTitle(R.string.main_rival_title)
-            .setMessage(
-                "The official CFMoto/EasyConnect app is running and holding the bike's link ports, so " +
-                    "the dash stays blank. Close it, then reconnect.\n\n" +
-                    "\"Close & retry\" tries to stop it for you; if the dash is still blank, use " +
-                    "\"App settings\" and tap Force stop."
-            )
-            .setPositiveButton("Close & retry") { _, _ ->
+            .setMessage(R.string.hc_main_rival_msg)
+            .setPositiveButton(R.string.hc_main_close_retry) { _, _ ->
                 val killed = RivalClient.closeBestEffort(this)
                 log(if (killed) "→ asked Android to close the official CFMoto app; retrying…"
                     else "→ couldn't auto-close the official CFMoto app — open its settings to Force stop.")
                 connectBtn.postDelayed({ reconnectSavedBike() }, 1500)
             }
-            .setNeutralButton("App settings") { _, _ ->
+            .setNeutralButton(R.string.setup_app_settings) { _, _ ->
                 if (!RivalClient.openAppInfo(this)) {
                     Toast.makeText(this, R.string.main_settings_failed, Toast.LENGTH_SHORT).show()
                 }
             }
-            .setNegativeButton("Dismiss", null)
+            .setNegativeButton(R.string.hc_main_dismiss, null)
             .setCancelable(true)
-            .apply { if (!installed) setMessage("Something is holding the bike's link ports (10920-10922). Close any other CFMoto/EasyConnect app and reconnect.") }
+            .apply { if (!installed) setMessage(R.string.hc_main_rival_unknown_msg) }
             .show()
     }
 
@@ -1930,28 +1914,20 @@ class MainActivity : AppCompatActivity() {
      */
     private fun promptVpnKillSwitch() {
         com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle("VPN is blocking the bike")
-            .setMessage(
-                "Android Auto reached the phone, but a VPN kill-switch is blocking the bike Wi‑Fi " +
-                    "(Network.bindSocket → EPERM).\n\n" +
-                    "Fix (any one):\n" +
-                    "• Turn the VPN off for this ride\n" +
-                    "• Disable Always-on VPN → \"Block connections without VPN\"\n" +
-                    "• Allow LAN / local network in the VPN app (PCAPdroid, AdGuard, etc.)\n\n" +
-                    "Then tap Connect again."
-            )
-            .setPositiveButton("VPN settings") { _, _ ->
+            .setTitle(R.string.hc_main_vpn_title)
+            .setMessage(R.string.hc_main_vpn_msg)
+            .setPositiveButton(R.string.hc_main_vpn_settings) { _, _ ->
                 try {
                     startActivity(Intent("android.net.vpn.SETTINGS"))
                 } catch (_: Exception) {
                     try {
                         startActivity(Intent(android.provider.Settings.ACTION_SETTINGS))
                     } catch (_: Exception) {
-                        Toast.makeText(this, "Open Settings ▸ Network ▸ VPN", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, R.string.hc_main_vpn_open_settings, Toast.LENGTH_LONG).show()
                     }
                 }
             }
-            .setNegativeButton("Dismiss", null)
+            .setNegativeButton(R.string.hc_main_dismiss, null)
             .setCancelable(true)
             .show()
     }
@@ -2127,7 +2103,7 @@ class MainActivity : AppCompatActivity() {
                     hotspotHandOff(bind, peer, gateOnAaSteady)
                 } catch (e: Exception) {
                     LogBus.log("[HOTSPOT] direct hand-off failed: $e")
-                    runOnUiThread { ConnectionState.set(Phase.ERROR, "hotspot hand-off failed") }
+                    runOnUiThread { ConnectionState.set(Phase.ERROR, getString(R.string.hc_main_detail_hotspot_handoff_failed)) }
                 }
             }, "phone-hotspot-direct").apply { isDaemon = true }.start()
             return
@@ -2219,7 +2195,7 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 LogBus.log("[HOTSPOT] failed: $e")
                 runOnUiThread {
-                    ConnectionState.set(Phase.ERROR, "hotspot scan failed")
+                    ConnectionState.set(Phase.ERROR, getString(R.string.hc_main_detail_hotspot_scan_failed))
                 }
             }
         }, "phone-hotspot-scan").apply { isDaemon = true }.start()
@@ -2341,7 +2317,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     if (seen.isEmpty()) LogBus.log("[P2P] no network from the dash in the scan cache (name '${qr.name ?: qr.ssid}', address ${qr.mac})")
                     LogBus.log("P2P join failed: $reason — no SoftAP credentials to fall back to")
-                    ConnectionState.set(Phase.ERROR, "Wi‑Fi Direct failed")
+                    ConnectionState.set(Phase.ERROR, getString(R.string.hc_main_detail_p2p_failed))
                     return@connect
                 }
                 LogBus.log("P2P join failed: $reason — falling back to AP join")
@@ -2563,7 +2539,7 @@ class MainActivity : AppCompatActivity() {
             log("→ Mirror: already mirroring (last frame ${ms}ms ago) — ignore duplicate tap")
             Toast.makeText(
                 this,
-                "Already mirroring — wait for the dash, or tap Stop first",
+                getString(R.string.hc_main_already_mirroring),
                 Toast.LENGTH_SHORT,
             ).show()
             return
@@ -2579,7 +2555,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(
                     this,
-                    "Single-app mirror needs Android 14+. Whole screen will be used.",
+                    getString(R.string.hc_main_single_app_needs_14),
                     Toast.LENGTH_LONG,
                 ).show()
                 mpm.createScreenCaptureIntent()
@@ -2639,7 +2615,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            startActivity(Intent.createChooser(send, "Share log").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION))
+            startActivity(Intent.createChooser(send, getString(R.string.hc_main_share_log)).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION))
             log("log saved: ${file.absolutePath} (${file.length()} bytes)")
         } catch (e: Exception) {
             log("share failed: $e")
@@ -2674,17 +2650,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun showUpdateDialog(release: UpdateChecker.Release) {
         val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("Update ${release.version}")
-            .setMessage(ReleaseNotes.toSpanned(release.notes))
-            .setPositiveButton("Download") { _, _ ->
+            .setTitle(getString(R.string.hc_main_update_title, release.version))
+            .setMessage(ReleaseNotes.toSpanned(release.notes.ifBlank { getString(R.string.hc_main_update_fallback) }))
+            .setPositiveButton(R.string.hc_main_download) { _, _ ->
                 try {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(release.downloadUrl)))
                 } catch (_: Exception) {
                     Toast.makeText(this, R.string.main_download_failed, Toast.LENGTH_SHORT).show()
                 }
             }
-            .setNegativeButton("Skip") { _, _ -> UpdateChecker.skip(this, release.version) }
-            .setNeutralButton("Later", null)
+            .setNegativeButton(R.string.hc_main_skip) { _, _ -> UpdateChecker.skip(this, release.version) }
+            .setNeutralButton(R.string.hc_main_later, null)
             .show()
         // Headings/bullets/bold come from [ReleaseNotes]; make markdown links tappable too.
         dialog.findViewById<TextView>(android.R.id.message)?.movementMethod =

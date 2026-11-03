@@ -186,7 +186,7 @@ class HudViewActivity : AppCompatActivity() {
             findViewById<View>(R.id.hud_controls).visibility =
                 if (fullscreen) View.GONE else View.VISIBLE
             findViewById<View>(R.id.hud_toggle_controls).visibility = View.VISIBLE
-            titleView.text = "Dash view"
+            titleView.text = getString(R.string.hud_dash_view)
         }
     }
 
@@ -203,7 +203,7 @@ class HudViewActivity : AppCompatActivity() {
         } catch (e: Exception) {
             gpxPreview = false
             LogBus.log("[HUD] inflate map chrome failed: $e")
-            Toast.makeText(this, "Map UI failed to open", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.hc_act_map_ui_failed, Toast.LENGTH_LONG).show()
             return
         }
         gpxHost.addView(
@@ -227,7 +227,7 @@ class HudViewActivity : AppCompatActivity() {
             gpxPreview = false
             try { ui.release() } catch (_: Exception) {}
             gpxHost.removeAllViews()
-            Toast.makeText(this, "Could not load map — try again from Map hub", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.hc_act_map_load_failed, Toast.LENGTH_LONG).show()
             return
         }
         gpxUi = ui
@@ -245,8 +245,8 @@ class HudViewActivity : AppCompatActivity() {
         insetsController.hide(SafeInsets.BARS)
         titleView.text = when (GpxSession.mode) {
             GpxSession.Mode.GPX -> "GPX · ${GpxSession.trackName}"
-            GpxSession.Mode.NAV_TO -> "Nav · ${GpxSession.trackName}"
-            GpxSession.Mode.FREE_RIDE -> "Map preview"
+            GpxSession.Mode.NAV_TO -> getString(R.string.hc_act_nav_title, GpxSession.trackName)
+            GpxSession.Mode.FREE_RIDE -> getString(R.string.hc_act_map_preview)
         }
         LogBus.log("[HUD] Map preview bound (${GpxSession.mode} '${GpxSession.trackName}')")
     }
@@ -270,7 +270,7 @@ class HudViewActivity : AppCompatActivity() {
         val on = NightPrefs.isNightNow(this)
         AaVideoBridge.nightSink?.invoke(on)
         gpxUi?.applyTheme()
-        val extra = if (theme == MapTheme.AUTO) " (${if (on) "night" else "day"} now)" else ""
+        val extra = if (theme == MapTheme.AUTO) getString(if (on) R.string.hc_act_theme_night_now else R.string.hc_act_theme_day_now) else ""
         Toast.makeText(this, getString(R.string.setup_toast_map_theme, getString(theme.labelRes)) + extra, Toast.LENGTH_SHORT).show()
     }
 
@@ -288,7 +288,7 @@ class HudViewActivity : AppCompatActivity() {
         }
         if (on) {
             insetsController.hide(SafeInsets.BARS)
-            Toast.makeText(this, "Fullscreen — press Back to exit", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_fullscreen_back, Toast.LENGTH_SHORT).show()
         } else {
             insetsController.show(SafeInsets.BARS)
         }
@@ -301,7 +301,7 @@ class HudViewActivity : AppCompatActivity() {
             val now = System.currentTimeMillis()
             if (now - noSessionToastAt > 3000) {
                 noSessionToastAt = now
-                Toast.makeText(this, "Connect to the bike first", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.hc_act_connect_bike_first, Toast.LENGTH_SHORT).show()
             }
             return
         }
@@ -356,12 +356,12 @@ class HudViewActivity : AppCompatActivity() {
 
     private fun key(code: Int) {
         if (gpxPreview) {
-            Toast.makeText(this, "AA controls need a bike connection", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_aa_needs_bike, Toast.LENGTH_SHORT).show()
             return
         }
         val sink = AaVideoBridge.keySink
         if (sink == null) {
-            Toast.makeText(this, "Connect to the bike first", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_connect_bike_first, Toast.LENGTH_SHORT).show()
         } else {
             sink(code)
         }
@@ -369,12 +369,12 @@ class HudViewActivity : AppCompatActivity() {
 
     private fun scroll(delta: Int) {
         if (gpxPreview) {
-            Toast.makeText(this, "AA controls need a bike connection", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_aa_needs_bike, Toast.LENGTH_SHORT).show()
             return
         }
         val sink = AaVideoBridge.scrollSink
         if (sink == null) {
-            Toast.makeText(this, "Connect to the bike first", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_connect_bike_first, Toast.LENGTH_SHORT).show()
         } else {
             sink(delta)
         }

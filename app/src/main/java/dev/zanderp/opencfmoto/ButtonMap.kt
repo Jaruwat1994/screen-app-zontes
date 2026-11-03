@@ -5,33 +5,34 @@
 package dev.zanderp.opencfmoto
 
 import android.content.Context
+import androidx.annotation.StringRes
 
 /**
  * Something a handlebar gesture can be made to do. Everything here is reachable with a live Android
  * Auto session and no touchscreen.
  */
-enum class ButtonAction(val id: String, val label: String) {
-    NONE("none", "Do nothing"),
-    KNOB_FORWARD("knobFwd", "Knob forward (next item)"),
-    KNOB_BACK("knobBack", "Knob back (previous item)"),
-    SELECT("select", "Select / OK"),
-    BACK("back", "Back"),
-    HOME("home", "Home (app list)"),
-    ASSISTANT("assistant", "Assistant (voice)"),
-    DPAD_UP("up", "D-pad up"),
-    DPAD_DOWN("down", "D-pad down"),
-    DPAD_LEFT("left", "D-pad left"),
-    DPAD_RIGHT("right", "D-pad right"),
-    NAV_1("nav1", "Navigate to saved place 1"),
-    NAV_2("nav2", "Navigate to saved place 2"),
-    NAV_3("nav3", "Navigate to saved place 3");
+enum class ButtonAction(val id: String, val label: String, @StringRes val labelRes: Int) {
+    NONE("none", "Do nothing", R.string.hc_misc_action_none),
+    KNOB_FORWARD("knobFwd", "Knob forward (next item)", R.string.hc_misc_action_knob_fwd),
+    KNOB_BACK("knobBack", "Knob back (previous item)", R.string.hc_misc_action_knob_back),
+    SELECT("select", "Select / OK", R.string.hc_misc_action_select),
+    BACK("back", "Back", R.string.hc_misc_action_back),
+    HOME("home", "Home (app list)", R.string.hc_misc_action_home),
+    ASSISTANT("assistant", "Assistant (voice)", R.string.hc_misc_action_assistant),
+    DPAD_UP("up", "D-pad up", R.string.hc_misc_action_dpad_up),
+    DPAD_DOWN("down", "D-pad down", R.string.hc_misc_action_dpad_down),
+    DPAD_LEFT("left", "D-pad left", R.string.hc_misc_action_dpad_left),
+    DPAD_RIGHT("right", "D-pad right", R.string.hc_misc_action_dpad_right),
+    NAV_1("nav1", "Navigate to saved place 1", R.string.hc_misc_action_nav1),
+    NAV_2("nav2", "Navigate to saved place 2", R.string.hc_misc_action_nav2),
+    NAV_3("nav3", "Navigate to saved place 3", R.string.hc_misc_action_nav3);
 
     /** Nav actions read better as the place's own name once one is saved. */
     fun displayLabel(context: Context): String = when (this) {
         NAV_1 -> SavedPlaces.actionLabel(context, 0)
         NAV_2 -> SavedPlaces.actionLabel(context, 1)
         NAV_3 -> SavedPlaces.actionLabel(context, 2)
-        else -> label
+        else -> context.getString(labelRes)
     }
 
     companion object {
@@ -60,17 +61,33 @@ enum class ButtonGesture(
     val label: String,
     val hint: String,
     val default: ButtonAction,
+    @StringRes val labelRes: Int,
+    @StringRes val hintRes: Int,
 ) {
     // Universal 3-control model: single = knob, ×2 = D-pad left/right, Select = OK / ×2 Back.
-    NAV_BACK("navBack", "Backward  ◀ / ▲", "◀ left, or the ▲ volume press on non-touch dashes", ButtonAction.KNOB_BACK),
-    NAV_FWD("navFwd", "Forward  ▶ / ▼", "▶ right, or the ▼ volume press on non-touch dashes", ButtonAction.KNOB_FORWARD),
-    SELECT_PRESS("selectPress", "Select  Enter / ★", "a quick tap of the OK / ★ start button", ButtonAction.SELECT),
-    NAV_BACK_LONG("navBackLong", "Backward (hold)  ◀", "press and hold ◀ (track-key dashes only)", ButtonAction.NONE),
-    NAV_FWD_LONG("navFwdLong", "Forward (hold)  ▶", "press and hold ▶ (track-key dashes only)", ButtonAction.NONE),
-    SELECT_LONG("selectLong", "Select (hold)  Enter / ★", "press and hold the OK / ★ button", ButtonAction.HOME),
-    NAV_BACK_DOUBLE("navBackDouble", "Backward ×2", "double-tap backward within a short window", ButtonAction.DPAD_LEFT),
-    NAV_FWD_DOUBLE("navFwdDouble", "Forward ×2", "double-tap forward within a short window", ButtonAction.DPAD_RIGHT),
-    SELECT_DOUBLE("selectDouble", "Select ×2", "double-tap the OK / ★ button", ButtonAction.BACK),
+    NAV_BACK("navBack", "Backward  ◀ / ▲", "◀ left, or the ▲ volume press on non-touch dashes", ButtonAction.KNOB_BACK,
+        R.string.hc_misc_gesture_nav_back, R.string.hc_misc_gesture_nav_back_hint),
+    NAV_FWD("navFwd", "Forward  ▶ / ▼", "▶ right, or the ▼ volume press on non-touch dashes", ButtonAction.KNOB_FORWARD,
+        R.string.hc_misc_gesture_nav_fwd, R.string.hc_misc_gesture_nav_fwd_hint),
+    SELECT_PRESS("selectPress", "Select  Enter / ★", "a quick tap of the OK / ★ start button", ButtonAction.SELECT,
+        R.string.hc_misc_gesture_select, R.string.hc_misc_gesture_select_hint),
+    NAV_BACK_LONG("navBackLong", "Backward (hold)  ◀", "press and hold ◀ (track-key dashes only)", ButtonAction.NONE,
+        R.string.hc_misc_gesture_nav_back_long, R.string.hc_misc_gesture_nav_back_long_hint),
+    NAV_FWD_LONG("navFwdLong", "Forward (hold)  ▶", "press and hold ▶ (track-key dashes only)", ButtonAction.NONE,
+        R.string.hc_misc_gesture_nav_fwd_long, R.string.hc_misc_gesture_nav_fwd_long_hint),
+    SELECT_LONG("selectLong", "Select (hold)  Enter / ★", "press and hold the OK / ★ button", ButtonAction.HOME,
+        R.string.hc_misc_gesture_select_long, R.string.hc_misc_gesture_select_long_hint),
+    NAV_BACK_DOUBLE("navBackDouble", "Backward ×2", "double-tap backward within a short window", ButtonAction.DPAD_LEFT,
+        R.string.hc_misc_gesture_nav_back_double, R.string.hc_misc_gesture_nav_back_double_hint),
+    NAV_FWD_DOUBLE("navFwdDouble", "Forward ×2", "double-tap forward within a short window", ButtonAction.DPAD_RIGHT,
+        R.string.hc_misc_gesture_nav_fwd_double, R.string.hc_misc_gesture_nav_fwd_double_hint),
+    SELECT_DOUBLE("selectDouble", "Select ×2", "double-tap the OK / ★ button", ButtonAction.BACK,
+        R.string.hc_misc_gesture_select_double, R.string.hc_misc_gesture_select_double_hint),
+    ;
+
+    /** Localized [label] / [hint] for the UI; the English fields stay for logs. */
+    fun displayLabel(context: Context): String = context.getString(labelRes)
+    fun displayHint(context: Context): String = context.getString(hintRes)
 }
 
 /**

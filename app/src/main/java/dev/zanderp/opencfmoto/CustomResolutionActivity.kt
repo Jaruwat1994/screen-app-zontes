@@ -72,7 +72,7 @@ class CustomResolutionActivity : AppCompatActivity() {
             readInt(R.id.match_w, mw0),
             readInt(R.id.match_h, mh0),
         )
-        Toast.makeText(this, "Saved (applies next connect)", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.hc_act_saved_next_connect, Toast.LENGTH_SHORT).show()
     }
 
     private fun refresh() {

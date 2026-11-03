@@ -163,8 +163,8 @@ class GpxDashUi(
 
         fun applyUnitLabels() {
             lSpeed.text = GpxNav.speedUnitLabel(units)
-            lAlt.text = if (units == MapUnits.IMPERIAL) "ALT ft" else "ALT m"
-            lLimit.text = if (units == MapUnits.IMPERIAL) "LIMIT mph" else "LIMIT"
+            lAlt.text = if (units == MapUnits.IMPERIAL) context.getString(R.string.hc_dash_alt_ft) else context.getString(R.string.dash_alt_m)
+            lLimit.text = if (units == MapUnits.IMPERIAL) context.getString(R.string.hc_dash_limit_mph) else context.getString(R.string.dash_limit)
             root.findViewById<TextView>(R.id.gpx_chip_speed_unit)?.text = GpxNav.speedUnitLabel(units)
         }
         fun applyMapTheme() {
@@ -174,7 +174,7 @@ class GpxDashUi(
         fun refreshTitle() {
             val nav = liveNav
             titleView.text = when (liveMode) {
-                GpxSession.Mode.FREE_RIDE -> "Free ride"
+                GpxSession.Mode.FREE_RIDE -> context.getString(R.string.gpx_free_ride_place)
                 GpxSession.Mode.NAV_TO -> "→ ${liveDest?.name ?: GpxSession.trackName}"
                 GpxSession.Mode.GPX -> buildString {
                     append(GpxSession.trackName)
@@ -195,7 +195,7 @@ class GpxDashUi(
             out.addAll(MapPlaces.markers(context))
             out.addAll(MapPlaces.favorites(context))
             track?.waypoints?.forEach { w ->
-                out.add(MapPlace(w.name ?: "Waypoint", w.lat, w.lon, "wpt"))
+                out.add(MapPlace(w.name ?: context.getString(R.string.hc_dash_waypoint), w.lat, w.lon, "wpt"))
             }
             // Corridor / session-only overlays. Skip stale MapPlaces snapshots
             // (older builds stuffed home/parked/markers into overlayPlaces).
@@ -253,7 +253,7 @@ class GpxDashUi(
         }
         fun requestOsrm(from: Location, reason: String) {
             val dest = liveDest ?: return
-            statusView.text = "Routing…"
+            statusView.text = context.getString(R.string.hc_dash_routing)
             OfflineRouter.routeAsync(
                 context,
                 from.latitude, from.longitude, dest.lat, dest.lon,
@@ -262,13 +262,13 @@ class GpxDashUi(
                         if (!isAlive() || released) return@post
                         applyRoadRoute(route, dest.name)
                         statusView.text =
-                            "Route · ${GpxNav.formatDistance(route.distanceM, units)}"
+                            context.getString(R.string.hc_dash_route_dist, GpxNav.formatDistance(route.distanceM, units))
                         // Don't announce a "ready" trip that's basically already the pin.
                         val worthAnnounce = route.distanceM >= 150.0
                         if (voiceOn && reason == "recalc" && worthAnnounce) {
-                            voiceLocal.speak("Route updated")
+                            voiceLocal.speak(context.getString(R.string.hc_dash_tts_route_updated))
                         } else if (voiceOn && reason == "start" && worthAnnounce) {
-                            voiceLocal.speak("Route ready")
+                            voiceLocal.speak(context.getString(R.string.hc_dash_tts_route_ready))
                         }
                         log(
                             "[GPX] route $reason ${route.points.size} pts " +
@@ -279,7 +279,7 @@ class GpxDashUi(
                 onError = { err ->
                     main.post {
                         if (!isAlive() || released) return@post
-                        statusView.text = "No road route · straight line"
+                        statusView.text = context.getString(R.string.hc_dash_no_road_route)
                         log("[GPX] route failed ($reason): $err")
                     }
                 },
@@ -292,8 +292,8 @@ class GpxDashUi(
             arriveCard?.visibility = View.GONE
         }
         fun showArriveCard(destName: String?) {
-            arriveTitle?.text = if (destName.isNullOrBlank()) "You've arrived" else "Arrived · $destName"
-            arriveMeta?.text = "Mark parking, find a spot, or continue free ride"
+            arriveTitle?.text = if (destName.isNullOrBlank()) context.getString(R.string.dash_you_ve_arrived) else context.getString(R.string.hc_dash_arrived_at, destName)
+            arriveMeta?.text = context.getString(R.string.hc_dash_arrive_meta)
             arriveCard?.visibility = View.VISIBLE
             root.findViewById<View>(R.id.gpx_preview_card)?.visibility = View.GONE
         }
@@ -317,7 +317,7 @@ class GpxDashUi(
             statusView.setTextColor(statusColorNormal)
             refreshTitle()
             statusView.text = spoken
-            if (voiceOn && spoken != "Already nearby") voiceLocal.speak(spoken)
+            if (voiceOn && spoken != context.getString(R.string.hc_dash_already_nearby)) voiceLocal.speak(spoken)
             log("[GPX] finished → free ride")
             if (offerParking) showArriveCard(arrivedName) else hideArriveCard()
             // Drop nav chrome immediately (refreshChrome is declared later in bind()).
@@ -340,7 +340,7 @@ class GpxDashUi(
                     log("[GPX] near dest at nav start (${distM.toInt()}m) — no Arrived sheet")
                     main.post {
                         if (!isAlive() || released) return@post
-                        finishToFreeRideUi("Already nearby", offerParking = false)
+                        finishToFreeRideUi(context.getString(R.string.hc_dash_already_nearby), offerParking = false)
                     }
                     return false
                 }
@@ -428,7 +428,7 @@ class GpxDashUi(
                 marker?.visibility = View.VISIBLE
                 previewAlts.visibility = View.GONE
                 altsHost?.visibility = View.GONE
-                root.findViewById<TextView>(R.id.gpx_preview_cancel)?.text = "Done"
+                root.findViewById<TextView>(R.id.gpx_preview_cancel)?.text = context.getString(R.string.about_done)
             } else {
                 // Trip preview: Go / Save / Circuit / Cancel — Home & Marker are pin-only.
                 go?.visibility = View.VISIBLE
@@ -436,7 +436,7 @@ class GpxDashUi(
                 home?.visibility = View.GONE
                 marker?.visibility = View.GONE
                 altsHost?.visibility = View.VISIBLE
-                root.findViewById<TextView>(R.id.gpx_preview_cancel)?.text = "Cancel"
+                root.findViewById<TextView>(R.id.gpx_preview_cancel)?.text = context.getString(R.string.dash_cancel)
             }
         }
         fun refreshChrome() {
@@ -451,13 +451,13 @@ class GpxDashUi(
                 applyPreviewModeChrome()
             }
             if (!navigating) {
-                searchPillText.text = pendingPlace?.name?.takeIf { inPreview } ?: "Search here"
+                searchPillText.text = pendingPlace?.name?.takeIf { inPreview } ?: context.getString(R.string.dash_search_here)
             } else if (maneuverRow.visibility != View.VISIBLE || cueView.text.isNullOrBlank()) {
                 // Never leave an empty black top bar while riding — seed destination until GPS fills turns.
                 maneuverRow.visibility = View.VISIBLE
                 cueIcon.setImageResource(R.drawable.ic_man_arrive)
                 if (cueDist.text.isNullOrBlank() || cueDist.text == "…") cueDist.text = "GPS"
-                cueView.text = "To ${liveDest?.name ?: GpxSession.trackName}"
+                cueView.text = context.getString(R.string.hc_dash_to_dest, liveDest?.name ?: GpxSession.trackName)
                 laneView.visibility = View.GONE
             }
             lastNavigating = navigating
@@ -540,15 +540,15 @@ class GpxDashUi(
                 R.id.gpx_circuit_60 to 60,
                 R.id.gpx_circuit_100 to 100,
             )
-            muteBtn.text = if (voiceOn) "Voice on" else "Voice muted"
-            followBtn.text = if (follow) "Follow on" else "Free pan"
-            northBtn.text = if (headingUp) "Heading up" else "North up"
+            muteBtn.text = if (voiceOn) context.getString(R.string.hc_dash_voice_on) else context.getString(R.string.hc_dash_voice_muted)
+            followBtn.text = if (follow) context.getString(R.string.hc_dash_follow_on) else context.getString(R.string.hc_dash_free_pan)
+            northBtn.text = if (headingUp) context.getString(R.string.dash_heading_up) else context.getString(R.string.hc_dash_north_up)
             recordBtn.text =
-                if (TripLogger.current?.recording == true) "Stop recording" else "Record ride"
+                if (TripLogger.current?.recording == true) context.getString(R.string.hc_dash_stop_recording) else context.getString(R.string.dash_record_ride)
             // Auto-log (Setup ▸ Log trips) already runs while this UI is live; the button is a
             // manual override for riders who turned that setting off.
-            root.findViewById<Button>(R.id.gpx_create_circuit)?.text = "Circuit"
-            root.findViewById<TextView>(R.id.gpx_preview_circuit)?.text = "Circuit"
+            root.findViewById<Button>(R.id.gpx_create_circuit)?.text = context.getString(R.string.gpx_circuit)
+            root.findViewById<TextView>(R.id.gpx_preview_circuit)?.text = context.getString(R.string.gpx_circuit)
         }
         fun hideSheets() {
             menuPanel.visibility = View.GONE
@@ -581,19 +581,19 @@ class GpxDashUi(
             showIdle()
             if (projected) {
                 // Presentation / VirtualDisplay has no IME — type on the phone home field.
-                searchInput.hint = "Type on your PHONE keyboard…"
+                searchInput.hint = context.getString(R.string.hc_dash_type_on_phone_hint)
                 searchInput.isFocusable = false
                 searchInput.isFocusableInTouchMode = false
                 searchStatus.setTextColor(0xFFE65100.toInt())
                 searchStatus.textSize = 16f
-                searchStatus.text = "⌨ Type on PHONE — results show here"
+                searchStatus.text = context.getString(R.string.hc_dash_type_on_phone_status)
                 if (!DashRemote.requestTypeOnPhone()) {
-                    searchStatus.text = "Open OpenCfMoto on the phone, then type"
+                    searchStatus.text = context.getString(R.string.hc_dash_open_app_then_type, context.getString(R.string.app_name))
                 } else if (voiceOn) {
-                    try { voiceLocal.speak("Type your search on the phone") } catch (_: Exception) {}
+                    try { voiceLocal.speak(context.getString(R.string.hc_dash_tts_type_on_phone)) } catch (_: Exception) {}
                 }
             } else {
-                searchInput.hint = "Search places or address"
+                searchInput.hint = context.getString(R.string.dash_search_places_or_address)
                 searchInput.isFocusable = true
                 searchInput.isFocusableInTouchMode = true
                 searchStatus.setTextColor(0xFF5F6368.toInt())
@@ -612,14 +612,14 @@ class GpxDashUi(
                 if (!isAlive() || released) return
                 if (!follow) {
                     follow = true
-                    followBtn.text = "Follow on"
+                    followBtn.text = context.getString(R.string.hc_dash_follow_on)
                     log("[GPX] auto-recenter (follow on)")
                 }
             }
         }
         fun bumpFreePan() {
             follow = false
-            followBtn.text = "Free pan"
+            followBtn.text = context.getString(R.string.hc_dash_free_pan)
             main.removeCallbacks(recenter)
             main.postDelayed(recenter, 12_000L)
         }
@@ -664,7 +664,7 @@ class GpxDashUi(
                 osrmRequested = true
                 applyRoadRoute(cached, place.name)
                 statusView.text =
-                    "Route · ${GpxNav.formatDistance(cached.distanceM, units)}"
+                    context.getString(R.string.hc_dash_route_dist, GpxNav.formatDistance(cached.distanceM, units))
                 lastLoc?.let { loc ->
                     val moving = loc.hasSpeed() && loc.speed > 1.2f
                     val brng = if (loc.hasBearing() && moving) loc.bearing else 0f
@@ -685,14 +685,14 @@ class GpxDashUi(
                 if (loc != null) {
                     requestOsrm(loc, "start")
                 } else {
-                    statusView.text = "GPS… · navigate to ${place.name}"
+                    statusView.text = context.getString(R.string.hc_dash_gps_nav_to, place.name)
                     dashLocal.setCenter(place.lat, place.lon, 16.0)
                 }
             }
             refreshTitle()
             refreshChrome()
             onChromeFocus?.invoke("end")
-            if (voiceOn) voiceLocal.speak("Navigating to ${place.name}")
+            if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_navigating_to, place.name))
             log("[GPX] Go → ${place.name} (cached=${cached != null})")
         }
         // Pick which route option is shown highlighted; redraw + refresh the summary/chips.
@@ -723,7 +723,7 @@ class GpxDashUi(
             val isDirect = route.label.equals("Direct", ignoreCase = true) ||
                 route.steps.any { it.roadName.contains("offline", ignoreCase = true) }
             previewMeta.text = buildString {
-                if (isDirect) append("Straight line (no road route) · ")
+                if (isDirect) append(context.getString(R.string.hc_dash_straight_line)).append(" · ")
                 append(GpxNav.formatDistance(route.distanceM, units))
                 append(" · ")
                 append(GpxNav.formatArrival(etaSec))
@@ -739,7 +739,7 @@ class GpxDashUi(
                     val sel = i == idx
                     val eta = r.durationSec.toLong().takeIf { it > 0 }
                         ?: GpxNav.etaSeconds(r.distanceM, loc.speed)
-                    val tag = r.label.ifBlank { if (i == 0) "Fast" else "Alt" }
+                    val tag = routeLabel(r.label.ifBlank { if (i == 0) "Fast" else "Alt" })
                     val label = "$tag · ${GpxNav.formatArrival(eta)} · ${GpxNav.formatDistance(r.distanceM, units)}"
                     val chip = TextView(context).apply {
                         text = if (sel) "★ $label" else label
@@ -778,14 +778,14 @@ class GpxDashUi(
             dashLocal.clearRoutes()
             dashLocal.clearToDest()
             dashLocal.clearPreviewRoute()
-            previewName.text = place.name.ifBlank { "Dropped pin" }
+            previewName.text = place.name.ifBlank { context.getString(R.string.hc_dash_dropped_pin) }
             previewMeta.text = place.subtitle.ifBlank {
                 String.format("%.5f, %.5f", place.lat, place.lon)
             }
             dashLocal.setCenter(place.lat, place.lon, 16.0)
             refreshChrome()
             onChromeFocus?.invoke("go")
-            statusView.text = "Save this pin — open it later to navigate"
+            statusView.text = context.getString(R.string.hc_dash_save_pin_hint)
         }
         fun previewPlace(place: MapPlace) {
             pinSetupOnly = false
@@ -805,11 +805,11 @@ class GpxDashUi(
             dashLocal.clearRoutes()
             dashLocal.resetNorth()
             previewName.text = place.name
-            previewMeta.text = if (place.subtitle.isNotBlank()) place.subtitle else "Getting route…"
+            previewMeta.text = if (place.subtitle.isNotBlank()) place.subtitle else context.getString(R.string.hc_dash_getting_route)
             if (!AppHttp.hasInternetPin()) {
                 previewMeta.text = listOfNotNull(
                     previewMeta.text?.toString()?.takeIf { it.isNotBlank() },
-                    "No mobile data pin — enable cellular for road routes",
+                    context.getString(R.string.hc_dash_no_mobile_data),
                 ).joinToString(" · ")
             }
             refreshChrome()
@@ -818,7 +818,7 @@ class GpxDashUi(
             if (loc == null) {
                 previewMeta.text = listOfNotNull(
                     place.subtitle.takeIf { it.isNotBlank() },
-                    "Waiting for GPS to route",
+                    context.getString(R.string.hc_dash_waiting_gps_route),
                 ).joinToString(" · ")
                 dashLocal.setCenter(place.lat, place.lon, 16.0)
                 return
@@ -838,7 +838,7 @@ class GpxDashUi(
                         pendingRoutes = result.routes
                         selectRoute(0, loc, place)
                         if (!result.avoidHonored || result.warning != null) {
-                            val warn = result.warning ?: "Avoid setting not applied"
+                            val warn = result.warning ?: context.getString(R.string.hc_dash_avoid_not_applied)
                             previewMeta.text = listOfNotNull(
                                 previewMeta.text?.toString()?.takeIf { it.isNotBlank() },
                                 warn,
@@ -854,7 +854,7 @@ class GpxDashUi(
                         pendingRoute = null
                         dashLocal.setToDest(loc.latitude, loc.longitude, place.lat, place.lon)
                         dashLocal.setCenter(place.lat, place.lon, 15.0)
-                        previewMeta.text = "No road route · straight line"
+                        previewMeta.text = context.getString(R.string.hc_dash_no_road_route)
                         log("[GPX] preview route failed: $err")
                     }
                 },
@@ -867,12 +867,12 @@ class GpxDashUi(
             if (list.isEmpty()) {
                 searchStatus.setTextColor(0xFF5F6368.toInt())
                 searchStatus.textSize = 13f
-                searchStatus.text = "No results"
+                searchStatus.text = context.getString(R.string.gpx_no_results)
                 return
             }
             searchStatus.setTextColor(0xFF5F6368.toInt())
             searchStatus.textSize = 13f
-            searchStatus.text = "${list.size} places"
+            searchStatus.text = context.getString(R.string.hc_dash_n_places, list.size)
             for (p in list) {
                 val row = LinearLayout(context).apply {
                     orientation = LinearLayout.VERTICAL
@@ -941,14 +941,14 @@ class GpxDashUi(
                 actions.addView(actionChip("➤ ${context.getString(R.string.main_go)}") {
                     startNavigationTo(p)
                 }.also { it.setTextColor(0xFF188038.toInt()) })
-                actions.addView(actionChip("★ Save") {
+                actions.addView(actionChip(context.getString(R.string.dash_save)) {
                     MapPlaces.addFavorite(context, p)
-                    searchStatus.text = "Saved ${p.name} to favorites"
+                    searchStatus.text = context.getString(R.string.hc_dash_saved_fav, p.name)
                 })
-                actions.addView(actionChip("＋ Marker") {
+                actions.addView(actionChip(context.getString(R.string.dash_marker)) {
                     MapPlaces.addMarker(context, p)
                     refreshPins()
-                    searchStatus.text = "Marker added for ${p.name}"
+                    searchStatus.text = context.getString(R.string.hc_dash_marker_added_for, p.name)
                 })
                 val isSavedMarker = MapPlaces.markers(context).any {
                     kotlin.math.abs(it.lat - p.lat) < 1e-5 && kotlin.math.abs(it.lon - p.lon) < 1e-5
@@ -964,10 +964,10 @@ class GpxDashUi(
                             kotlin.math.abs(it.lon - p.lon) < 1e-5
                     }
                 if (canDelete) {
-                    actions.addView(actionChip("Delete") {
+                    actions.addView(actionChip(context.getString(R.string.gpx_delete)) {
                         MapPlaces.deletePlace(context, p)
                         refreshPins()
-                        searchStatus.text = "Deleted ${p.name}"
+                        searchStatus.text = context.getString(R.string.hc_dash_deleted_name, p.name)
                         showIdle()
                     }.also { it.setTextColor(0xFFD93025.toInt()) })
                 }
@@ -1003,13 +1003,13 @@ class GpxDashUi(
                 searchStatus.setTextColor(0xFF5F6368.toInt())
                 searchStatus.textSize = 13f
                 searchStatus.text = if (projected) {
-                    "Type on PHONE, or tap a category"
+                    context.getString(R.string.hc_dash_type_or_category)
                 } else {
-                    "Search for a place or tap a category"
+                    context.getString(R.string.hc_dash_search_or_category)
                 }
             } else {
                 showSearchResults(idle)
-                searchStatus.text = "Recent & favorites"
+                searchStatus.text = context.getString(R.string.hc_dash_recent_favorites)
             }
         }
         syncPlacesIfChanged = {
@@ -1024,7 +1024,7 @@ class GpxDashUi(
                 showIdle()
                 return
             }
-            searchStatus.text = "Searching…"
+            searchStatus.text = context.getString(R.string.gpx_searching)
             searchResults.removeAllViews()
             val nearLat = lastLoc?.latitude
             val nearLon = lastLoc?.longitude
@@ -1055,10 +1055,10 @@ class GpxDashUi(
         fun runDashPoi(chip: NominatimSearch.PoiChip) {
             val loc = lastLoc
             if (loc == null) {
-                searchStatus.text = "Need GPS for nearby POI"
+                searchStatus.text = context.getString(R.string.hc_dash_need_gps_poi)
                 return
             }
-            searchStatus.text = "Finding ${chip.label} nearby…"
+            searchStatus.text = context.getString(R.string.gpx_finding_poi, context.getString(chip.labelRes))
             searchResults.removeAllViews()
             // Offline area first (instant, no data). Then a real Overpass "around me" tag search —
             // actual fuel stations / cafes near you, sorted by distance, not a name search.
@@ -1075,9 +1075,9 @@ class GpxDashUi(
                     main.post {
                         if (!isAlive() || released) return@post
                         if (list.isEmpty()) {
-                            searchStatus.text = "No ${chip.label.lowercase()} found nearby"
+                            searchStatus.text = context.getString(R.string.hc_dash_none_nearby, context.getString(chip.labelRes).lowercase())
                         } else {
-                            searchStatus.text = "${list.size} ${chip.label.lowercase()} nearby"
+                            searchStatus.text = context.getString(R.string.hc_dash_n_nearby, list.size, context.getString(chip.labelRes).lowercase())
                             showSearchResults(withDistance(list, loc, chip.label))
                         }
                     }
@@ -1089,15 +1089,15 @@ class GpxDashUi(
             )
         }
 
-        muteBtn.text = if (voiceOn) "Voice on" else "Voice muted"
+        muteBtn.text = if (voiceOn) context.getString(R.string.hc_dash_voice_on) else context.getString(R.string.hc_dash_voice_muted)
         refreshSettingsLabels()
         statusView.text = when (liveMode) {
-            GpxSession.Mode.FREE_RIDE -> "GPS… · free ride"
-            GpxSession.Mode.NAV_TO -> "GPS… · navigate to ${liveDest?.name ?: "?"}"
+            GpxSession.Mode.FREE_RIDE -> context.getString(R.string.hc_dash_gps_free_ride)
+            GpxSession.Mode.NAV_TO -> context.getString(R.string.hc_dash_gps_nav_to, liveDest?.name ?: "?")
             GpxSession.Mode.GPX -> {
                 val nav = liveNav
                 if (nav != null && nav.totalM > 0) {
-                    "GPS… · ${GpxNav.formatDistance(nav.totalM, units)} track"
+                    context.getString(R.string.hc_dash_gps_track, GpxNav.formatDistance(nav.totalM, units))
                 } else "GPS…"
             }
         }
@@ -1111,7 +1111,7 @@ class GpxDashUi(
         for (chip in NominatimSearch.POI_CHIPS) {
             searchChips.addView(
                 TextView(context).apply {
-                    text = chip.label
+                    text = context.getString(chip.labelRes)
                     setTextColor(0xFF3C4043.toInt())
                     textSize = 14f
                     setPadding(36, 18, 36, 18)
@@ -1137,7 +1137,7 @@ class GpxDashUi(
             // Compass needle points to true north: rotate opposite the map bearing when heading-up.
             quickNorth.rotation = if (headingUp) -lastMapBearing else 0f
             quickNorth.alpha = if (headingUp) 1f else 0.55f
-            northBtn.text = if (headingUp) "Heading up" else "North up"
+            northBtn.text = if (headingUp) context.getString(R.string.dash_heading_up) else context.getString(R.string.hc_dash_north_up)
         }
         // Best available heading: GPS course while riding, else compass, else last known.
         fun bestBearing(): Float {
@@ -1249,7 +1249,7 @@ class GpxDashUi(
         }
         root.findViewById<View>(R.id.gpx_btn_recenter).setOnClickListener {
             follow = true
-            followBtn.text = "Follow on"
+            followBtn.text = context.getString(R.string.hc_dash_follow_on)
             main.removeCallbacks(recenter)
             val loc = lastLoc
             if (loc != null) {
@@ -1263,9 +1263,9 @@ class GpxDashUi(
                     moving = moving,
                 )
                 syncQuickLabels()
-                statusView.text = "Centered on GPS"
+                statusView.text = context.getString(R.string.hc_dash_centered_gps)
             } else {
-                statusView.text = "No GPS yet — wait for a fix"
+                statusView.text = context.getString(R.string.hc_dash_no_gps_yet)
             }
         }
         root.findViewById<View>(R.id.gpx_btn_overview).setOnClickListener {
@@ -1287,11 +1287,11 @@ class GpxDashUi(
             } ?: initialRoutePts
             if (remain != null && remain.size >= 2) {
                 dashLocal.zoomToRoute(remain)
-                statusView.text = "Route overview · north up"
+                statusView.text = context.getString(R.string.hc_dash_route_overview)
             } else {
                 liveDest?.let { dashLocal.setCenter(it.lat, it.lon, 14.0) }
                     ?: lastLoc?.let { dashLocal.setCenter(it.latitude, it.longitude, 14.0) }
-                statusView.text = "Overview · north up"
+                statusView.text = context.getString(R.string.hc_dash_overview)
             }
         }
         root.findViewById<View>(R.id.gpx_btn_zoom_in).setOnClickListener {
@@ -1331,7 +1331,7 @@ class GpxDashUi(
                 }
             }
             syncQuickLabels()
-            statusView.text = if (headingUp) "Heading up" else "North up"
+            statusView.text = if (headingUp) context.getString(R.string.dash_heading_up) else context.getString(R.string.hc_dash_north_up)
         }
         root.findViewById<View>(R.id.gpx_menu_close).setOnClickListener { hideSheets() }
         root.findViewById<View>(R.id.gpx_search_close).setOnClickListener { hideSheets() }
@@ -1374,7 +1374,7 @@ class GpxDashUi(
                     showIdle()
                     return
                 }
-                searchStatus.text = "Suggestions…"
+                searchStatus.text = context.getString(R.string.hc_dash_suggestions)
                 main.postDelayed(suggestRunnable, 350)
             }
         })
@@ -1394,40 +1394,40 @@ class GpxDashUi(
             val p = pendingPlace ?: return@wirePreviewAction
             MapPlaces.addFavorite(context, p)
             refreshPins()
-            statusView.text = "Saved ${p.name} to favorites"
-            if (voiceOn) voiceLocal.speak("Saved")
+            statusView.text = context.getString(R.string.hc_dash_saved_fav, p.name)
+            if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_saved))
             if (pinSetupOnly) cancelPreview()
         }
         wirePreviewAction(R.id.gpx_preview_home) {
             val p = pendingPlace ?: return@wirePreviewAction
-            MapPlaces.setHome(context, p.copy(name = if (p.name == "Dropped pin") "Home" else p.name))
+            MapPlaces.setHome(context, p.copy(name = if (p.name == "Dropped pin" || p.name == context.getString(R.string.hc_dash_dropped_pin)) "Home" else p.name))
             refreshPins()
-            statusView.text = "Home set"
-            if (voiceOn) voiceLocal.speak("Home set")
+            statusView.text = context.getString(R.string.hc_dash_home_set)
+            if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_home_set))
             if (pinSetupOnly) cancelPreview()
         }
         wirePreviewAction(R.id.gpx_preview_marker) {
             val p = pendingPlace ?: return@wirePreviewAction
             MapPlaces.addMarker(context, p)
             refreshPins()
-            statusView.text = "Marker added"
-            if (voiceOn) voiceLocal.speak("Marker added")
+            statusView.text = context.getString(R.string.hc_dash_marker_added)
+            if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_marker_added))
             if (pinSetupOnly) cancelPreview()
         }
         root.findViewById<Button>(R.id.gpx_arrive_park)?.setOnClickListener {
             val loc = lastLoc
             if (loc == null) {
-                statusView.text = "No GPS for parking"
+                statusView.text = context.getString(R.string.hc_dash_no_gps_parking)
                 return@setOnClickListener
             }
             val place = MapPlace(
-                "Parked", loc.latitude, loc.longitude, "parking", "Marked on arrival",
+                "Parked", loc.latitude, loc.longitude, "parking", context.getString(R.string.hc_dash_marked_on_arrival),
             )
             MapPlaces.setParked(context, place)
             refreshPins()
             hideArriveCard()
-            statusView.text = "Parking marked"
-            if (voiceOn) voiceLocal.speak("Parking marked")
+            statusView.text = context.getString(R.string.hc_dash_parking_marked)
+            if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_parking_marked))
         }
         root.findViewById<Button>(R.id.gpx_arrive_find)?.setOnClickListener {
             hideArriveCard()
@@ -1440,13 +1440,13 @@ class GpxDashUi(
         }
         root.findViewById<Button>(R.id.gpx_arrive_done)?.setOnClickListener {
             hideArriveCard()
-            statusView.text = "Free ride"
+            statusView.text = context.getString(R.string.gpx_free_ride_place)
         }
         refreshChrome()
 
         followBtn.setOnClickListener {
             follow = !follow
-            followBtn.text = if (follow) "Follow on" else "Free pan"
+            followBtn.text = if (follow) context.getString(R.string.hc_dash_follow_on) else context.getString(R.string.hc_dash_free_pan)
             main.removeCallbacks(recenter)
         }
         northBtn.setOnClickListener {
@@ -1492,12 +1492,12 @@ class GpxDashUi(
                 return
             }
             if (liveMode == GpxSession.Mode.FREE_RIDE) {
-                statusView.text = "Already free ride"
+                statusView.text = context.getString(R.string.hc_dash_already_free_ride)
                 hideSheets()
                 return
             }
             // Manual stop ≠ arrival — never flash "Arrived at …" / parking sheet.
-            finishToFreeRideUi("Navigation finished", offerParking = false)
+            finishToFreeRideUi(context.getString(R.string.hc_dash_nav_finished), offerParking = false)
             refreshChrome()
             hideSheets()
             onChromeFocus?.invoke("default")
@@ -1507,7 +1507,7 @@ class GpxDashUi(
         root.findViewById<Button>(R.id.gpx_park).setOnClickListener {
             val loc = lastLoc
             if (loc == null) {
-                statusView.text = "No GPS for parking"
+                statusView.text = context.getString(R.string.hc_dash_no_gps_parking)
                 return@setOnClickListener
             }
             val existing = MapPlaces.parked(context)
@@ -1517,24 +1517,24 @@ class GpxDashUi(
                 // Same spot → clear. Farther away → replace with a new parking pin.
                 MapPlaces.clearParked(context)
                 refreshPins()
-                statusView.text = "Parked spot cleared"
-                if (voiceOn) voiceLocal.speak("Parking cleared")
+                statusView.text = context.getString(R.string.hc_dash_parked_cleared)
+                if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_parking_cleared))
                 hideSheets()
                 return@setOnClickListener
             }
             val place = MapPlace(
-                "Parked", loc.latitude, loc.longitude, "parking", "Marked on dash",
+                "Parked", loc.latitude, loc.longitude, "parking", context.getString(R.string.hc_dash_marked_on_dash),
             )
             MapPlaces.setParked(context, place)
             refreshPins()
-            statusView.text = if (existing != null) "Parking updated" else "Parking marked"
-            if (voiceOn) voiceLocal.speak(if (existing != null) "Parking updated" else "Parking marked")
+            statusView.text = if (existing != null) context.getString(R.string.hc_dash_parking_updated) else context.getString(R.string.hc_dash_parking_marked)
+            if (voiceOn) voiceLocal.speak(if (existing != null) context.getString(R.string.hc_dash_parking_updated) else context.getString(R.string.hc_dash_parking_marked))
             hideSheets()
         }
         root.findViewById<Button>(R.id.gpx_go_home)?.setOnClickListener {
             val home = MapPlaces.home(context)
             if (home == null) {
-                statusView.text = "No Home set — long-press map or use Set Home"
+                statusView.text = context.getString(R.string.hc_dash_no_home)
                 hideSheets()
                 return@setOnClickListener
             }
@@ -1544,19 +1544,19 @@ class GpxDashUi(
         root.findViewById<Button>(R.id.gpx_set_home)?.setOnClickListener {
             val loc = lastLoc
             if (loc == null) {
-                statusView.text = "No GPS to set Home"
+                statusView.text = context.getString(R.string.hc_dash_no_gps_home)
                 return@setOnClickListener
             }
-            val place = MapPlace("Home", loc.latitude, loc.longitude, "home", "Set on dash")
+            val place = MapPlace("Home", loc.latitude, loc.longitude, "home", context.getString(R.string.hc_dash_set_on_dash))
             MapPlaces.setHome(context, place)
             refreshPins()
-            statusView.text = "Home set here"
-            if (voiceOn) voiceLocal.speak("Home set")
+            statusView.text = context.getString(R.string.hc_dash_home_set_here)
+            if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_home_set))
             hideSheets()
         }
         root.findViewById<Button>(R.id.gpx_recalc).setOnClickListener {
             follow = true
-            followBtn.text = "Follow on"
+            followBtn.text = context.getString(R.string.hc_dash_follow_on)
             main.removeCallbacks(recenter)
             units = MapPrefs.units(context)
             showNextStop = MapPrefs.showNextStop(context)
@@ -1583,16 +1583,16 @@ class GpxDashUi(
                             dashLocal.setCenter(pts.first().lat, pts.first().lon, 15.0)
                         }
                         statusView.setTextColor(statusColorNormal)
-                        statusView.text = "Snap · back on track"
-                        if (voiceOn) voiceLocal.speak("Back on track")
+                        statusView.text = context.getString(R.string.hc_dash_snap_back)
+                        if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_back_on_track))
                     }
                 }
                 loc != null -> {
                     dashLocal.setCenter(loc.latitude, loc.longitude)
-                    statusView.text = "Recentered"
-                    if (voiceOn) voiceLocal.speak("Centered")
+                    statusView.text = context.getString(R.string.hc_dash_recentered)
+                    if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_centered))
                 }
-                else -> statusView.text = "No GPS"
+                else -> statusView.text = context.getString(R.string.hc_dash_no_gps)
             }
             hideSheets()
         }
@@ -1734,13 +1734,13 @@ class GpxDashUi(
         fun startCircuit() {
             val loc = lastLoc
             if (loc == null) {
-                statusView.text = "Need GPS for a circuit"
+                statusView.text = context.getString(R.string.hc_dash_need_gps_circuit)
                 hideSheets()
                 return
             }
             val place = pendingPlace
             if (place == null) {
-                statusView.text = "Pick a destination, then Circuit (there & back)"
+                statusView.text = context.getString(R.string.hc_dash_pick_dest_circuit)
                 hideSheets()
                 return
             }
@@ -1748,12 +1748,12 @@ class GpxDashUi(
                 loc.latitude, loc.longitude, place.lat, place.lon,
             ) < 120.0
             if (sameSpot) {
-                statusView.text = "Pick a place away from you, then Circuit"
+                statusView.text = context.getString(R.string.hc_dash_pick_far_circuit)
                 hideSheets()
                 return
             }
             hideSheets()
-            statusView.text = "Building there & back to ${place.name}…"
+            statusView.text = context.getString(R.string.hc_dash_building_circuit_to, place.name)
             pendingRoute = null
             pendingRoutes = emptyList()
             selectedRouteIdx = 0
@@ -1763,7 +1763,7 @@ class GpxDashUi(
             dashLocal.setDestination(place)
             dashLocal.clearRoutes()
             previewName.text = place.name
-            previewMeta.text = "There & back · returning home"
+            previewMeta.text = context.getString(R.string.hc_dash_there_back_returning)
             refreshChrome()
             OfflineRouter.circuitAlternativesAsync(
                 context,
@@ -1775,14 +1775,14 @@ class GpxDashUi(
                     main.post {
                         if (!isAlive() || released || pendingPlace != place) return@post
                         if (routes.isEmpty()) {
-                            previewMeta.text = "No circuit found"
+                            previewMeta.text = context.getString(R.string.hc_dash_no_circuit)
                             return@post
                         }
                         pendingRoutes = routes
                         selectRoute(0, loc, place)
                         previewMeta.text = listOfNotNull(
                             previewMeta.text?.toString()?.takeIf { it.isNotBlank() },
-                            "There & back · returns home",
+                            context.getString(R.string.hc_dash_there_back_returns),
                         ).joinToString(" · ")
                     }
                 },
@@ -1794,7 +1794,7 @@ class GpxDashUi(
                     }
                 },
             )
-            if (voiceOn) voiceLocal.speak("Building there and back circuit")
+            if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_building_circuit))
         }
         root.findViewById<Button>(R.id.gpx_create_circuit)?.setOnClickListener { startCircuit() }
         wirePreviewAction(R.id.gpx_preview_circuit) { startCircuit() }
@@ -1819,10 +1819,10 @@ class GpxDashUi(
                 card.visibility = View.VISIBLE
                 pill?.text = context.getString(R.string.gpx_lap_stop)
                 currentTv.text = if (h.waiting) context.getString(R.string.gpx_lap_pass_sf)
-                else "LAP ${h.lap}  ${LapTimer.formatMs(h.currentMs)}"
+                else context.getString(R.string.hc_dash_lap_current, h.lap, LapTimer.formatMs(h.currentMs))
                 val last = h.lastMs?.let { LapTimer.formatMs(it) } ?: "—"
                 val best = h.bestMs?.let { LapTimer.formatMs(it) } ?: "—"
-                metaTv.text = "LAST $last   BEST $best"
+                metaTv.text = context.getString(R.string.hc_dash_lap_last_best, last, best)
             }
         }
         fun paintLapHud() = lapTick.paintLapHud()
@@ -1832,11 +1832,11 @@ class GpxDashUi(
                 main.removeCallbacks(lapTick)
                 paintLapHud()
                 refreshPins()
-                statusView.text = "Lap timer off"
+                statusView.text = context.getString(R.string.hc_dash_lap_off)
             } else {
                 val loc = lastLoc
                 if (loc == null) {
-                    statusView.text = "Need GPS for lap timer"
+                    statusView.text = context.getString(R.string.hc_dash_need_gps_lap)
                     return@setOnClickListener
                 }
                 lapTimer.arm(loc.latitude, loc.longitude)
@@ -1844,8 +1844,8 @@ class GpxDashUi(
                 refreshPins()
                 main.removeCallbacks(lapTick)
                 main.post(lapTick)
-                statusView.text = "Lap: ride out, then pass start/finish"
-                if (voiceOn) voiceLocal.speak("Lap timer armed")
+                statusView.text = context.getString(R.string.hc_dash_lap_armed_status)
+                if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_lap_armed))
                 log("[LAP] armed at ${loc.latitude},${loc.longitude}")
             }
         }
@@ -1854,7 +1854,7 @@ class GpxDashUi(
             main.postDelayed({
                 if (!isAlive() || released) return@postDelayed
                 if (pendingPlace != null) startCircuit()
-                else statusView.text = "Pick a destination, then Circuit (there & back)"
+                else statusView.text = context.getString(R.string.hc_dash_pick_dest_circuit)
             }, 600)
         }
         // Legacy cycle buttons (gone in layout) — keep working if an old layout is inflated.
@@ -1898,12 +1898,12 @@ class GpxDashUi(
             val rec = TripLogger.get(context)
             if (rec.recording) {
                 rec.stopAndSave()
-                statusView.text = "Ride recording saved"
-                if (voiceOn) voiceLocal.speak("Recording saved")
+                statusView.text = context.getString(R.string.hc_dash_recording_saved_status)
+                if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_recording_saved))
             } else {
                 val ok = rec.start()
-                statusView.text = if (ok) "Recording ride…" else "Can't record — check GPS / permission"
-                if (ok && voiceOn) voiceLocal.speak("Recording started")
+                statusView.text = if (ok) context.getString(R.string.hc_dash_recording) else context.getString(R.string.hc_dash_cant_record)
+                if (ok && voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_recording_started))
             }
             refreshSettingsLabels()
         }
@@ -1913,10 +1913,10 @@ class GpxDashUi(
                 if (!isAlive() || released) return@post
                 hideSheets()
                 val place = MapPlace(
-                    "Dropped pin", lat, lon, "pin",
+                    context.getString(R.string.hc_dash_dropped_pin), lat, lon, "pin",
                     String.format("%.5f, %.5f", lat, lon),
                 )
-                if (voiceOn) voiceLocal.speak("Pin dropped")
+                if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_pin_dropped))
                 showPinSetup(place)
             }
         }
@@ -2177,7 +2177,7 @@ class GpxDashUi(
                         val dir = GpxNav.dirToFace(bestBearing(), toSnap)
                         cueIcon.setImageResource(GpxNav.iconResFor(dir))
                         cueDist.text = GpxNav.formatDistance(prog.offTrackM, units)
-                        cueView.text = GpxNav.joinRouteWord(dir)
+                        cueView.text = joinRouteWord(dir)
                         laneView.visibility = View.GONE
                         if (voiceOn) voiceLocal.onJoinRoute(dir, prog.offTrackM, units)
                     }
@@ -2197,7 +2197,7 @@ class GpxDashUi(
                         // On route, no turn ahead → show the run-in to the destination.
                         cueIcon.setImageResource(R.drawable.ic_man_arrive)
                         cueDist.text = GpxNav.formatDistance(prog.remainM, units)
-                        cueView.text = "To ${dest?.name ?: GpxSession.trackName}"
+                        cueView.text = context.getString(R.string.hc_dash_to_dest, dest?.name ?: GpxSession.trackName)
                         laneView.visibility = View.GONE
                         if (voiceOn) voiceLocal.onProgress(prog, units, loc.speed)
                     }
@@ -2205,10 +2205,10 @@ class GpxDashUi(
                 nextView.visibility = View.GONE
                 if (prog.remainM < 40 && !destArrivedSpoken && canDeclareArrival(prog.remainM)) {
                     destArrivedSpoken = true
-                    if (voiceOn) voiceLocal.speak("Destination reached")
+                    if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_dest_reached))
                     if (autoFinish) {
                         main.postDelayed({
-                            finishToFreeRideUi("Arrived", offerParking = true)
+                            finishToFreeRideUi(context.getString(R.string.hc_dash_arrived), offerParking = true)
                             refreshChrome()
                         }, 2_000L)
                     } else {
@@ -2232,8 +2232,8 @@ class GpxDashUi(
                 cueIcon.setImageResource(GpxNav.iconResFor(dir))
                 cueDist.text = GpxNav.formatDistance(dM, units)
                 cueView.text = when (dir) {
-                    GpxNav.TurnDir.STRAIGHT, GpxNav.TurnDir.CONTINUE -> "Go ahead"
-                    else -> GpxNav.joinRouteWord(dir)
+                    GpxNav.TurnDir.STRAIGHT, GpxNav.TurnDir.CONTINUE -> context.getString(R.string.hc_dash_go_ahead)
+                    else -> joinRouteWord(dir)
                 }
                 laneView.visibility = View.GONE
                 nextView.visibility = View.GONE
@@ -2242,10 +2242,10 @@ class GpxDashUi(
                 }
                 if (dM < 80 && !destArrivedSpoken && canDeclareArrival(dM)) {
                     destArrivedSpoken = true
-                    if (voiceOn) voiceLocal.speak("Arriving at ${dest.name}")
+                    if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_arriving_at, dest.name))
                     if (autoFinish) {
                         main.postDelayed({
-                            finishToFreeRideUi("Arrived", offerParking = true)
+                            finishToFreeRideUi(context.getString(R.string.hc_dash_arrived), offerParking = true)
                             refreshChrome()
                         }, 2_500L)
                     } else {
@@ -2297,8 +2297,8 @@ class GpxDashUi(
                 ) {
                     val h = lapTimer.hud(System.currentTimeMillis())
                     val last = h.lastMs?.let { LapTimer.formatMs(it) } ?: ""
-                    statusView.text = "Lap ${h.finished}  $last"
-                    if (voiceOn) voiceLocal.speak("Lap ${h.finished}")
+                    statusView.text = context.getString(R.string.hc_dash_lap_done, h.finished, last)
+                    if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_lap, h.finished))
                     log("[LAP] finished #${h.finished} $last best=${h.bestMs?.let { LapTimer.formatMs(it) }}")
                 }
                 paintLapHud()
@@ -2312,7 +2312,7 @@ class GpxDashUi(
                         track = oriented
                         liveNav = GpxNav(oriented)
                         log("[GPX] reversed track to match rider heading")
-                        if (voiceOn) voiceLocal.speak("Following the track the other way")
+                        if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_reverse_track))
                         refreshTitle()
                     }
                 }
@@ -2349,13 +2349,10 @@ class GpxDashUi(
                         val dM = GpxNav.haversineM(
                             loc.latitude, loc.longitude, dest.lat, dest.lon,
                         )
-                        "${GpxNav.formatSpeed(speedKmh, units)} ${GpxNav.speedUnitLabel(units)} · " +
-                            "${GpxNav.formatDistance(dM, units)} to ${dest.name} · " +
-                            "avg ${GpxNav.formatSpeed(rideStats.avgKmh(), units)}"
+                        context.getString(R.string.hc_dash_status_to, GpxNav.formatSpeed(speedKmh, units), GpxNav.speedUnitLabel(units), GpxNav.formatDistance(dM, units), dest.name, GpxNav.formatSpeed(rideStats.avgKmh(), units))
                     }
                     else ->
-                        "${GpxNav.formatSpeed(speedKmh, units)} ${GpxNav.speedUnitLabel(units)} · " +
-                            "free ride · avg ${GpxNav.formatSpeed(rideStats.avgKmh(), units)}"
+                        context.getString(R.string.hc_dash_status_free, GpxNav.formatSpeed(speedKmh, units), GpxNav.speedUnitLabel(units), GpxNav.formatSpeed(rideStats.avgKmh(), units))
                 }
                 applyProgress(prog, speedKmh, loc)
                 // Auto-reroute: sustained off-route in NAV_TO recalculates from the current spot.
@@ -2368,7 +2365,7 @@ class GpxDashUi(
                             lastAutoRerouteMs = now
                             offRouteSinceMs = 0L
                             log("[GPX] auto-reroute (off ${prog.offTrackM.toInt()}m for ${offForMs / 1000}s)")
-                            if (voiceOn) voiceLocal.speak("Rerouting")
+                            if (voiceOn) voiceLocal.speak(context.getString(R.string.hc_dash_tts_rerouting))
                             requestOsrm(loc, "recalc")
                         }
                     } else {
@@ -2438,34 +2435,62 @@ class GpxDashUi(
                         .maxByOrNull { it.time }
                         ?.let { listener.onLocationChanged(it) }
                 } else {
-                    statusView.text = "no GPS"
+                    statusView.text = context.getString(R.string.hc_dash_no_gps)
                 }
             } else {
-                statusView.text = "location off"
+                statusView.text = context.getString(R.string.hc_dash_location_off)
             }
         } catch (e: Exception) {
             log("[GPX] location failed: $e")
-            statusView.text = "GPS error"
+            statusView.text = context.getString(R.string.hc_dash_gps_error)
         }
         // Same auto-log path as AA projection — rides on the built-in map land in Saved trips.
         TripAutoLog.setMapUiLive(context, true)
         return true
     }
 
+    /** Display text for [GpxNav.joinRouteWord] directions (GpxNav stays locale-free). */
+    private fun joinRouteWord(dir: GpxNav.TurnDir): String = context.getString(
+        when (dir) {
+            GpxNav.TurnDir.LEFT -> R.string.hc_dash_man_turn_left
+            GpxNav.TurnDir.RIGHT -> R.string.hc_dash_man_turn_right
+            GpxNav.TurnDir.SHARP_LEFT -> R.string.hc_dash_man_sharp_left
+            GpxNav.TurnDir.SHARP_RIGHT -> R.string.hc_dash_man_sharp_right
+            GpxNav.TurnDir.SLIGHT_LEFT -> R.string.hc_dash_join_bear_left
+            GpxNav.TurnDir.SLIGHT_RIGHT -> R.string.hc_dash_join_bear_right
+            GpxNav.TurnDir.UTURN -> R.string.hc_dash_join_turn_around
+            GpxNav.TurnDir.STRAIGHT, GpxNav.TurnDir.CONTINUE -> R.string.hc_dash_go_ahead
+            else -> R.string.hc_dash_join_to_route
+        },
+    )
+
+    /** Router labels are stable English keys (compared elsewhere); translate only for display. */
+    private fun routeLabel(label: String): String = when (label) {
+        "Fast" -> context.getString(R.string.gpx_fast)
+        "Fun" -> context.getString(R.string.gpx_fun)
+        "Alt" -> context.getString(R.string.hc_dash_route_alt)
+        "Circuit" -> context.getString(R.string.gpx_circuit)
+        "Direct" -> context.getString(R.string.hc_dash_route_direct)
+        "No highway" -> context.getString(R.string.hc_dash_route_no_highway)
+        "No toll" -> context.getString(R.string.hc_dash_route_no_toll)
+        "No hwy/toll" -> context.getString(R.string.hc_dash_route_no_hwy_toll)
+        else -> label
+    }
+
     private fun maneuverWord(dir: GpxNav.TurnDir): String = when (dir) {
-        GpxNav.TurnDir.LEFT -> "Turn left"
-        GpxNav.TurnDir.RIGHT -> "Turn right"
-        GpxNav.TurnDir.SHARP_LEFT -> "Sharp left"
-        GpxNav.TurnDir.SHARP_RIGHT -> "Sharp right"
-        GpxNav.TurnDir.SLIGHT_LEFT -> "Slight left"
-        GpxNav.TurnDir.SLIGHT_RIGHT -> "Slight right"
-        GpxNav.TurnDir.UTURN -> "U-turn"
-        GpxNav.TurnDir.ROUNDABOUT -> "Roundabout"
-        GpxNav.TurnDir.MERGE_LEFT, GpxNav.TurnDir.MERGE_RIGHT -> "Merge"
-        GpxNav.TurnDir.FORK_LEFT -> "Keep left"
-        GpxNav.TurnDir.FORK_RIGHT -> "Keep right"
-        GpxNav.TurnDir.STRAIGHT, GpxNav.TurnDir.CONTINUE -> "Continue"
-        GpxNav.TurnDir.ARRIVE -> "Arrive"
+        GpxNav.TurnDir.LEFT -> context.getString(R.string.hc_dash_man_turn_left)
+        GpxNav.TurnDir.RIGHT -> context.getString(R.string.hc_dash_man_turn_right)
+        GpxNav.TurnDir.SHARP_LEFT -> context.getString(R.string.hc_dash_man_sharp_left)
+        GpxNav.TurnDir.SHARP_RIGHT -> context.getString(R.string.hc_dash_man_sharp_right)
+        GpxNav.TurnDir.SLIGHT_LEFT -> context.getString(R.string.hc_dash_man_slight_left)
+        GpxNav.TurnDir.SLIGHT_RIGHT -> context.getString(R.string.hc_dash_man_slight_right)
+        GpxNav.TurnDir.UTURN -> context.getString(R.string.hc_dash_man_uturn)
+        GpxNav.TurnDir.ROUNDABOUT -> context.getString(R.string.hc_dash_man_roundabout)
+        GpxNav.TurnDir.MERGE_LEFT, GpxNav.TurnDir.MERGE_RIGHT -> context.getString(R.string.hc_dash_man_merge)
+        GpxNav.TurnDir.FORK_LEFT -> context.getString(R.string.hc_dash_man_keep_left)
+        GpxNav.TurnDir.FORK_RIGHT -> context.getString(R.string.hc_dash_man_keep_right)
+        GpxNav.TurnDir.STRAIGHT, GpxNav.TurnDir.CONTINUE -> context.getString(R.string.hc_dash_man_continue)
+        GpxNav.TurnDir.ARRIVE -> context.getString(R.string.hc_dash_man_arrive)
     }
 
     fun applyTheme() {

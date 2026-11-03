@@ -124,7 +124,7 @@ object BikeLink {
             p.start(bikeNetwork, gatewayOverride = p2pGatewayIp, bindIpOverride = p2pBindIp)
         } catch (e: Exception) {
             LogBus.log("prober start failed: $e")
-            ConnectionState.set(Phase.ERROR, "prober start failed")
+            ConnectionState.set(Phase.ERROR, appContext?.getString(R.string.hc_main_detail_prober_start_failed).orEmpty())
         }
     }
 
@@ -161,14 +161,14 @@ object BikeLink {
             // error, keep waiting. Only a later drop without video is worth telling the rider.
             val sinceStart = android.os.SystemClock.elapsedRealtime() - connectStartedAt
             if (connectStartedAt > 0 && sinceStart < 45_000L) {
-                ConnectionState.set(Phase.STARTING_AA, "waiting for Android Auto video")
+                ConnectionState.set(Phase.STARTING_AA, appContext?.getString(R.string.hc_main_detail_waiting_aa_video).orEmpty())
             } else {
-                ConnectionState.set(Phase.ERROR, "Android Auto isn't sending video — tap Connect")
+                ConnectionState.set(Phase.ERROR, appContext?.getString(R.string.hc_main_detail_aa_no_video).orEmpty())
             }
             return
         }
         LogBus.log("→ restarting bike link on re-acquired Wi-Fi")
-        ConnectionState.set(Phase.PXC_CONNECTING, "reconnecting")
+        ConnectionState.set(Phase.PXC_CONNECTING, appContext?.getString(R.string.hc_main_detail_reconnecting).orEmpty())
         try { p.stop() } catch (_: Exception) {}
         bikeNetwork = network
         networkReady = true
@@ -178,7 +178,7 @@ object BikeLink {
             p.start(network)
         } catch (e: Exception) {
             LogBus.log("prober restart failed: $e")
-            ConnectionState.set(Phase.ERROR, "prober restart failed")
+            ConnectionState.set(Phase.ERROR, appContext?.getString(R.string.hc_main_detail_prober_restart_failed).orEmpty())
         }
     }
 }

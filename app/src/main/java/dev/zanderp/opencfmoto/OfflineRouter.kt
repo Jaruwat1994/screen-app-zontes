@@ -97,7 +97,7 @@ object OfflineRouter {
             try {
                 val out = computeOutAndBack(ctx, fromLat, fromLon, toLat, toLon)
                 if (out.routes.isEmpty()) {
-                    onError(out.warning ?: "Couldn't build there-and-back circuit")
+                    onError(out.warning ?: ctx.getString(R.string.hc_dash_circuit_failed))
                 } else {
                     LogBus.log(
                         "[route] circuit out-and-back ${out.routes.size} option(s)" +
@@ -106,7 +106,7 @@ object OfflineRouter {
                     onResult(out.routes)
                 }
             } catch (e: Exception) {
-                onError(e.message ?: "Circuit failed")
+                onError(e.message ?: ctx.getString(R.string.hc_dash_circuit_error))
             }
         }
     }
@@ -202,12 +202,12 @@ object OfflineRouter {
                     ),
                 )
             } else {
-                warning = out.warning ?: back.warning ?: "Couldn't build there-and-back circuit"
+                warning = out.warning ?: back.warning ?: ctx.getString(R.string.hc_dash_circuit_failed)
             }
         } else if (opts.wantsAvoids) {
             avoidHonored = usedAvoidEngine
             if (!usedAvoidEngine) {
-                warning = "Couldn't avoid highways/tolls — circuit may use motorway"
+                warning = ctx.getString(R.string.hc_dash_circuit_avoid_failed)
             }
         }
 
@@ -289,7 +289,7 @@ object OfflineRouter {
                 val offlineAvoid = tryOfflineAvoid(ctx, fromLat, fromLon, toLat, toLon, forceLabel)
                 if (offlineAvoid != null) {
                     val warn = if (opts.avoidTolls) {
-                        "Avoiding motorways offline — tolls may still appear"
+                        ctx.getString(R.string.hc_dash_avoid_offline_tolls)
                     } else {
                         null
                     }
@@ -297,7 +297,7 @@ object OfflineRouter {
                     return RouteResult(listOf(offlineAvoid), avoidHonored = !opts.avoidTolls, warning = warn)
                 }
             }
-            val msg = "Couldn't avoid highways/tolls online — showing normal (may use motorway)"
+            val msg = ctx.getString(R.string.hc_dash_avoid_online_failed)
             LogBus.log("[route] $msg — OSRM fallback")
             // Last resort: Google-like fast OSRM (no Fun vias) so the map isn't weird.
             val fallback = cloudWithoutAvoids(

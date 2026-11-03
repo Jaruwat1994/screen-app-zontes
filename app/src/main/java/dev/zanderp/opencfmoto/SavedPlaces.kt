@@ -32,9 +32,9 @@ object SavedPlaces {
 
     /** How this slot reads in the action picker — its own name once there is one. */
     fun actionLabel(context: Context, slot: Int): String {
-        if (!isSet(context, slot)) return "Navigate to saved place ${slot + 1} (not set yet)"
+        if (!isSet(context, slot)) return context.getString(R.string.hc_dash_saved_place_unset, slot + 1)
         val n = name(context, slot)
-        return "Navigate: ${n.ifBlank { query(context, slot) }}"
+        return context.getString(R.string.hc_dash_saved_place_nav, n.ifBlank { query(context, slot) })
     }
 
     private fun prefs(context: Context) =

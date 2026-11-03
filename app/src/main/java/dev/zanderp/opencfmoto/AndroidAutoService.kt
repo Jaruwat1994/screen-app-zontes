@@ -254,11 +254,11 @@ class AndroidAutoService : Service() {
         if (aaParked) return
         aaParked = true
         LogBus.log("[AA] bike Wi-Fi gone > ${GRACE_MS / 1000}s — parking Android Auto to save battery; watching for the bike")
-        ConnectionState.set(Phase.WAITING_FOR_BIKE, "will resume when the bike is back")
+        ConnectionState.set(Phase.WAITING_FOR_BIKE, getString(R.string.hc_main_detail_resume_when_back))
         tearDownAaKeepService()
         updateNotification(
-            "Waiting for bike",
-            "Projection paused to save battery — resumes when the bike is back",
+            getString(R.string.hc_main_notif_waiting_bike),
+            getString(R.string.hc_main_notif_paused_battery),
         )
     }
 
@@ -311,7 +311,7 @@ class AndroidAutoService : Service() {
         if (!isRunning || resumeSteadyReached) return
         aaParked = true
         LogBus.log("[AA] background AA relaunch blocked — parking + prompting tap-to-resume")
-        ConnectionState.set(Phase.WAITING_FOR_BIKE, "tap to resume")
+        ConnectionState.set(Phase.WAITING_FOR_BIKE, getString(R.string.hc_main_detail_tap_resume))
         tearDownAaKeepService()
         postResumeFallbackNotification()
     }
@@ -444,7 +444,7 @@ class AndroidAutoService : Service() {
     private fun postResumeFallbackNotification() {
         LogBus.log("[AA] auto-resume couldn't relaunch Android Auto in the background — prompting to tap")
         val hint = if (!SetupHelper.canAutoResume(this))
-            "Tap to resume — or enable “Display over other apps” in Setup for hands-free resume"
+            getString(R.string.hc_main_notif_tap_resume_overlay)
         else
             getString(R.string.notif_tap_resume)
         updateNotification(getString(R.string.notif_bike_reconnected), hint, resume = true)
@@ -630,7 +630,7 @@ class AndroidAutoService : Service() {
             ConnectionState.set(Phase.STREAMING)
         } else {
             LogBus.log("[AA→MAP] Map attach failed — try Stop then Map")
-            ConnectionState.set(Phase.ERROR, "Map switch failed — Stop, then Map")
+            ConnectionState.set(Phase.ERROR, getString(R.string.hc_main_detail_map_switch_failed))
         }
         return ok
     }

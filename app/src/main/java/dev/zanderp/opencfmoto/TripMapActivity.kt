@@ -79,7 +79,7 @@ class TripMapActivity : AppCompatActivity() {
         val id = intent.getStringExtra(EXTRA_ID)
         val trip = id?.let { TripStore.get(this, it) }
         if (trip == null) {
-            Toast.makeText(this, "Trip not found", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_trip_not_found, Toast.LENGTH_SHORT).show()
             finish()
             return
         }
@@ -87,7 +87,7 @@ class TripMapActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.map_title).text = TripNames.title(this, trip)
         findViewById<TextView>(R.id.map_stats).text =
-            "${trip.distanceText()} · ${trip.durationText()} · avg ${trip.avgKmh} · max ${trip.maxKmh} km/h\n" +
+            getString(R.string.hc_act_trip_map_stats, trip.distanceText(), trip.durationText(), trip.avgKmh, trip.maxKmh) + "\n" +
             getString(R.string.map_speed_legend)
 
         renderRoute(trip)
@@ -198,8 +198,8 @@ class TripMapActivity : AppCompatActivity() {
         }
         flush()
 
-        addMarker(geo.first(), "Start", Color.GREEN)
-        if (geo.size > 1) addMarker(geo.last(), "End", Color.RED)
+        addMarker(geo.first(), getString(R.string.hc_act_marker_start), Color.GREEN)
+        if (geo.size > 1) addMarker(geo.last(), getString(R.string.hc_act_marker_end), Color.RED)
         frame(geo, 1.4f)
     }
 

@@ -74,7 +74,7 @@ class ControlsActivity : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.btn_nav_go).setOnClickListener {
             val dest = nav.text?.toString()?.trim().orEmpty()
             if (dest.isEmpty()) {
-                Toast.makeText(this, "Type a destination first", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.hc_act_type_destination_first, Toast.LENGTH_SHORT).show()
             } else {
                 NavLauncher.navigate(this, dest, LogBus::log)
             }
@@ -324,12 +324,12 @@ class ControlsActivity : AppCompatActivity() {
             }
         }
 
-        btnPadFullscreen.text = if (on) "Exit" else "Fullscreen"
+        btnPadFullscreen.text = getString(if (on) R.string.hc_act_exit else R.string.controls_fullscreen)
 
         if (on) {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             insetsController.hide(SafeInsets.BARS)
-            Toast.makeText(this, "Pad fullscreen — screen stays on. Press Back to exit.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_pad_fullscreen, Toast.LENGTH_SHORT).show()
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             insetsController.show(SafeInsets.BARS)
@@ -384,7 +384,7 @@ class ControlsActivity : AppCompatActivity() {
         }
         val sink = AaVideoBridge.keySink
         if (sink == null) {
-            Toast.makeText(this, "Start Android Auto or Map first", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_start_aa_or_map_first, Toast.LENGTH_SHORT).show()
         } else {
             sink(code)
         }
@@ -398,7 +398,7 @@ class ControlsActivity : AppCompatActivity() {
         }
         val sink = AaVideoBridge.scrollSink
         if (sink == null) {
-            Toast.makeText(this, "Start Android Auto or Map first", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_start_aa_or_map_first, Toast.LENGTH_SHORT).show()
         } else {
             sink(delta)
         }

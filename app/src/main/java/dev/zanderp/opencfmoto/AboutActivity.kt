@@ -29,7 +29,7 @@ class AboutActivity : AppCompatActivity() {
         }
 
         findViewById<TextView>(R.id.about_version).text =
-            "Version ${BuildConfig.VERSION_NAME}  ·  build ${BuildConfig.VERSION_CODE}"
+            getString(R.string.hc_act_about_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
 
         findViewById<MaterialButton>(R.id.btn_about_website).setOnClickListener {
             openUrl(URL_WEBSITE)
@@ -59,7 +59,7 @@ class AboutActivity : AppCompatActivity() {
         try {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
         } catch (_: Exception) {
-            Toast.makeText(this, "Couldn't open link", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_open_link_failed, Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -48,19 +48,16 @@ object ManualWifiPairing {
             return et
         }
 
-        val ssid = field("Wi‑Fi name (SSID)")
-        val pwd = field("Password", password = true)
-        val name = field("Bike name (optional)")
+        val ssid = field(activity.getString(R.string.hc_act_wifi_ssid_hint))
+        val pwd = field(activity.getString(R.string.hc_act_wifi_password_hint), password = true)
+        val name = field(activity.getString(R.string.hc_act_bike_name_optional))
 
         val dialog = MaterialAlertDialogBuilder(activity)
-            .setTitle("Enter bike Wi‑Fi")
-            .setMessage(
-                "For dashes that show SSID + password instead of a QR (e.g. Benelli TRK). " +
-                    "Use the exact network name from the bike screen.",
-            )
+            .setTitle(R.string.hc_act_manual_wifi_title)
+            .setMessage(R.string.hc_act_manual_wifi_msg)
             .setView(col)
-            .setPositiveButton("Add bike", null)
-            .setNegativeButton("Cancel", null)
+            .setPositiveButton(R.string.hc_act_add_bike, null)
+            .setNegativeButton(android.R.string.cancel, null)
             .create()
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
@@ -70,7 +67,7 @@ object ManualWifiPairing {
                     displayName = name.text?.toString(),
                 )
                 if (built == null) {
-                    Toast.makeText(activity, "SSID and password are required", Toast.LENGTH_SHORT)
+                    Toast.makeText(activity, R.string.hc_act_ssid_pwd_required, Toast.LENGTH_SHORT)
                         .show()
                     return@setOnClickListener
                 }

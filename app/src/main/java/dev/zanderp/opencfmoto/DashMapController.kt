@@ -95,7 +95,7 @@ class DashMapController(
     }
 
     private val me = Marker(map).apply {
-        title = "You"
+        title = context.getString(R.string.hc_dash_you)
         setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
         setFlat(true)
         icon = sizedDrawable(R.drawable.ic_nav_arrow, 48, 48)

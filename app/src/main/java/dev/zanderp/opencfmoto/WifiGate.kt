@@ -151,8 +151,8 @@ object WifiGate {
             )
             val n = Notification.Builder(app, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.ic_dialog_alert)
-                .setContentTitle("Turn on Wi‑Fi")
-                .setContentText("OpenCfMoto can’t reach the bike — tap to open Wi‑Fi settings.")
+                .setContentTitle(app.getString(R.string.hc_main_wifi_notif_title))
+                .setContentText(app.getString(R.string.hc_main_wifi_notif_text))
                 .setContentIntent(pi)
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
@@ -170,10 +170,10 @@ object WifiGate {
         nm.createNotificationChannel(
             NotificationChannel(
                 CHANNEL_ID,
-                "Wi‑Fi required",
+                app.getString(R.string.hc_main_wifi_channel),
                 NotificationManager.IMPORTANCE_DEFAULT,
             ).apply {
-                description = "Alerts when phone Wi‑Fi is off during Connect"
+                description = app.getString(R.string.hc_main_wifi_channel_desc)
             }
         )
     }

@@ -219,7 +219,7 @@ class EasyConnProber(
             if (BikeWifi.isVpnBindBlocked(context, bindErr)) {
                 log("!! VPN kill-switch is blocking bike Wi-Fi (EPERM on Network.bindSocket). " +
                     "Disable Always-on VPN → 'Block connections without VPN', allow LAN, or turn the VPN off.")
-                ConnectionState.set(Phase.ERROR, "VPN kill-switch blocking bike Wi‑Fi")
+                ConnectionState.set(Phase.ERROR, context.getString(R.string.hc_main_detail_vpn_kill_switch))
                 stop()
                 return
             }
@@ -252,7 +252,7 @@ class EasyConnProber(
         if (bindConflict) {
             log("!! link ports are held by another app (usually the official CFMoto/EasyConnect app). " +
                 "Close it (force-stop) and reconnect — OpenCfMoto needs ports ${LISTEN_PORTS.toList()}.")
-            ConnectionState.set(Phase.ERROR, "close the official CFMoto app, then reconnect")
+            ConnectionState.set(Phase.ERROR, context.getString(R.string.hc_main_detail_close_rival))
             stop()
             return
         }
@@ -467,7 +467,7 @@ class EasyConnProber(
             val bindErr = BikeWifi.testBikeSocketBind(context)
             if (BikeWifi.isVpnBindBlocked(context, bindErr)) {
                 log("!! VPN kill-switch blocked bike bind after probe failure: ${bindErr?.message}")
-                ConnectionState.set(Phase.ERROR, "VPN kill-switch blocking bike Wi‑Fi")
+                ConnectionState.set(Phase.ERROR, context.getString(R.string.hc_main_detail_vpn_kill_switch))
             } else if (BikeWifi.isVpnActive(context)) {
                 log("!! probe never reached the bike; an internet VPN is also active " +
                     "(${BikeWifi.vpnNetworksSummary(context)}). If this keeps happening, turn the VPN " +
@@ -566,7 +566,7 @@ class EasyConnProber(
                 if (everConnected) {
                     log("!! ignoring VPN bind blip — bike already linked this session; will retry")
                 } else {
-                    ConnectionState.set(Phase.ERROR, "VPN kill-switch blocking bike Wi‑Fi")
+                    ConnectionState.set(Phase.ERROR, context.getString(R.string.hc_main_detail_vpn_kill_switch))
                     return
                 }
             } catch (e: Exception) {
@@ -679,16 +679,16 @@ class EasyConnProber(
         }
         if (emptySessions >= MAX_EMPTY_SESSIONS) {
             log("[reconnect] dash hung up $emptySessions times without getting a single frame — no video source (Android Auto not running?). Stopping the re-probe loop.")
-            ConnectionState.set(Phase.ERROR, "Android Auto isn't sending video — tap Connect")
+            ConnectionState.set(Phase.ERROR, context.getString(R.string.hc_main_detail_aa_no_video))
             return
         }
         if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
             log("[reconnect] gave up after $reconnectAttempts attempts — tap Connect to retry")
-            ConnectionState.set(Phase.ERROR, "lost bike link")
+            ConnectionState.set(Phase.ERROR, context.getString(R.string.hc_main_detail_lost_link))
             return
         }
         reprobing = true
-        if (controlOnlySessions == 0) ConnectionState.set(Phase.RECONNECTING, "attempt ${reconnectAttempts + 1}")
+        if (controlOnlySessions == 0) ConnectionState.set(Phase.RECONNECTING, context.getString(R.string.hc_main_detail_attempt, reconnectAttempts + 1))
         thread(name = "ec-reprobe", isDaemon = true) {
             try {
                 while (running && liveConns.get() == 0 && reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {

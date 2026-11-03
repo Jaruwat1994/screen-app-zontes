@@ -468,7 +468,7 @@ class YunmoLink(
             if (!sendAccessUnit(out, toSend, encW, encH, metaW, metaH, port, force = false)) break
         }
         if (running) {
-            ConnectionState.set(Phase.ERROR, "Yunmo link dropped")
+            ConnectionState.set(Phase.ERROR, context.getString(R.string.hc_main_detail_yunmo_dropped))
         }
     }
 

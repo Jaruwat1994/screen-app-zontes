@@ -293,7 +293,7 @@ object BikeWifi {
             logCb?.invoke("re-requesting bike Wi-Fi (attempt $rejoinAttempts) …")
             // Don't stomp the WAITING_FOR_BIKE state the service sets once AA is parked.
             if (ConnectionState.phase != Phase.WAITING_FOR_BIKE) {
-                ConnectionState.set(Phase.RECONNECTING, "waiting for bike Wi-Fi")
+                ConnectionState.set(Phase.RECONNECTING, appContext?.getString(R.string.hc_main_detail_waiting_bike_wifi).orEmpty())
             }
             registerCallback()
         }, delay)

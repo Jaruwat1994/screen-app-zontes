@@ -64,9 +64,9 @@ object ButtonPresencePrefs {
 
     fun summarize(ctx: Context): String {
         fun label(p: ButtonPresence) = when (p) {
-            ButtonPresence.UNKNOWN -> "untested"
-            ButtonPresence.PRESENT -> "works"
-            ButtonPresence.ABSENT -> "absent"
+            ButtonPresence.UNKNOWN -> ctx.getString(R.string.hc_misc_presence_untested)
+            ButtonPresence.PRESENT -> ctx.getString(R.string.hc_misc_presence_works)
+            ButtonPresence.ABSENT -> ctx.getString(R.string.hc_misc_presence_absent)
         }
         return "▲/▼ ${label(volumeRocker(ctx))} · ◀/▶ ${label(trackKeys(ctx))}"
     }

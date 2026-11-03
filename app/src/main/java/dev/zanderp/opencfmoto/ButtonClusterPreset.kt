@@ -4,6 +4,7 @@
 package dev.zanderp.opencfmoto
 
 import android.content.Context
+import androidx.annotation.StringRes
 
 /**
  * Recommended handlebar mappings for the common CFMOTO left-switch clusters. Physical hardware
@@ -26,9 +27,13 @@ enum class ButtonClusterPreset(
      * clusters that cannot express discrete ×2 — waiting only adds lag.
      */
     val instantSingles: Boolean,
+    @StringRes val titleRes: Int,
+    @StringRes val summaryRes: Int,
 ) {
     FIVE_WAY(
         id = "five_way",
+        titleRes = R.string.hc_misc_preset_five_way_title,
+        summaryRes = R.string.hc_misc_preset_five_way_summary,
         title = "5-way Explore (Fn / ★ / voice)",
         summary = "◀/▶ = knob (move) · ◀◀/▶▶ = D-pad ←/→ (into apps) · ★ = Select · " +
             "★★ = Back · ★ hold = Home. Singles fire immediately (no lag waiting for ×2).",
@@ -37,6 +42,8 @@ enum class ButtonClusterPreset(
     ),
     MODE_ENT(
         id = "mode_ent",
+        titleRes = R.string.hc_misc_preset_mode_ent_title,
+        summaryRes = R.string.hc_misc_preset_mode_ent_summary,
         title = "MODE / ENT cluster",
         summary = "Same AA navigation as 5-way: knob · ×2 = D-pad ←/→ · ★★ = Back. " +
             "Singles are snappy; a second tap in the window still fires ×2.",
@@ -44,6 +51,8 @@ enum class ButtonClusterPreset(
     ),
     BACK_SET(
         id = "back_set",
+        titleRes = R.string.hc_misc_preset_back_set_title,
+        summaryRes = R.string.hc_misc_preset_back_set_summary,
         title = "BACK / SET diamond (limited)",
         summary = "Snappy singles (no double-tap wait). Discrete hold / Select ×2 usually don't " +
             "exist — but a hard ▲▲ / ▼▼ volume flick often coalesces into ×2 → Back / Home. " +
@@ -72,6 +81,10 @@ enum class ButtonClusterPreset(
             ButtonGesture.NAV_FWD_DOUBLE to ButtonAction.HOME,
         )
     }
+
+    /** Localized [title] / [summary] for the UI; the English fields stay for logs. */
+    fun displayTitle(context: Context): String = context.getString(titleRes)
+    fun displaySummary(context: Context): String = context.getString(summaryRes)
 
     fun apply(context: Context) {
         // Clear first so gestures not listed fall back to shipped defaults (FIVE_WAY), then

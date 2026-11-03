@@ -92,21 +92,21 @@ class TripActivity : AppCompatActivity() {
             return
         }
         if (!recorder.gpsAvailable()) {
-            gpsView.text = "GPS is off"
-            if (!silent) Toast.makeText(this, "Turn on GPS/Location to record", Toast.LENGTH_LONG).show()
+            gpsView.text = getString(R.string.hc_act_gps_off)
+            if (!silent) Toast.makeText(this, R.string.hc_act_turn_on_gps_record, Toast.LENGTH_LONG).show()
             return
         }
         if (!recorder.start() && !silent) {
-            Toast.makeText(this, "Couldn't start GPS", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.hc_act_gps_start_failed, Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun render(s: TripRecorder.Stats) {
         speedView.text = s.speedKmh.toString()
         gpsView.text = when {
-            !s.recording -> "Stopped"
-            !s.hasFix -> "Acquiring GPS…"
-            else -> "GPS fix" + if (s.accuracyM > 0) " ±${s.accuracyM}m" else ""
+            !s.recording -> getString(R.string.conn_stopped)
+            !s.hasFix -> getString(R.string.hc_act_gps_acquiring)
+            else -> getString(R.string.hc_act_gps_fix) + if (s.accuracyM > 0) " ±${s.accuracyM}m" else ""
         }
         distanceView.text = String.format(Locale.US, "%.2f km", s.distanceMeters / 1000.0)
         durationView.text = formatDuration(s.movingTimeMs)
@@ -127,7 +127,7 @@ class TripActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQ_LOCATION) {
             if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) tryStart()
-            else Toast.makeText(this, "Location permission is required for the trip HUD", Toast.LENGTH_LONG).show()
+            else Toast.makeText(this, R.string.hc_act_trip_location_required, Toast.LENGTH_LONG).show()
         }
     }
 

@@ -19,17 +19,18 @@ import kotlin.math.sqrt
  * nearby cities over tiny locals / far-away name collisions. No region hardcoding.
  */
 object NominatimSearch {
-    data class PoiChip(val label: String, val query: String)
+    /** [label] is the stable English key; show [labelRes] to the user. */
+    data class PoiChip(val label: String, val query: String, val labelRes: Int)
 
     val POI_CHIPS = listOf(
-        PoiChip("Fuel", "amenity=fuel"),
-        PoiChip("Cafe", "amenity=cafe"),
-        PoiChip("Food", "amenity=restaurant"),
-        PoiChip("Parking", "amenity=parking"),
-        PoiChip("Hotel", "tourism=hotel"),
-        PoiChip("ATM", "amenity=atm"),
-        PoiChip("Hospital", "amenity=hospital"),
-        PoiChip("Viewpoint", "tourism=viewpoint"),
+        PoiChip("Fuel", "amenity=fuel", R.string.hc_dash_poi_fuel),
+        PoiChip("Cafe", "amenity=cafe", R.string.hc_dash_poi_cafe),
+        PoiChip("Food", "amenity=restaurant", R.string.hc_dash_poi_food),
+        PoiChip("Parking", "amenity=parking", R.string.hc_dash_poi_parking),
+        PoiChip("Hotel", "tourism=hotel", R.string.hc_dash_poi_hotel),
+        PoiChip("ATM", "amenity=atm", R.string.hc_dash_poi_atm),
+        PoiChip("Hospital", "amenity=hospital", R.string.hc_dash_poi_hospital),
+        PoiChip("Viewpoint", "tourism=viewpoint", R.string.hc_dash_poi_viewpoint),
     )
 
     fun searchAsync(

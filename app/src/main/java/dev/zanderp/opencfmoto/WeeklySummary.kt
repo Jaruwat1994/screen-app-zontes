@@ -66,7 +66,7 @@ object WeeklySummary {
         val lines = ArrayList<String>()
         val h = w.movingMs / 3_600_000L; val m = (w.movingMs / 60_000L) % 60
         lines += ctx.getString(R.string.week_line_main, String.format(Locale.getDefault(), "%.0f", w.km), w.rides,
-            if (h > 0) "$h h $m min" else "$m min")
+            if (h > 0) ctx.getString(R.string.hc_misc_duration_h_min, h, m) else ctx.getString(R.string.hc_misc_duration_min, m))
         if (w.prevKm > 0.5) {
             val pct = ((w.km - w.prevKm) / w.prevKm * 100).toInt()
             lines += ctx.getString(if (pct >= 0) R.string.week_line_more else R.string.week_line_less, kotlin.math.abs(pct))

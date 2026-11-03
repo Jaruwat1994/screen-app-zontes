@@ -53,14 +53,14 @@ object MapDataBackup {
         val root = try {
             JSONObject(json.trim().removePrefix("\uFEFF"))
         } catch (e: Exception) {
-            return Result(false, "Not valid JSON: ${e.message}")
+            return Result(false, context.getString(R.string.hc_act_backup_bad_json, e.message.orEmpty()))
         }
         if (root.optString("format") != FORMAT) {
-            return Result(false, "Not an OpenCfMoto map file")
+            return Result(false, context.getString(R.string.hc_act_backup_not_map))
         }
         val ver = root.optInt("version", 0)
         if (ver < 1 || ver > VERSION) {
-            return Result(false, "Unsupported map backup version $ver")
+            return Result(false, context.getString(R.string.hc_act_backup_map_version, ver))
         }
         try {
             root.optJSONObject("prefs")?.let { p ->
@@ -95,9 +95,9 @@ object MapDataBackup {
                 home = root.optJSONObject("home")?.let { parsePlace(it) },
             )
         } catch (e: Exception) {
-            return Result(false, "Import failed: ${e.message}")
+            return Result(false, context.getString(R.string.hc_act_import_failed, e.message.orEmpty()))
         }
-        return Result(true, "Map data imported")
+        return Result(true, context.getString(R.string.hc_act_backup_map_imported))
     }
 
     fun suggestedFileName(): String =

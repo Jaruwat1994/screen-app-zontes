@@ -65,7 +65,7 @@ object MapOfflineManager {
         onDone: (ok: Boolean, message: String) -> Unit,
     ) {
         if (styles.isEmpty()) {
-            onDone(false, "No map style to download")
+            onDone(false, ctx.getString(R.string.hc_dash_offline_no_style))
             return
         }
         val mgr = manager(ctx)
@@ -75,7 +75,7 @@ object MapOfflineManager {
 
         fun downloadNext() {
             if (index >= styles.size) {
-                onDone(true, "Offline area \"$name\" ready")
+                onDone(true, ctx.getString(R.string.hc_dash_offline_ready, name))
                 return
             }
             val (styleUrl, night) = styles[index]
@@ -115,7 +115,7 @@ object MapOfflineManager {
                                 region.setObserver(null)
                                 activeRegions.remove(region)
                                 LogBus.log("[MAP] offline region error: ${error.reason} ${error.message}")
-                                onDone(false, "Offline download failed: ${error.message}")
+                                onDone(false, ctx.getString(R.string.hc_dash_offline_failed, error.message ?: ""))
                             }
 
                             override fun mapboxTileCountLimitExceeded(limit: Long) {
@@ -124,7 +124,7 @@ object MapOfflineManager {
                                 activeRegions.remove(region)
                                 onDone(
                                     false,
-                                    "Area too large (tile limit $limit). Pick a smaller area or lower detail.",
+                                    ctx.getString(R.string.hc_dash_offline_too_large, limit),
                                 )
                             }
                         })
@@ -133,7 +133,7 @@ object MapOfflineManager {
 
                     override fun onError(error: String) {
                         LogBus.log("[MAP] offline create failed: $error")
-                        onDone(false, "Offline download failed: $error")
+                        onDone(false, ctx.getString(R.string.hc_dash_offline_failed, error))
                     }
                 },
             )

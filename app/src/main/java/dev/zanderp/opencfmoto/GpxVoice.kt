@@ -11,6 +11,7 @@ import java.util.Locale
  * Spoken cues for Map / GPX — turns, waypoints, off-track.
  */
 class GpxVoice(context: Context) : TextToSpeech.OnInitListener {
+    private val res = context.applicationContext.resources
     private var tts: TextToSpeech? = TextToSpeech(context.applicationContext, this)
     private var ready = false
     // Google/Waze-style: one heads-up ("in 300 m, turn right onto X") then one at the
@@ -60,7 +61,7 @@ class GpxVoice(context: Context) : TextToSpeech.OnInitListener {
                     if (preparedIdx != turn.index) {
                         preparedIdx = turn.index
                         val dist = GpxNav.roundedSpokenDistance(d, units)
-                        speak("In $dist, $phrase")
+                        speak(res.getString(R.string.hc_dash_tts_in_dist, dist, phrase))
                     }
                 }
             }
@@ -71,8 +72,8 @@ class GpxVoice(context: Context) : TextToSpeech.OnInitListener {
             val key = "${wpt.lat},${wpt.lon}"
             if (key != lastWptKey) {
                 lastWptKey = key
-                val name = wpt.name?.takeIf { it.isNotBlank() } ?: "waypoint"
-                speak("Approaching $name")
+                val name = wpt.name?.takeIf { it.isNotBlank() } ?: res.getString(R.string.hc_dash_tts_waypoint)
+                speak(res.getString(R.string.hc_dash_tts_approaching, name))
             }
         }
     }
@@ -94,20 +95,20 @@ class GpxVoice(context: Context) : TextToSpeech.OnInitListener {
     }
 
     private fun dirPhrase(dir: GpxNav.TurnDir): String = when (dir) {
-        GpxNav.TurnDir.LEFT -> "turn left"
-        GpxNav.TurnDir.RIGHT -> "turn right"
-        GpxNav.TurnDir.SHARP_LEFT -> "make a sharp left"
-        GpxNav.TurnDir.SHARP_RIGHT -> "make a sharp right"
-        GpxNav.TurnDir.SLIGHT_LEFT -> "keep left"
-        GpxNav.TurnDir.SLIGHT_RIGHT -> "keep right"
-        GpxNav.TurnDir.UTURN -> "make a U-turn"
-        GpxNav.TurnDir.ROUNDABOUT -> "enter the roundabout"
-        GpxNav.TurnDir.MERGE_LEFT -> "merge left"
-        GpxNav.TurnDir.MERGE_RIGHT -> "merge right"
-        GpxNav.TurnDir.FORK_LEFT -> "keep left at the fork"
-        GpxNav.TurnDir.FORK_RIGHT -> "keep right at the fork"
-        GpxNav.TurnDir.ARRIVE -> "you have arrived"
-        GpxNav.TurnDir.STRAIGHT, GpxNav.TurnDir.CONTINUE -> "continue straight"
+        GpxNav.TurnDir.LEFT -> res.getString(R.string.hc_dash_tts_dir_left)
+        GpxNav.TurnDir.RIGHT -> res.getString(R.string.hc_dash_tts_dir_right)
+        GpxNav.TurnDir.SHARP_LEFT -> res.getString(R.string.hc_dash_tts_dir_sharp_left)
+        GpxNav.TurnDir.SHARP_RIGHT -> res.getString(R.string.hc_dash_tts_dir_sharp_right)
+        GpxNav.TurnDir.SLIGHT_LEFT -> res.getString(R.string.hc_dash_tts_dir_slight_left)
+        GpxNav.TurnDir.SLIGHT_RIGHT -> res.getString(R.string.hc_dash_tts_dir_slight_right)
+        GpxNav.TurnDir.UTURN -> res.getString(R.string.hc_dash_tts_dir_uturn)
+        GpxNav.TurnDir.ROUNDABOUT -> res.getString(R.string.hc_dash_tts_dir_roundabout)
+        GpxNav.TurnDir.MERGE_LEFT -> res.getString(R.string.hc_dash_tts_dir_merge_left)
+        GpxNav.TurnDir.MERGE_RIGHT -> res.getString(R.string.hc_dash_tts_dir_merge_right)
+        GpxNav.TurnDir.FORK_LEFT -> res.getString(R.string.hc_dash_tts_dir_fork_left)
+        GpxNav.TurnDir.FORK_RIGHT -> res.getString(R.string.hc_dash_tts_dir_fork_right)
+        GpxNav.TurnDir.ARRIVE -> res.getString(R.string.hc_dash_tts_dir_arrive)
+        GpxNav.TurnDir.STRAIGHT, GpxNav.TurnDir.CONTINUE -> res.getString(R.string.hc_dash_tts_dir_straight)
     }
 
     fun speak(text: String) {

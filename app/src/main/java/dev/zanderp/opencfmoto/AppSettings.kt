@@ -204,11 +204,14 @@ object AppSettings {
 }
 
 /** How to join the bike Wi‑Fi. [AUTO] prefers AP when the QR advertises it, else P2P. */
-enum class WifiTransport(val id: String, val label: String) {
-    AUTO("auto", "Auto (from QR)"),
-    AP("ap", "Force Wi‑Fi AP"),
-    P2P("p2p", "Force Wi‑Fi Direct"),
+enum class WifiTransport(val id: String, val label: String, @androidx.annotation.StringRes val labelRes: Int) {
+    AUTO("auto", "Auto (from QR)", R.string.hc_misc_transport_auto),
+    AP("ap", "Force Wi‑Fi AP", R.string.hc_misc_transport_ap),
+    P2P("p2p", "Force Wi‑Fi Direct", R.string.hc_misc_transport_p2p),
     ;
+
+    /** Localized [label] for the UI; the English field stays for logs. */
+    fun displayLabel(context: Context): String = context.getString(labelRes)
 
     companion object {
         fun byId(id: String?): WifiTransport =
