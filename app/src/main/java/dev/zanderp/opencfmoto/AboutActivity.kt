@@ -44,11 +44,16 @@ class AboutActivity : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.btn_about_github).setOnClickListener {
             openUrl(URL_GITHUB)
         }
+        // ZRide support (F5): the redacted log goes out through the share sheet (LINE, e-mail…),
+        // not to the upstream Discord or GitHub issues (our repo is private).
         findViewById<MaterialButton>(R.id.btn_about_discord).setOnClickListener {
-            openUrl(URL_ISSUES)
+            startActivity(Intent(this, MainActivity::class.java).putExtra(MainActivity.EXTRA_REPORT, true)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP))
+            finish()
         }
         // RideScreen AA donations (Ko-fi on GitHub builds, Google Play Billing on the Play build).
         findViewById<MaterialButton>(R.id.btn_about_kofi).setOnClickListener { Support.open(this) }
+        findViewById<MaterialButton>(R.id.btn_about_telegram).setOnClickListener { openUrl(URL_TELEGRAM) }
         findViewById<MaterialButton>(R.id.btn_about_license).setOnClickListener {
             openUrl(URL_NOTICE)
         }
@@ -67,10 +72,11 @@ class AboutActivity : AppCompatActivity() {
         private const val URL_WEBSITE = "https://alexandru.rocks"
         // RideScreen AA (this fork) and the original OpenCfMoto it's based on.
         private const val URL_GITHUB = "https://github.com/Jaruwat1994/screen-app-zontes"
-        private const val URL_ISSUES = "https://github.com/Jaruwat1994/screen-app-zontes/issues"
         private const val URL_UPSTREAM = "https://github.com/zanderp/open-cfmoto"
         private const val URL_DISCORD = "https://discord.gg/KNTjJhmFZ6"
         const val URL_KOFI = "https://ko-fi.com/alexandrupopa"
+        /** ZRide Screen maintainer: contact, support and donations (Telegram @AZURE11S). */
+        const val URL_TELEGRAM = "https://t.me/AZURE11S"
         private const val URL_NOTICE =
             "https://github.com/Jaruwat1994/screen-app-zontes/blob/main/NOTICE"
 

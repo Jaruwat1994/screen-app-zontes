@@ -44,7 +44,7 @@ object NominatimSearch {
             try {
                 onResult(search(query, nearLat, nearLon))
             } catch (e: Exception) {
-                onError(e.message ?: "Search failed")
+                onError(AppHttp.userMessage(e, R.string.f1_search_failed))
             }
         }
     }

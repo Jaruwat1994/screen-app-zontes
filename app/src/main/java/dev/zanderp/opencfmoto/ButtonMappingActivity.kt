@@ -172,7 +172,7 @@ class ButtonMappingActivity : AppCompatActivity() {
             if (active != null) getString(R.string.hc_act_cluster_active, active.displayTitle(this))
             else getString(R.string.buttons_no_preset_shipped_defaults_your_custom_map)
         findViewById<MaterialButton>(R.id.btn_cluster_clear).isEnabled = active != null
-        findViewById<TextView>(R.id.tv_bt_status).text = BluetoothHelper.status(this).shortLine()
+        findViewById<TextView>(R.id.tv_bt_status).text = BluetoothHelper.status(this).shortLine(this)
         findViewById<TextView>(R.id.tv_presence).text =
             getString(R.string.hc_act_handlebar_sources, ButtonPresencePrefs.summarize(this))
         highlightOnOff(R.id.remote_pad_on, R.id.remote_pad_off, RemotePad.enabled(this))

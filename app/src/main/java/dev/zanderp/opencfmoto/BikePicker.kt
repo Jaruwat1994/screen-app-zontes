@@ -12,16 +12,21 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
  * ([KnownDashes]) even when the dash's QR doesn't identify the model. "Other" keeps automatic.
  */
 object BikePicker {
-    enum class Model(val label: String, val dashKey: String?) {
-        Z125X("Zontes 125X", "125x"),
-        Z125V("Zontes 125V", "125x"),
-        Z368G("Zontes 368G", "368"),
-        Z368K("Zontes 368K", "368"),
-        Z368E("Zontes 368E", "368"),
-        Z368D("Zontes 368D", "368"),
+    /**
+     * [tankL] = fuel tank in litres from the maker's spec sheets (checked 2026-11-05): zontes.co.th
+     * (368G 17.5, 368E 17, 150X 11), zontes.co.uk (125X 11), Zontes Malaysia (368K 17), Thai press
+     * (368D 12), Sportrik (125V 11). It's the fuel gauge's default until the rider types their own.
+     */
+    enum class Model(val label: String, val dashKey: String?, val tankL: Float) {
+        Z125X("Zontes 125X", "125x", 11f),
+        Z125V("Zontes 125V", "125x", 11f),
+        Z368G("Zontes 368G", "368", 17.5f),
+        Z368K("Zontes 368K", "368", 17f),
+        Z368E("Zontes 368E", "368", 17f),
+        Z368D("Zontes 368D", "368", 12f),
         // Screen size not logged yet: automatic until a 150X log gives its panel.
-        Z150X("Zontes 150X", null),
-        OTHER("", null),
+        Z150X("Zontes 150X", null, 11f),
+        OTHER("", null, 0f),
     }
 
     private const val PREFS = "bike_model"

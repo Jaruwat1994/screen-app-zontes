@@ -19,4 +19,47 @@
     <string name="dl_w_max_speed">Max speed</string>
     <string name="dl_w_phone">Phone</string>
     <string name="dl_w_maintenance">Maintenance</string>
+    <string name="dl_w_map">Map</string>
+    <string name="dl_buttons_hint">On the bike, handlebar buttons: ▼ or OK = full-screen map (any template) · ▲ = hide the right panel · ◀ ▶ = previous / next song · knob = zoom · Back = normal view.</string>
+    <string name="dl_step_template">① Template</string>
+    <string name="dl_step_colour">② Colours · %1$s</string>
+    <string name="dl_colour_hint">Only this template changes; each template keeps its own colours.</string>
+    <string name="dl_step_show">③ Show / hide</string>
+    <string name="dl_show_hint">Untick what you don\'t want on this template. The rest closes up the gap.</string>
+    <string name="dl_step_more">④ Advanced</string>
+    <string name="dl_alert">Speed alert</string>
+    <string name="dl_alert_hint">Above this speed the number turns red and the frame flashes. The gauge\'s red zone starts here too.</string>
+    <string name="dl_alert_off">Off</string>
+    <string name="dl_night">Dim at night</string>
+    <string name="dl_night_hint">Darkens the dash after dark (follows the map\'s day/night setting).</string>
+    <string name="dl_sweep">Start-up needle sweep</string>
+    <string name="dl_sweep_hint">The needle sweeps to the top and back when the dash comes on, like a new bike.</string>
+    <string name="dl_p_art">Bike picture</string>
+    <string name="dl_p_tabs">Ride-mode tabs</string>
+    <string name="dl_p_gps">GPS status</string>
+    <string name="dl_fx_intro">Welcome animation</string>
+    <string name="dl_fx_intro_hint">Your bike\'s name lights up for 2 seconds before the dash appears.</string>
+    <string name="dl_fx_smooth">Smooth needle</string>
+    <string name="dl_fx_smooth_hint">The needle and speed glide to each new value instead of jumping.</string>
+    <string name="dl_fx_glow">Speed glow</string>
+    <string name="dl_fx_glow_hint">The gauge glows brighter the faster you go and turns red near the red zone.</string>
+    <string name="dl_w_lean">Lean angle</string>
+    <string name="dl_p_live_map">Live map in the card</string>
+    <string name="dl_p_scene">Card picture (road)</string>
+    <string name="dl_w_fuel">Fuel (estimate)</string>
+    <string name="dl_fuel_hint">The bike doesn\'t send its fuel level to the phone. The fuel gauge, the grid\'s Fuel widget and the low-fuel station finder estimate it from this tank size and your refuel log. Log every fill-up (full tank).</string>
+    <string name="dl_cat_basic">Basic</string>
+    <string name="dl_cat_sport">Sport &amp; racing</string>
+    <string name="dl_cat_luxury">Luxury</string>
+    <string name="dl_cat_touring">Touring &amp; adventure</string>
+    <string name="dl_cat_neon">Cyber &amp; neon</string>
+    <string name="dl_cat_fantasy">Fantasy &amp; anime</string>
+    <string name="dl_pick_category">1. Pick a kind</string>
+    <string name="dl_pick_template">2. Pick a dash</string>
+    <string name="dl_tank_default">Default for your %1$s: %2$s L (maker\'s spec). Clear the box to go back to it.</string>
+    <string name="dl_w_media">Music</string>
+    <string name="dl_media_access">🎵🧭 Show songs and Google Maps / Waze turns on the dash</string>
+    <string name="dl_media_access_hint">For song titles and the turns of Google Maps / Waze, Android needs "Notification access" for ZRide Screen. It reads only music sessions and those navigation apps\' turn notification; nothing else is read, stored or sent. ◀ ▶ on the handlebar change track even without it.</string>
+    <string name="dl_nav_on_dash">Navigation on My Dash</string>
+    <string name="dl_nav_on_dash_hint">Every template shows the next turn: from the app\'s Map screen (Go) and from Google Maps or Waze on the phone. Off = the Map screen\'s navigation uses the full map dash as before.</string>
 </resources>

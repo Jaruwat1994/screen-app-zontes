@@ -20,6 +20,7 @@ object TripAutoLog {
 
     fun setMapUiLive(context: Context, live: Boolean) {
         mapUiLive = live
+        if (live) RideGpsService.start(context) else RideGpsService.stop(context)
         sync(context)
     }
 

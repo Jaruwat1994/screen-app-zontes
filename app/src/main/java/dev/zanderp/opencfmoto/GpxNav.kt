@@ -78,6 +78,8 @@ class GpxNav(
         val shortLabel: String,
         /** Spoken instruction WITHOUT any distance prefix, e.g. "turn right onto Main St". */
         val instr: String = "",
+        /** Thai version of [instr], spoken when the app runs in Thai. */
+        val instrTh: String = "",
         /** Road you turn onto (OSRM steps only). */
         val roadName: String? = null,
         /** Compact lane arrows to be in, when OSRM reports turn lanes. */
@@ -258,6 +260,7 @@ class GpxNav(
                     speak = "In $distLabel, $dirWord",
                     shortLabel = "$short · $distLabel",
                     instr = dirWord,
+                    instrTh = dirWordTh(dir),
                 )
             }
             prevBrng = brng
@@ -303,6 +306,7 @@ class GpxNav(
                 roadName = road,
                 laneLabel = laneLabel,
                 instr = instr,
+                instrTh = instructionTh(type, step.modifier, road, step.exit),
             )
         }
         return null
@@ -422,6 +426,26 @@ class GpxNav(
             else -> "head to the route"
         }
 
+        /** Thai spoken cue while off the road / joining the route. */
+        fun joinRouteSpeakTh(dir: TurnDir): String = when (dir) {
+            TurnDir.UTURN -> "กลับรถเพื่อเข้าเส้นทาง"
+            TurnDir.STRAIGHT, TurnDir.CONTINUE -> "ตรงไปเข้าเส้นทาง"
+            TurnDir.LEFT, TurnDir.RIGHT, TurnDir.SHARP_LEFT, TurnDir.SHARP_RIGHT,
+            TurnDir.SLIGHT_LEFT, TurnDir.SLIGHT_RIGHT -> dirWordTh(dir) + "เพื่อเข้าเส้นทาง"
+            else -> "มุ่งหน้าเข้าเส้นทาง"
+        }
+
+        private fun dirWordTh(dir: TurnDir): String = when (dir) {
+            TurnDir.LEFT -> "เลี้ยวซ้าย"
+            TurnDir.RIGHT -> "เลี้ยวขวา"
+            TurnDir.SHARP_LEFT -> "เลี้ยวซ้ายหักศอก"
+            TurnDir.SHARP_RIGHT -> "เลี้ยวขวาหักศอก"
+            TurnDir.SLIGHT_LEFT -> "เบี่ยงซ้าย"
+            TurnDir.SLIGHT_RIGHT -> "เบี่ยงขวา"
+            TurnDir.UTURN -> "กลับรถ"
+            else -> "ตรงไป"
+        }
+
         /** Off-route distance above which we guide by compass toward the snap point. */
         const val OFF_ROUTE_GUIDE_M = 40.0
 
@@ -468,6 +492,39 @@ class GpxNav(
                     else -> "turn ${modWord(m)}$onto"
                 }
             }
+        }
+
+        /** Thai grammar for [instruction], e.g. "เลี้ยวขวาเข้าสู่ ถ.วิภาวดี". */
+        fun instructionTh(type: String, modifier: String?, road: String?, exit: Int?): String {
+            val m = modifier?.lowercase()
+            val onto = if (road != null) "เข้าสู่ $road" else ""
+            val side = when (sideWord(m)) { "left" -> "ซ้าย"; "right" -> "ขวา"; else -> null }
+            val then = modWordTh(m)?.let { " แล้ว$it" } ?: ""
+            return when (type.lowercase()) {
+                "roundabout", "rotary", "roundabout turn" ->
+                    if (exit != null) "ที่วงเวียน ใช้ทางออกที่ $exit ${onto}".trimEnd()
+                    else "เข้าวงเวียน$then ${onto}".trimEnd()
+                "merge" -> "รวมเลน${side ?: ""}$onto"
+                "fork" -> (if (side != null) "ชิด${side}ที่ทางแยก" else "ตรงไปที่ทางแยก") + onto
+                "on ramp" -> "ใช้ทางขึ้น${side?.let { "ด้าน$it" } ?: ""}$onto"
+                "off ramp" -> "ใช้ทางออก${side?.let { "ด้าน$it" } ?: ""}$onto"
+                "end of road" -> "สุดทาง" + (side?.let { "เลี้ยว$it" } ?: "ตรงไป") + onto
+                "new name", "continue" -> if (road != null) "ไปต่อทาง $road" else "ตรงไป"
+                "arrive" -> "ถึงจุดหมายแล้ว"
+                else -> (modWordTh(m) ?: "ตรงไป") + onto
+            }
+        }
+
+        private fun modWordTh(m: String?): String? = when (m) {
+            "sharp left" -> "เลี้ยวซ้ายหักศอก"
+            "sharp right" -> "เลี้ยวขวาหักศอก"
+            "slight left" -> "เบี่ยงซ้าย"
+            "slight right" -> "เบี่ยงขวา"
+            "left" -> "เลี้ยวซ้าย"
+            "right" -> "เลี้ยวขวา"
+            "straight" -> "ตรงไป"
+            "uturn" -> "กลับรถ"
+            else -> null
         }
 
         private fun modWord(m: String?): String? = when (m) {
@@ -562,23 +619,23 @@ class GpxNav(
          * Distance rounded to a natural spoken value ("in 300 meters", "in 1000 feet",
          * "in 1.2 kilometers") — like Google/Waze, so the pre-turn cue reads cleanly.
          */
-        fun roundedSpokenDistance(metres: Double, units: MapUnits): String = when (units) {
+        fun roundedSpokenDistance(metres: Double, units: MapUnits, thai: Boolean = false): String = when (units) {
             MapUnits.IMPERIAL -> {
                 val miles = metres / 1609.344
-                if (miles >= 0.2) String.format("%.1f miles", miles)
+                if (miles >= 0.2) String.format(if (thai) "%.1f ไมล์" else "%.1f miles", miles)
                 else {
                     val ft = metres * 3.28084
                     val steps = intArrayOf(50, 100, 150, 200, 300, 500, 800, 1000, 1500)
                     val r = steps.firstOrNull { it >= ft } ?: ((Math.round(ft / 500.0) * 500).toInt())
-                    "$r feet"
+                    if (thai) "$r ฟุต" else "$r feet"
                 }
             }
             MapUnits.METRIC -> {
-                if (metres >= 1000) String.format("%.1f kilometers", metres / 1000.0)
+                if (metres >= 1000) String.format(if (thai) "%.1f กิโลเมตร" else "%.1f kilometers", metres / 1000.0)
                 else {
                     val steps = intArrayOf(50, 100, 150, 200, 300, 400, 500, 700, 800)
                     val r = steps.firstOrNull { it >= metres } ?: ((Math.round(metres / 100.0) * 100).toInt())
-                    "$r meters"
+                    if (thai) "$r เมตร" else "$r meters"
                 }
             }
         }
@@ -641,23 +698,25 @@ class GpxNav(
             totalM: Double,
             units: MapUnits = MapUnits.METRIC,
             showNextStop: Boolean = true,
+            /** Display words (translated by the caller); English defaults for tests/logs. */
+            words: HudWords = HudWords(),
         ): String {
             if (p == null) return ""
             val tot = formatDistance(totalM, units)
-            val off = if (p.offTrackM > 40) "OFF ${formatDistance(p.offTrackM, units)}" else ""
+            val off = if (p.offTrackM > 40) "${words.off} ${formatDistance(p.offTrackM, units)}" else ""
             val grade = p.gradePct?.let { g ->
                 if (abs(g) >= 2) String.format("%+d%%", g.roundToInt()) else ""
             } ?: ""
-            val avg = if (avgKmh >= 1f) "avg ${formatSpeed(avgKmh, units)}" else ""
+            val avg = if (avgKmh >= 1f) "${words.avg} ${formatSpeed(avgKmh, units)}" else ""
             val wpt = if (showNextStop) {
                 p.nextWaypoint?.let { w ->
-                    val n = w.name?.takeIf { it.isNotBlank() } ?: "wpt"
+                    val n = w.name?.takeIf { it.isNotBlank() } ?: words.wpt
                     val d = p.nextWaypointM?.let { formatDistance(it, units) } ?: ""
                     "→ $n $d"
                 } ?: ""
             } else ""
             return listOfNotNull(
-                "Route · $tot".takeIf { totalM > 0 },
+                "${words.route} · $tot".takeIf { totalM > 0 },
                 off.takeIf { it.isNotEmpty() },
                 grade.takeIf { it.isNotEmpty() },
                 avg.takeIf { it.isNotEmpty() },
@@ -678,6 +737,14 @@ class GpxNav(
         }
     }
 }
+
+/** Words used by [GpxNav.formatHud]. */
+data class HudWords(
+    val route: String = "Route",
+    val off: String = "OFF",
+    val avg: String = "avg",
+    val wpt: String = "wpt",
+)
 
 /** Rolling ride averages for the average-speed HUD. */
 class GpxRideStats {

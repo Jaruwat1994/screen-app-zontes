@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="crash_call_emergency">โทร %1$s (เจ็บป่วยฉุกเฉิน)</string>
+</resources>

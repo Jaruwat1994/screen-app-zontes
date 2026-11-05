@@ -8,17 +8,19 @@ import android.net.Uri
 import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-/** GitHub build: donations through a Ko-fi link (the Play build uses Google Play Billing instead). */
+/**
+ * GitHub build: support goes to the ZRide Screen maintainer on Telegram (@AZURE11S), where the rider
+ * can ask how to donate; the Play build uses Google Play Billing instead.
+ */
 object Support {
-    const val KOFI_URL = "https://ko-fi.com/mgb1982"
 
     fun onResume(activity: Activity) = Unit
 
     fun open(activity: Activity) {
         MaterialAlertDialogBuilder(activity)
             .setTitle(R.string.support_title)
-            .setMessage(R.string.support_body)
-            .setPositiveButton(R.string.support_kofi) { _, _ -> openUrl(activity, KOFI_URL) }
+            .setMessage(R.string.support_body_telegram)
+            .setPositiveButton(R.string.support_telegram) { _, _ -> openUrl(activity, AboutActivity.URL_TELEGRAM) }
             .setNeutralButton(R.string.support_original) { _, _ -> openUrl(activity, AboutActivity.URL_KOFI) }
             .setNegativeButton(R.string.support_later, null)
             .show()

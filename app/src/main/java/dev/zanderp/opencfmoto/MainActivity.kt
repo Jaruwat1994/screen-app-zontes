@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             log("QR parse FAILED — missing ssid/pwd?" + (hint?.let { " ($it)" } ?: ""))
             Toast.makeText(
                 this,
-                hint ?: getString(R.string.main_invalid_qr),
+                QrData.parseFailureHint(raw, this) ?: getString(R.string.main_invalid_qr),
                 Toast.LENGTH_LONG,
             ).show()
             return@registerForActivityResult
@@ -613,8 +613,7 @@ class MainActivity : AppCompatActivity() {
         if (prefs.getBoolean(KEY_BT_ASKED, false) || isFinishing || isDestroyed) return false
         prefs.edit().putBoolean(KEY_BT_ASKED, true).apply()
         log("→ asking for Nearby devices up front (needed to reach the dash)")
-        val perms = mutableListOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) perms += Manifest.permission.NEARBY_WIFI_DEVICES
+        val perms = SetupHelper.nearbyPermissions()
         com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
             .setTitle(R.string.nearby_upfront_title)
             .setMessage(R.string.nearby_upfront_body)
@@ -1018,7 +1017,7 @@ class MainActivity : AppCompatActivity() {
 
         // First launch: walk the user through the one-time prerequisites.
         try {
-            if (!SetupActivity.hasSeen(this)) SetupActivity.start(this)
+            if (!SetupActivity.hasSeen(this)) GuideActivity.start(this)
             else {
                 maybeAutoConnect()
                 if (!maybeAskNearbyUpfront() && !maybeAskXiaomiAutostart() && !WhatsNew.maybeShow(this)) TelemetryNotice.maybeShow(this)
@@ -1026,6 +1025,8 @@ class MainActivity : AppCompatActivity() {
             maybeResumeFromParked(intent)
             maybeStartFromBtTrigger(intent)
             maybeStartFromWidget(intent)
+            maybeStartFromGuide(intent)
+            maybeOpenReport(intent)
         } catch (e: Exception) {
             log("startup failed (UI still up): $e")
             CrashGuard.persistSession(this)
@@ -1049,6 +1050,8 @@ class MainActivity : AppCompatActivity() {
         maybeResumeFromParked(intent)
         maybeStartFromBtTrigger(intent)
         maybeStartFromWidget(intent)
+        maybeStartFromGuide(intent)
+        maybeOpenReport(intent)
         if (intent.getBooleanExtra(EXTRA_RECONNECT, false)) {
             intent.removeExtra(EXTRA_RECONNECT)
             log("→ Fit to dash: restarting Android Auto with the new panel shape")
@@ -1122,6 +1125,17 @@ class MainActivity : AppCompatActivity() {
      * 1x1 Connect widget. Idle → Connect with the saved bike. Connecting or projecting → nothing (the
      * widget never cancels: a brush must not undo a connect or cut a ride).
      */
+    /** The setup guide's last step: press Connect for the rider, through all its usual checks. */
+    private fun maybeStartFromGuide(intent: Intent?) {
+        if (intent?.getBooleanExtra(EXTRA_GUIDE_CONNECT, false) != true) return
+        intent.removeExtra(EXTRA_GUIDE_CONNECT)
+        val phase = ConnectionState.phase
+        // Connect toggles: never let the guide stop a session that is already running.
+        if (phase.busy || phase == Phase.STREAMING || phase == Phase.MIRRORING) return
+        log("→ setup guide finished: Connect")
+        connectBtn.post { connectBtn.performClick() }
+    }
+
     private fun maybeStartFromWidget(intent: Intent?) {
         if (intent?.getBooleanExtra(EXTRA_WIDGET_CONNECT, false) != true) return
         intent.removeExtra(EXTRA_WIDGET_CONNECT)
@@ -1464,6 +1478,8 @@ class MainActivity : AppCompatActivity() {
     private fun buildTile(
         id: Int, @androidx.annotation.DrawableRes icon: Int, title: String, sub: String = "", big: Boolean = false,
         @androidx.annotation.DrawableRes art: Int = 0, hint: String? = null,
+        /** Small pill on the tile (instead of the ›) that does its own thing, e.g. log a refuel. */
+        action: Pair<String, () -> Unit>? = null,
     ) {
         val box = findViewById<android.widget.LinearLayout?>(id) ?: return
         box.removeAllViews()
@@ -1502,7 +1518,19 @@ class MainActivity : AppCompatActivity() {
             }
             texts.addView(t); texts.addView(st)
             row.addView(texts, android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-            row.addView(TextView(this).apply { text = "›"; textSize = 24f; setTextColor(gold); setPadding((4 * dp).toInt(), 0, 0, (2 * dp).toInt()) })
+            if (action != null) {
+                row.addView(TextView(this).apply {
+                    text = action.first; textSize = 12f; setTextColor(primary); typeface = semibold
+                    setPadding((10 * dp).toInt(), (6 * dp).toInt(), (10 * dp).toInt(), (6 * dp).toInt())
+                    background = android.graphics.drawable.GradientDrawable().apply {
+                        setColor(0xCC000000.toInt()); cornerRadius = 14 * dp; setStroke((1.5f * dp).toInt(), gold)
+                    }
+                    contentDescription = action.first
+                    setOnClickListener { action.second() }
+                }, android.widget.LinearLayout.LayoutParams(android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT).apply { marginStart = (4 * dp).toInt() })
+            } else {
+                row.addView(TextView(this).apply { text = "›"; textSize = 24f; setTextColor(gold); setPadding((4 * dp).toInt(), 0, 0, (2 * dp).toInt()) })
+            }
             box.addView(row, android.widget.LinearLayout.LayoutParams(android.widget.LinearLayout.LayoutParams.MATCH_PARENT, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT))
             tiles[id] = Tile(st, t, hint)
             return
@@ -1546,7 +1574,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupHomeTiles() {
         buildTile(R.id.btn_trips_list, R.drawable.ic_place, getString(R.string.home_tile_trips), art = R.drawable.tile_trip, hint = getString(R.string.home_tile_trips_hint))
-        buildTile(R.id.btn_fuel, R.drawable.ic_tile_fuel, getString(R.string.home_tile_fuel), getString(R.string.home_tile_fuel_sub), art = R.drawable.tile_fuel)
+        // Shortcut: log a fill-up from the home screen while standing at the pump (feeds the fuel gauge).
+        buildTile(R.id.btn_fuel, R.drawable.ic_tile_fuel, getString(R.string.home_tile_fuel), getString(R.string.home_tile_fuel_sub), art = R.drawable.tile_fuel,
+            action = getString(R.string.home_refuel_shortcut) to { MaintenanceActivity.askRefuel(this) { renderMaint() } })
         buildTile(R.id.btn_maint, R.drawable.ic_tile_maint, getString(R.string.home_tile_maint), art = R.drawable.tile_maint, hint = getString(R.string.home_tile_maint_hint))
         buildTile(R.id.btn_traffic_lights, R.drawable.ic_tile_traffic, getString(R.string.home_tile_tl), art = R.drawable.tile_traffic, hint = getString(R.string.home_tile_tl_hint))
         buildTile(R.id.btn_live, R.drawable.ic_tile_route, getString(R.string.home_tile_live), art = R.drawable.tile_live, hint = getString(R.string.home_tile_live_hint))
@@ -2678,7 +2708,7 @@ class MainActivity : AppCompatActivity() {
 
             val send = Intent(if (uris.size > 1) Intent.ACTION_SEND_MULTIPLE else Intent.ACTION_SEND).apply {
                 type = if (uris.size > 1) "*/*" else "text/plain"
-                putExtra(Intent.EXTRA_SUBJECT, "RideScreen AA log $stamp")
+                putExtra(Intent.EXTRA_SUBJECT, "ZRide Screen log $stamp")
                 if (uris.size > 1) putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
                 else putExtra(Intent.EXTRA_STREAM, uris[0])
                 // Some apps (Claude among them) only read the shared file through ClipData; without it
@@ -2738,6 +2768,13 @@ class MainActivity : AppCompatActivity() {
         // Headings/bullets/bold come from [ReleaseNotes]; make markdown links tappable too.
         dialog.findViewById<TextView>(android.R.id.message)?.movementMethod =
             LinkMovementMethod.getInstance()
+    }
+
+    /** About → "Report a problem" lands here: the same dialog as Help → Report a problem. */
+    private fun maybeOpenReport(intent: Intent) {
+        if (!intent.getBooleanExtra(EXTRA_REPORT, false)) return
+        intent.removeExtra(EXTRA_REPORT)
+        reportProblem()
     }
 
     private fun reportProblem() {
@@ -2904,8 +2941,10 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_START_GPX = "start_gpx"
+        const val EXTRA_REPORT = "open_report"
         const val EXTRA_BT_TRIGGER = "bt_trigger"
         const val EXTRA_WIDGET_CONNECT = "widget_connect"
+        const val EXTRA_GUIDE_CONNECT = "guide_connect"
         private const val ENGINE_ON_V = 13.2f
         private const val ENGINE_OFF_V = 12.8f
         private const val CANCEL_LOCK_MS = 3_000L

@@ -68,6 +68,47 @@ object SetupHelper {
      */
     fun canAutoResume(ctx: Context): Boolean = Settings.canDrawOverlays(ctx)
 
+    /** "Nearby devices" (Android 12+): reach the dash over Bluetooth / Wi-Fi. Empty on older Android. */
+    fun nearbyPermissions(): List<String> = buildList {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            add(Manifest.permission.BLUETOOTH_CONNECT)
+            add(Manifest.permission.BLUETOOTH_SCAN)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) add(Manifest.permission.NEARBY_WIFI_DEVICES)
+    }
+
+    /** Android Auto installed → its settings (head-unit mode lives there); else its Play Store page. */
+    fun openAndroidAuto(a: android.app.Activity) {
+        if (isAndroidAutoInstalled(a)) {
+            openAndroidAutoSettings(a)
+            return
+        }
+        try {
+            a.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW,
+                android.net.Uri.parse("market://details?id=$GEARHEAD_PACKAGE")))
+        } catch (_: Exception) {
+            try {
+                a.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW,
+                    android.net.Uri.parse("https://play.google.com/store/apps/details?id=$GEARHEAD_PACKAGE")))
+            } catch (_: Exception) {
+                android.widget.Toast.makeText(a, a.getString(R.string.setup_play_store_failed), android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun openAndroidAutoSettings(a: android.app.Activity) {
+        try {
+            a.startActivity(android.content.Intent("android.settings.ANDROID_AUTO_SETTINGS").setPackage(GEARHEAD_PACKAGE))
+        } catch (_: Exception) {
+            try {
+                a.startActivity(android.content.Intent(android.content.Intent.ACTION_MAIN).setClassName(
+                    GEARHEAD_PACKAGE, "com.google.android.projection.gearhead.companion.settings.DefaultSettingsActivity"))
+            } catch (_: Exception) {
+                android.widget.Toast.makeText(a, a.getString(R.string.setup_android_auto_settings_failed), android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     /** Everything we can verify is in place. Head-unit mode can't be verified, so it isn't gated. */
     fun coreReady(ctx: Context): Boolean =
         isAndroidAutoInstalled(ctx) && isPlayServicesPresent(ctx) && permissionsGranted(ctx)

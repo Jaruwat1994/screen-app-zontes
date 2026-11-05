@@ -69,8 +69,9 @@ object YearInReview {
         val fills = Maintenance.load(ctx).log.filter { e ->
             e.kind == "fuel" && run { cal.timeInMillis = e.at; cal.get(Calendar.YEAR) == year && (month == null || cal.get(Calendar.MONTH) == month) }
         }
-        val label = if (month == null) year.toString()
-            else DateFormatSymbols.getInstance().months[month].replaceFirstChar { it.titlecase(Locale.getDefault()) } + " $year"
+        val shownYear = ThaiDate.year(year)
+        val label = if (month == null) shownYear.toString()
+            else DateFormatSymbols.getInstance().months[month].replaceFirstChar { it.titlecase(Locale.getDefault()) } + " $shownYear"
         return Stats(
             label, trips, km, days, hours,
             trips.maxByOrNull { it.distanceKm },
@@ -234,7 +235,7 @@ object YearInReview {
                 4501,
                 NotificationCompat.Builder(ctx, "yir")
                     .setSmallIcon(R.drawable.ic_launcher_monochrome)
-                    .setContentTitle(ctx.getString(R.string.yir_notif_title, year))
+                    .setContentTitle(ctx.getString(R.string.yir_notif_title, ThaiDate.year(year)))
                     .setContentText(ctx.getString(R.string.yir_notif_text))
                     .setAutoCancel(true)
                     .setContentIntent(open)

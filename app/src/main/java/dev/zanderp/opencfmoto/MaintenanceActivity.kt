@@ -104,7 +104,7 @@ class MaintenanceActivity : AppCompatActivity() {
             }
         }
         body.addView(button(getString(R.string.maint_add_task)) { editTask(null, book) })
-        body.addView(button(getString(R.string.maint_plan_125)) { askPlan125() })
+        body.addView(button(getString(R.string.maint_plan_pick)) { askPlan() })
 
         // Fuel.
         body.addView(section(getString(R.string.maint_fuel)))
@@ -132,9 +132,21 @@ class MaintenanceActivity : AppCompatActivity() {
                     else -> "🔧 " + (book.tasks.firstOrNull { it.id == e.taskId }?.name ?: e.taskId.orEmpty()) +
                         " · " + Maintenance.fmtKm(e.km)
                 }
-                body.addView(text("${df.format(Date(e.at))} — $what", 13f, R.color.text_secondary))
+                body.addView(text("${ThaiDate.format(df, e.at)} — $what", 13f, R.color.text_secondary))
             }
         }
+    }
+
+    /** "every 8,000 km · 24 months" for the plan preview (no "first at" when it equals the step). */
+    private fun planInterval(t: Maintenance.Task): String {
+        val parts = ArrayList<String>()
+        val first = t.firstKm?.takeIf { it != t.everyKm }
+        first?.let { parts += getString(R.string.maint_first_at, Maintenance.fmtKm(it.toDouble())) }
+        t.everyKm?.let {
+            parts += getString(if (first != null) R.string.maint_then_every_km else R.string.maint_every_km, Maintenance.fmtKm(it.toDouble()))
+        }
+        t.everyMonths?.let { parts += getString(R.string.maint_every_months, it) }
+        return parts.joinToString(" · ")
     }
 
     private fun intervalText(t: Maintenance.Task): String {
@@ -147,7 +159,7 @@ class MaintenanceActivity : AppCompatActivity() {
         t.everyMonths?.let { parts += getString(R.string.maint_every_months, it) }
         val last = ArrayList<String>()
         t.lastKm?.let { last += Maintenance.fmtKm(it) }
-        t.lastAt?.let { last += DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(it)) }
+        t.lastAt?.let { last += ThaiDate.format(DateFormat.getDateInstance(DateFormat.MEDIUM), it) }
         return parts.joinToString(" · ") + if (last.isNotEmpty()) "\n" + getString(R.string.maint_last, last.joinToString(" · ")) else ""
     }
 
@@ -180,38 +192,33 @@ class MaintenanceActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun askPlan125() {
+    /** Pick the model (pre-selected from the Garage), then confirm what the manual's plan contains. */
+    private fun askPlan() {
+        val plans = Maintenance.Plan.entries
+        var chosen = plans.indexOf(Maintenance.planFor(BikePicker.selected(this))).coerceAtLeast(0)
         MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.maint_plan_125)
-            .setMessage(R.string.maint_plan_125_msg)
+            .setTitle(R.string.maint_plan_pick)
+            .setSingleChoiceItems(plans.map { it.label }.toTypedArray(), chosen) { _, i -> chosen = i }
+            .setPositiveButton(R.string.maint_plan_next) { _, _ -> confirmPlan(plans[chosen]) }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun confirmPlan(p: Maintenance.Plan) {
+        val tasks = Maintenance.planTasks(this, p)
+        MaterialAlertDialogBuilder(this)
+            .setTitle(p.label)
+            .setMessage(getString(R.string.maint_plan_msg, p.label, String.format(Locale.getDefault(), "%,d", p.cycleKm), p.source,
+                tasks.joinToString("\n") { "• " + it.name + "  —  " + planInterval(it) }))
             .setPositiveButton(R.string.maint_plan_apply) { _, _ ->
-                Maintenance.applyPlan(this, Maintenance.zontes125Plan(this))
+                Maintenance.applyPlan(this, tasks)
                 render()
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
-    private fun askRefuel() {
-        val liters = number(null, getString(R.string.maint_liters), decimal = true)
-        val euros = number(null, getString(if (Maintenance.isThailand()) R.string.maint_th_baht else R.string.maint_euros), decimal = true)
-        val box = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; addView(liters); addView(euros) }
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.maint_refuel)
-            .setMessage(R.string.maint_refuel_dialog)
-            .setView(padded(box))
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val l = liters.text.toString().replace(',', '.').toDoubleOrNull()
-                if (l == null || l <= 0) {
-                    Toast.makeText(this, R.string.maint_liters_needed, Toast.LENGTH_SHORT).show()
-                } else {
-                    Maintenance.addRefuel(this, l, euros.text.toString().replace(',', '.').toDoubleOrNull())
-                    render()
-                }
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
-    }
+    private fun askRefuel() = askRefuel(this) { render() }
 
     /** Edit (or, with [t] null, create) a task: name, intervals, and when it was last done. */
     private fun editTask(t: Maintenance.Task?, book: Maintenance.Book) {
@@ -224,7 +231,7 @@ class MaintenanceActivity : AppCompatActivity() {
         val lastDate = MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle)
         fun showDate() {
             lastDate.text = getString(R.string.maint_last_date) + ": " +
-                (lastAt?.let { DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(it)) } ?: "—")
+                (lastAt?.let { ThaiDate.format(DateFormat.getDateInstance(DateFormat.MEDIUM), it) } ?: "—")
         }
         showDate()
         lastDate.setOnClickListener {
@@ -332,5 +339,36 @@ class MaintenanceActivity : AppCompatActivity() {
 
     companion object {
         fun start(ctx: Context) = ctx.startActivity(Intent(ctx, MaintenanceActivity::class.java))
+
+        /** "I filled up" dialog (litres, optional price); shared with the home screen's fuel shortcut. */
+        fun askRefuel(a: android.app.Activity, onSaved: () -> Unit) {
+            fun field(hintRes: Int) = EditText(a).apply {
+                inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+                hint = a.getString(hintRes)
+            }
+            val liters = field(R.string.maint_liters)
+            val price = field(if (Maintenance.isThailand()) R.string.maint_th_baht else R.string.maint_euros)
+            val pad = (22 * a.resources.displayMetrics.density).toInt()
+            val box = LinearLayout(a).apply {
+                orientation = LinearLayout.VERTICAL; setPadding(pad, pad / 5, pad, 0)
+                addView(liters); addView(price)
+            }
+            MaterialAlertDialogBuilder(a)
+                .setTitle(R.string.maint_refuel)
+                .setMessage(R.string.maint_refuel_dialog)
+                .setView(box)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    val l = liters.text.toString().replace(',', '.').toDoubleOrNull()
+                    if (l == null || l <= 0) {
+                        Toast.makeText(a, R.string.maint_liters_needed, Toast.LENGTH_SHORT).show()
+                    } else {
+                        Maintenance.addRefuel(a, l, price.text.toString().replace(',', '.').toDoubleOrNull())
+                        Toast.makeText(a, a.getString(R.string.maint_refuel_saved, liters.text.toString()), Toast.LENGTH_SHORT).show()
+                        onSaved()
+                    }
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+        }
     }
 }

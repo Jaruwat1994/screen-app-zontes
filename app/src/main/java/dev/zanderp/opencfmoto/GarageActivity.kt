@@ -47,7 +47,12 @@ class GarageActivity : AppCompatActivity() {
         if (result.resultCode != RESULT_OK || raw == null) return@registerForActivityResult
         val qr = QrData.parse(raw)
         if (qr == null) {
-            Toast.makeText(this, R.string.main_invalid_qr, Toast.LENGTH_SHORT).show()
+            LogBus.log("[Garage] QR parse FAILED — raw: $raw")
+            Toast.makeText(
+                this,
+                QrData.parseFailureHint(raw, this) ?: getString(R.string.main_invalid_qr),
+                Toast.LENGTH_LONG,
+            ).show()
             return@registerForActivityResult
         }
         BikeMemory.save(this, raw, qr)

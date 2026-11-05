@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="maint_plan_pick">📖 Plan from the Zontes manual</string>
+    <string name="maint_plan_next">Next</string>
+    <string name="maint_plan_msg">Replaces the tasks with the %1$s owner\'s manual table (manual: %3$s): first service at 1,000 km or 3 months, the second at %2$s km, then every %2$s km or 15 months, with these items on their own cycles:\n\n%4$s\n\nWhat you have already logged and your own tasks are kept. Riding in humidity or dust? The manual says to shorten the intervals.</string>
+    <string name="maint_cvt_filter">CVT air filter</string>
+    <string name="maint_cvt_filter_check">CVT air filter (inspect)</string>
+    <string name="maint_steer_bearing">Steering-head bearings</string>
+    <string name="maint_fork_oil">Front fork oil and seals</string>
+    <string name="maint_shocks">Shock absorbers (inspect)</string>
+    <string name="maint_brake_hose">Brake hoses</string>
+    <string name="maint_brake_fluid_check">Brake fluid (inspect)</string>
+    <string name="maint_coolant_check">Coolant (inspect)</string>
+</resources>

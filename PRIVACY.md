@@ -1,179 +1,118 @@
-# OpenCfMoto — Privacy & Permissions
+# ZRide Screen — ความเป็นส่วนตัวและสิทธิ์การเข้าถึง
 
-_Last updated: 2026-10-06 (RideScreen AA v1.1)_
+_ปรับปรุงล่าสุด: 5 พฤศจิกายน 2569 (2026)_
 
-> **RideScreen AA** is a fork of OpenCfMoto maintained by Manel (GitHub: mgb1982). Everything
-> below applies to it; the only difference is **who receives the anonymous reports** — since
-> v1.1 they go to a service run by the fork maintainer, not to the original OpenCfMoto project.
+ZRide Screen ดูแลโดย Harajuku ต่อยอดจาก RideScreen AA และ OpenCfMoto เป็นแอปที่
+**ทำงานบนเครื่องเป็นหลัก** แอปเชื่อมมือถือกับหน้าปัดรถผ่าน Wi‑Fi ของตัวรถ แล้วส่งภาพ
+Android Auto หน้าจอมือถือ หรือหน้าปัดของฉันไปแสดงบนหน้าปัด **ไม่มีบัญชีผู้ใช้และไม่มีโฆษณา**
+ข้อมูลรถ ทริป และ log เก็บไว้บนมือถือของคุณ จนกว่า*คุณ*จะเลือกแชร์เอง
 
-OpenCfMoto is a **local-first** app. It connects your phone to a CFMoto MotoPlay
-dashboard (T-Box) over the bike's own Wi-Fi and projects Android Auto or your
-screen to the dash. It has **no user accounts and no ads**. Bike profiles, trip
-logs, and full diagnostic logs stay on your phone unless *you* choose to share
-them.
+## สรุป
 
-This document explains what the app can access, why, and where data goes.
+- **ไม่มีบัญชี ไม่ต้องล็อกอิน** แอปไม่ถามว่าคุณเป็นใคร
+- **ไม่ส่งข้อมูลการใช้งานไปที่ผู้พัฒนา** ฉบับ ZRide Screen ไม่ได้ตั้งเซิร์ฟเวอร์รับรายงาน
+  การใช้งานและข้อผิดพลาดแบบไม่ระบุตัวตน (โค้ดส่วนนี้มีอยู่แต่ไม่ทำงาน) ถ้าวันหนึ่งเปิดใช้
+  จะแจ้งในเอกสารนี้และในบันทึกการอัปเดตก่อน
+- **ข้อมูลการขี่อยู่บนเครื่องของคุณ** ได้แก่ ข้อมูลรถ เส้นทาง GPS ของทริป สมุดบำรุงรักษา
+- ข้อมูลบางอย่างต้องส่งออกจากมือถือเพื่อให้ฟีเจอร์ทำงาน เช่น แผนที่ ค้นหาสถานที่ ปั๊มน้ำมัน
+  พยากรณ์ฝน ดูรายละเอียดในหัวข้อ "ข้อมูลที่ออกจากมือถือ"
 
----
+## สิทธิ์ที่แอปขอ
 
-## Summary
+### ขอระหว่างใช้งาน
 
-- **No account, no sign-in.** The app never asks who you are.
-- **Optional anonymous telemetry (default on).** A random UUID, app version, and
-  (when something breaks) a redacted crash/error snippet may be sent to a
-  Cloudflare Worker operated by the RideScreen AA maintainer — so we can see roughly how many
-  phones use the app and fix crashes. Turn it off anytime under
-  **Setup → Privacy → Anonymous usage & crash reports**.
-- **Your ride data stays on the device** (bike profiles, trip GPS logs).
-- Other traffic that leaves the phone (not to us as “who you are”):
-  - **Map tiles** for the trip map are fetched from **OpenStreetMap** servers.
-  - **Android Auto** content (Maps/Waze/media) is handled by Google's Android
-    Auto app under Google's own terms — OpenCfMoto only relays its video to the
-    dash.
-
----
-
-## Permissions
-
-### Requested while using the app
-
-| Permission | When | Why | What it does *not* mean |
+| สิทธิ์ | ขอเมื่อ | ใช้ทำอะไร | สิ่งที่*ไม่ได้*ทำ |
 | --- | --- | --- | --- |
-| **Camera** | When you scan a bike's pairing QR code | Reads the T-Box QR shown on the dash | Not needed for normal streaming; frames are not recorded or uploaded |
-| **Location (fine)** | With Wi-Fi actions, and while recording a trip | Android requires location permission for Wi-Fi scanning/join; **and** the trip computer reads GPS to record your ride | See "Trip logging" below — this is the one feature that *does* record location, locally and only when enabled |
-| **Nearby Wi-Fi / network state** | When connecting to a saved or new bike | Finds and requests the bike's Wi-Fi access point and talks to the local T-Box | Not used to access unrelated networks or the internet on your behalf |
-| **Bluetooth (scan/connect)** | On the Setup screen's Bluetooth helper | Reports whether the phone is paired to the bike so the handlebar media/call buttons work | Declared `neverForLocation`; not used to derive your location |
-| **Notifications** | When starting mirroring / Android Auto (Android 13+) | Shows the required foreground-service status with controls to stop the session | Not telemetry; notifications stay on the phone |
+| **กล้อง** | ตอนสแกน QR บนหน้าปัด หรือถ่ายรูปจุดจอดรถ | อ่าน QR ที่หน้าปัดแสดง | ไม่ได้ใช้ระหว่างส่งภาพ ไม่บันทึกและไม่อัปโหลดภาพ |
+| **ตำแหน่ง (แม่นยำ)** | ตอนเชื่อมต่อ Wi‑Fi และระหว่างขี่ | Android บังคับให้ใช้สิทธิ์ตำแหน่งในการค้นหาและเชื่อม Wi‑Fi และแอปใช้ GPS แสดงความเร็ว แผนที่ มุมเอียง และบันทึกทริป | ดู "การบันทึกทริป" ด้านล่าง เป็นฟีเจอร์เดียวที่*เก็บ*ประวัติตำแหน่ง และเก็บบนเครื่องเท่านั้น |
+| **Wi‑Fi ใกล้เคียง / สถานะเครือข่าย** | ตอนเชื่อมต่อรถ | ค้นหาและเชื่อม Wi‑Fi ของรถ แล้วสื่อสารกับหน้าปัด | ไม่ใช้เข้าเครือข่ายอื่นแทนคุณ |
+| **Bluetooth** | ในหน้าตั้งค่า | ตรวจว่ามือถือจับคู่กับรถแล้ว เพื่อให้ปุ่มเพลงและปุ่มรับสายที่แฮนด์ใช้ได้ และเชื่อมนาฬิกา | ประกาศ `neverForLocation` ไม่ใช้หาตำแหน่งของคุณ |
+| **การแจ้งเตือน** | ตอนเริ่มส่งภาพ (Android 13 ขึ้นไป) | แสดงสถานะของบริการเบื้องหน้าที่ระบบบังคับ พร้อมปุ่มหยุด | ไม่ใช่การติดตาม และอยู่บนมือถือเท่านั้น |
 
-### System confirmations and optional access
+### การยืนยันของระบบและสิทธิ์เสริม
 
-| Access | When | Why |
+| สิทธิ์ | เมื่อไร | ทำไม |
 | --- | --- | --- |
-| **Screen-capture approval** | Every time you start mirroring | Android requires you to approve capturing the display or a chosen app; the app cannot approve this silently |
-| **Display over other apps** *(optional)* | Only if you enable seamless auto-resume | Lets the foreground service relaunch Android Auto after a long stop with the screen off. If not granted, you get a tap-to-resume notification instead |
+| **อนุญาตบันทึกหน้าจอ** | ทุกครั้งที่เริ่มสะท้อนจอ | Android บังคับให้คุณกดอนุญาตเอง แอปอนุญาตแทนไม่ได้ |
+| **แสดงทับแอปอื่น** *(ไม่บังคับ)* | เฉพาะเมื่อเปิดการกลับมาเชื่อมต่อต่ออัตโนมัติ | ให้แอปเปิด Android Auto กลับมาเองได้หลังจอดนาน ถ้าไม่อนุญาตจะได้การแจ้งเตือนให้แตะเพื่อกลับมาแทน |
 
-### Technical permissions granted by Android
+### สิทธิ์ทางเทคนิคที่ระบบให้อัตโนมัติ
 
-Internet and network-state access, Wi-Fi state/change, Wi-Fi multicast (for
-NSD/mDNS discovery of the dash), foreground-service types (media projection,
-connected device, location), and a wake lock. These keep the local T-Box
-connection and the active projection alive. The manifest also declares package
-visibility for Android Auto / Google Play services so the app can detect and
-launch the installed Android Auto component — this does not grant access to your
-Google account.
+อินเทอร์เน็ตและสถานะเครือข่าย, สถานะ Wi‑Fi, Wi‑Fi multicast (ค้นหาหน้าปัดด้วย mDNS),
+บริการเบื้องหน้า (ส่งภาพ, อุปกรณ์ที่เชื่อมต่อ, ตำแหน่ง), เซนเซอร์ (ไจโรสโคปสำหรับมุมเอียง
+และตรวจจับการล้ม) และ wake lock เพื่อให้การเชื่อมต่อกับหน้าปัดไม่หลุดระหว่างขี่ แอปยังประกาศ
+การมองเห็นแพ็กเกจของ Android Auto และ Google Play services เพื่อตรวจหาและเปิด Android Auto
+ซึ่ง**ไม่ได้**ทำให้แอปเข้าถึงบัญชี Google ของคุณ
 
----
+## ข้อมูลที่เก็บบนมือถือ
 
-## Data the app stores on your phone
-
-| Data | Where | Notes |
+| ข้อมูล | เก็บที่ | หมายเหตุ |
 | --- | --- | --- |
-| **Bike profiles** — SSID, Wi-Fi password, QR metadata, display name | App-private storage (`SharedPreferences`) | Stored in the app's sandbox on the device. It is **not** transmitted anywhere by the app. It is currently stored in plaintext within app-private storage (encryption at rest is a planned improvement); anyone with a rooted device or a full device backup could read it. |
-| **Trip logs** — GPS route points, distance, duration, max/avg speed, timestamps | App-private storage | Created only when *Log trips automatically* is on, or when you start a manual recording. Viewable under **Trip ▸ Saved trips**, shown on a map, and deletable by long-press. Never uploaded by the app. |
-| **Diagnostic log** | In-memory / app-private storage | A rolling technical log for troubleshooting. Shared **only** when you tap **Logs ▸ Share** and pick a destination yourself. |
+| **ข้อมูลรถ**: ชื่อ Wi‑Fi, รหัส Wi‑Fi, ข้อมูลจาก QR, ชื่อรถ, รูปรถ | พื้นที่ส่วนตัวของแอป | ไม่ส่งไปที่ไหน ตอนนี้ยังเก็บแบบไม่เข้ารหัสในพื้นที่ส่วนตัวของแอป ผู้ที่ root เครื่องหรือมีไฟล์สำรองทั้งเครื่องอาจอ่านได้ |
+| **ทริป**: จุด GPS, ระยะทาง, เวลา, ความเร็ว | พื้นที่ส่วนตัวของแอป | สร้างเมื่อเปิด "บันทึกทริปอัตโนมัติ" หรือกดเริ่มบันทึกเอง ลบได้ทีละทริป แอปไม่อัปโหลด |
+| **สมุดบำรุงรักษา, บันทึกการเติมน้ำมัน, สถิติ, ถ้วยรางวัล** | พื้นที่ส่วนตัวของแอป | คำนวณและเก็บบนเครื่องเท่านั้น รูปสำหรับแชร์จะสร้างเมื่อคุณกดแชร์ และส่งไปเฉพาะที่ที่คุณเลือก |
+| **จุดจอดรถ** | มือถือ และนาฬิกาของคุณ | ตำแหน่งล่าสุดของรถตอนตัดการเชื่อมต่อ ส่งไปนาฬิกาของคุณผ่าน Bluetooth เท่านั้น ปิดได้ และเมื่อปิดจะลบตำแหน่งที่เก็บไว้ |
+| **log สำหรับแก้ปัญหา** | หน่วยความจำ / พื้นที่ส่วนตัวของแอป | log ทางเทคนิค ส่งออก**เฉพาะ**ตอนที่คุณกด **แชร์บันทึก (log)** แล้วเลือกปลายทางเอง |
 
-### Trip logging (location history)
+### การบันทึกทริป (ประวัติตำแหน่ง)
 
-Unlike a pure connection app, OpenCfMoto includes a GPS **trip computer** that
-**does record a location history** — your route and speed — while a trip is
-being logged. This is a deliberate feature, it is **on-device only**, and you
-control it:
+แอปมี**คอมพิวเตอร์ทริป**ที่**เก็บประวัติตำแหน่ง** (เส้นทางและความเร็ว) ระหว่างบันทึกทริป
+เป็นฟีเจอร์ที่ตั้งใจให้มี เก็บ**บนเครื่องเท่านั้น** และคุณควบคุมได้:
 
-- It records when *Log trips automatically* is enabled (Setup ▸ Startup &
-  recovery) during a projection session, or when you press Start on the Trip
-  screen.
-- Trips are stored locally and can be deleted individually.
-- The route data is never sent to the project or any analytics service.
+- บันทึกเมื่อเปิด "บันทึกทริปอัตโนมัติ" ระหว่างเชื่อมต่อหน้าปัด หรือเมื่อกดเริ่มในหน้าทริป
+- ทริปเก็บบนเครื่อง และลบทีละทริปได้
+- เส้นทางไม่ถูกส่งไปที่ผู้พัฒนาหรือบริการวิเคราะห์ใดๆ
 
----
+## รายงานการใช้งานแบบไม่ระบุตัวตน และแชร์ตำแหน่งสด
 
-## Anonymous telemetry (optional)
+แอปต้นฉบับ (RideScreen AA) มีรายงานการใช้งาน/ข้อผิดพลาดแบบไม่ระบุตัวตน และฟีเจอร์
+"แชร์การขี่แบบสด" ซึ่งทั้งสองอย่างส่งข้อมูลไปยังเซิร์ฟเวอร์ของผู้ดูแล
 
-When **Anonymous usage & crash reports** is on (Setup → Privacy):
+**ใน ZRide Screen ทั้งสองอย่างไม่ทำงาน** เพราะเราไม่ได้ตั้งเซิร์ฟเวอร์รับข้อมูล แอปจึงไม่ส่ง
+รายงานไปที่ใด และปุ่มแชร์ตำแหน่งสดจะไม่ปรากฏ ถ้าในอนาคตเปิดใช้ จะปรับปรุงเอกสารนี้ก่อน
+และจะเป็นตัวเลือกที่คุณปิดได้เสมอ
 
-| Sent | Not sent |
-| --- | --- |
-| Random UUID generated on the phone | Name, email, Google account |
-| App version / Android API level / UI locale | Bike SSID, Wi‑Fi password, QR secrets |
-| Occasional “still installed” heartbeat | GPS trip routes or destinations |
-| Redacted crash stack / short error text | Dash video, camera frames, contacts |
+## ข้อมูลที่ออกจากมือถือ
 
-If the phone has no internet (or is only on the bike SoftAP), events stay in a
-small local queue and upload later over cellular/home Wi‑Fi. Turning the toggle
-**Off** stops uploads and clears the outbound queue.
+ฟีเจอร์ต่อไปนี้ต้องส่งคำขอไปยังบริการภายนอก ผู้ให้บริการจะได้รับคำขอเหมือนการเปิดเว็บไซต์
+ทั่วไป (รวมถึงหมายเลข IP ของคุณ) แต่แอปไม่ได้ส่งชื่อหรือรหัสประจำตัวของคุณไปด้วย
 
-The ingest service is a Cloudflare Worker + D1 database run by the RideScreen AA
-maintainer; its full source is in this repository under [`telemetry/`](telemetry/).
-It stores only what the app sends (the random UUID, version info, Android API
-level, UI language and the redacted crash/error text). It does **not** store your
-IP address, country or any request headers. Records are deleted automatically
-after 180 days without activity. New crashes and errors trigger a private
-Telegram notification to the maintainer so they can be fixed quickly; the data is
-not shared with anyone else and is used for maintenance only.
+- **แผนที่:** ภาพแผนที่ดาวน์โหลดจากเซิร์ฟเวอร์ OpenStreetMap / OpenFreeMap ตามพื้นที่ที่แสดง
+  ข้อมูลแผนที่ © ผู้ร่วมสร้าง OpenStreetMap (ODbL)
+- **ค้นหาสถานที่ ชื่อทริป และ "ตำแหน่งปัจจุบัน" บนหน้าปัด Nav Center:** ส่งคำค้นหรือตำแหน่ง (ปัดเศษประมาณ
+  100 ม. สำหรับชื่อทริปและชื่อถนนบนหน้าปัด ซึ่งขอใหม่เมื่อรถเคลื่อนที่เกิน 150 ม. และไม่ถี่กว่าทุก 30 วินาที)
+  ไปยัง Nominatim / Photon
+- **วางเส้นทาง:** ส่งจุดเริ่มต้นและปลายทางไปยัง OSRM, Valhalla หรือ OpenRouteService
+- **ปั๊มน้ำมันใกล้ตัว** (รวมถึงตอนน้ำมันใกล้หมดบนหน้าปัด): ส่งตำแหน่งปัจจุบันไปยัง Overpass API
+  (OpenStreetMap) เพื่อค้นหาปั๊มรอบตัว และดึงราคาน้ำมันจาก API ราคาน้ำมันของบางจาก
+- **เตือนฝน:** ส่งตำแหน่ง (ปัดเศษประมาณ 1 กม.) ไปยัง Open‑Meteo ตอนเริ่มขี่ ปิดได้
+- **เพลงและการนำทางบนหน้าปัด** (ไม่บังคับ): ถ้าคุณเปิด "การเข้าถึงการแจ้งเตือน" ให้แอป แอปจะใช้สิทธิ์นี้อ่าน
+  (1) ชื่อเพลงและศิลปินจากแอปเพลงที่กำลังเล่น และ (2) การแจ้งเตือนนำทางที่ค้างอยู่ของ Google Maps, Waze, HERE
+  และ Sygic (ระยะ คำสั่งเลี้ยว เวลาถึง ไอคอนลูกศร) เพื่อแสดงบนหน้าปัดเท่านั้น ไม่อ่าน ไม่เก็บ และไม่ส่ง
+  การแจ้งเตือนอื่นใด ข้อมูลเหล่านี้อยู่ในหน่วยความจำ ไม่บันทึกลงเครื่อง และไม่ออกจากมือถือ ยกเว้นในภาพหน้าปัดที่ส่งไปจอรถ
+- **Android Auto:** การนำทางและเพลงทำงานในแอป Android Auto ของ Google แอปเราแค่รับภาพ
+  และเสียงแล้วส่งต่อไปที่หน้าปัด สิ่งที่ Android Auto หรือแอปในนั้นส่งออกไปเป็นไปตามเงื่อนไข
+  ของ Google และแอปนั้นๆ
+- **Wi‑Fi ของรถ** ใช้ส่งภาพไปหน้าปัดเท่านั้น และอาจไม่มีอินเทอร์เน็ต
 
-Builds of RideScreen AA up to v1 sent these reports to the original OpenCfMoto
-project's service ([opencfmoto-telemetry](https://github.com/zanderp/opencfmoto-telemetry)).
+## ถ้าไม่อนุญาตบางสิทธิ์
 
-## Ride extras (v1.2)
+แอปยังเปิดได้ ใช้ไม่ได้เฉพาะฟีเจอร์ที่เกี่ยวข้อง:
 
-- **Where did I park?** The bike's last GPS position when you disconnect from the dash is stored
-  **on the phone** and sent to **your own watch** over Bluetooth. Nothing leaves your devices. Turn
-  it off in Setup → Ride extras; turning it off deletes the saved spot.
-- **Rain alert.** When a ride starts, the app asks [Open-Meteo](https://open-meteo.com) for the
-  forecast at your position **rounded to about 1 km** (two decimals). No ID, no history; Open-Meteo
-  receives the request like any website would (including your IP address). Off in Setup → Ride extras.
-- **Turn vibrations on the watch.** Uses the navigation instructions Android Auto sends to the dash
-  (next manoeuvre and distance). They only travel from your phone to your watch.
-- **Share my ride live** (off unless you start it each time). While active, your position and speed
-  are sent every ~10 s to the RideScreen AA server (the same Cloudflare Worker as the anonymous
-  reports, code in [`telemetry/src/live.js`](telemetry/src/live.js)) under a random link, and anyone
-  with the link can see them on a map. It stops when you tap stop, a few minutes after the ride ends,
-  or after 12 hours at most. The positions and the link are **deleted 24 hours after it ends**. The
-  name shown is the one you type (optional).
+- ไม่มี**กล้อง** → ใช้ QR จากรถที่บันทึกไว้แทน
+- ไม่มี **Wi‑Fi ใกล้เคียง/ตำแหน่ง** → ค้นหาและเชื่อมหน้าปัดไม่ได้
+- ไม่มี**การแจ้งเตือน** → ส่งภาพแบบบริการเบื้องหน้าไม่ได้
+- ไม่อนุญาต**บันทึกหน้าจอ** → เริ่มสะท้อนจอไม่ได้
+- ไม่มี**ตำแหน่ง**ระหว่างขี่ → ไม่มีความเร็ว แผนที่ และเส้นทางทริป
+- สิทธิ์เสริม (แสดงทับแอปอื่น) → ฟีเจอร์ที่เกี่ยวข้องจะปิดอยู่
 
-## v2 additions
+## ติดต่อ
 
-- **Trip names** ("Sants → Zona Franca"). For each saved trip the app asks OpenStreetMap's
-  [Nominatim](https://nominatim.org) for the neighbourhood of its start and end points, **rounded to
-  about 100 m** (three decimals), at most one request per second. The name is stored on the phone;
-  nothing else about the trip is sent.
-- **Maintenance logbook, records, heat map, year in review.** Computed and stored **only on the
-  phone**. Share images are created only when you tap *Share* and go where you send them.
-- **Head unit server check.** A connection attempt to `127.0.0.1:5277` on the phone itself; nothing
-  leaves the device.
-- **Watch compass.** The watch asks for location permission to point at the parked bike; the position
-  stays on the watch.
+คำถามเกี่ยวกับ ZRide Screen: เปิด issue ใน repository ของโปรเจกต์ หรือส่ง log ผ่านเมนู
+**ช่วยเหลือ ▸ แชร์บันทึก (log)** ในแอป
 
-## Data that leaves the phone (other)
+RideScreen AA (Manel): <https://github.com/mgb1982/ridescreen-aa> ·
+OpenCfMoto (Alexandru): <https://alexandru.rocks>
 
-- **OpenStreetMap tiles:** Opening a trip's map downloads map imagery from
-  OpenStreetMap tile servers for the area of your route. Those requests reach
-  OSM's infrastructure and are subject to OpenStreetMap's own policies. Map data
-  is © OpenStreetMap contributors (ODbL).
-- **Android Auto:** Navigation and media run inside Google's Android Auto app;
-  OpenCfMoto only receives and relays its video/audio to the dash. Anything
-  Android Auto or its apps send is governed by Google's and those apps' terms.
-- The **bike's Wi-Fi** is a local display transport and may have no internet.
-  The app keeps it separate from your normal connectivity where Android allows.
-
----
-
-## If a permission is denied
-
-The app still opens. Only the related feature is unavailable: without **Camera**,
-import a QR from a saved bike; without **Nearby Wi-Fi/Location**, the dash can't
-be discovered or joined; without **Notifications**, projection can't run as a
-managed foreground session; without **screen-capture approval**, mirroring can't
-start; without **Location while logging**, trips won't record a route. Optional
-overlay dimming/seamless-resume simply stays off unless granted.
-
----
-
-## Contact
-
-RideScreen AA questions: open an issue at <https://github.com/mgb1982/ridescreen-aa/issues>.
-OpenCfMoto (the original project) is an independent, unofficial project by
-Alexandru: <https://alexandru.rocks>.
-
-CFMOTO, MotoPlay, EasyConn, Android Auto, and Google are trademarks of their
-respective owners; this project is not affiliated with or endorsed by them.
+Zontes, CFMOTO, MotoPlay, EasyConn, Android Auto และ Google เป็นเครื่องหมายการค้าของเจ้าของ
+แต่ละราย โปรเจกต์นี้ไม่มีส่วนเกี่ยวข้องและไม่ได้รับการรับรองจากบริษัทเหล่านั้น

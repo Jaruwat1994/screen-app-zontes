@@ -105,8 +105,6 @@
     <string name="maint_first_km">Prima volta a … km (facoltativo)</string>
     <string name="maint_first_at">la prima a %1$s</string>
     <string name="maint_then_every_km">poi ogni %1$s sul contachilometri</string>
-    <string name="maint_plan_125">📖 Piano del manuale Zontes 125X</string>
-    <string name="maint_plan_125_msg">Sostituisce gli interventi con la tabella del manuale della Zontes 125X: primo tagliando a 1.000 km, il secondo a 6.000 e poi ogni 6.000 (o 15 mesi), più filtro dell\'olio, olio del cambio, valvole, cinghia, boccole delle pulegge, bloccasterzo, candela, liquido dei freni e liquido di raffreddamento con i loro cicli.\n\nQuello che hai già registrato e i tuoi interventi restano.\n\nGuidi con umidità o polvere? Il manuale dice di accorciare gli intervalli.</string>
     <string name="maint_plan_apply">Applica</string>
     <string name="maint_oil_engine">Olio motore</string>
     <string name="maint_oil_filter">Filtro dell\'olio</string>

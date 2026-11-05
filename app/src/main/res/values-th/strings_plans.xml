@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="maint_plan_pick">📖 แผนตามคู่มือ Zontes</string>
+    <string name="maint_plan_next">ถัดไป</string>
+    <string name="maint_plan_msg">แทนที่รายการด้วยตารางในคู่มือผู้ใช้ %1$s (เล่ม %3$s): เช็กระยะครั้งแรกที่ 1,000 km หรือ 3 เดือน ครั้งที่สองที่ %2$s km แล้วทุก %2$s km หรือ 15 เดือน พร้อมรายการตามรอบของแต่ละอย่าง:\n\n%4$s\n\nข้อมูลที่บันทึกไว้แล้วและรายการที่คุณสร้างเองจะยังอยู่ ขี่ในที่ชื้นหรือมีฝุ่นมาก? คู่มือแนะนำให้ลดระยะลง</string>
+    <string name="maint_cvt_filter">ไส้กรองอากาศ CVT</string>
+    <string name="maint_cvt_filter_check">ไส้กรองอากาศ CVT (ตรวจสอบ)</string>
+    <string name="maint_steer_bearing">ลูกปืนคอ</string>
+    <string name="maint_fork_oil">น้ำมันโช้คหน้าและซีล</string>
+    <string name="maint_shocks">โช้คอัพ (ตรวจสอบ)</string>
+    <string name="maint_brake_hose">ท่อน้ำมันเบรก</string>
+    <string name="maint_brake_fluid_check">น้ำมันเบรก (ตรวจสอบ)</string>
+    <string name="maint_coolant_check">น้ำหล่อเย็น (ตรวจสอบ)</string>
+</resources>

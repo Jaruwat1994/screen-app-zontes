@@ -1,122 +1,96 @@
-<div align="center">
+# 🏍️ ZRide Screen
 
-# 🏍️ RideScreen AA
+### Android Auto และหน้าปัดที่คุณออกแบบเอง บนจอรถ Zontes แบบไร้สาย
 
-### Android Auto inalámbrico en el cuadro de tu moto, con extras pensados para la Zontes 125X / 125V
+**ZRide Screen** แสดง **Google Maps, Waze, เพลง และผู้ช่วย Google** จาก Android Auto บนหน้าปัดรถ Zontes ผ่าน Wi‑Fi โดยไม่ต้องต่อสาย หรือจะใช้**หน้าปัดของฉัน** ที่แสดงความเร็ว แผนที่ และข้อมูลการขี่ในหน้าตาที่คุณเลือกเองก็ได้ ใช้กับหน้าปัด **EasyConn / Carbit** (หน้าปัดที่แสดง QR ของ MotoPlay)
 
-*Wireless Android Auto on your motorbike's dash, with extras built for the Zontes 125X / 125V — [English summary below](#-in-english)*
+> ⚠️ **ไม่ใช่แอปทางการของ Zontes** เป็นโปรเจกต์อิสระ ซอฟต์แวร์เสรีภายใต้สัญญาอนุญาต AGPL‑3.0
 
-[![Descargas](https://img.shields.io/github/downloads/mgb1982/ridescreen-aa/total?style=for-the-badge&label=Descargas&color=D1A955)](https://github.com/mgb1982/ridescreen-aa/releases/latest)
-[![Última versión](https://img.shields.io/github/v/release/mgb1982/ridescreen-aa?style=for-the-badge&label=Versi%C3%B3n&color=243028)](https://github.com/mgb1982/ridescreen-aa/releases/latest)
-[![Ko-fi](https://img.shields.io/badge/Ko--fi-Inv%C3%ADtame%20a%20un%20caf%C3%A9-ff5e5b?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/mgb1982)
+## รุ่นที่รองรับ
 
-**[⬇️ Descargar](https://github.com/mgb1982/ridescreen-aa/releases/latest)** · **[📖 Guía de instalación](https://ridescreen.app/guia/)** · **[📸 Todas las capturas](docs/CAPTURAS.md)**
+| รุ่น | จอ | สถานะ |
+|---|---|---|
+| Zontes 368G และตระกูล 368 (K / E / D) | 8 นิ้ว 1024×425 | ✅ ใช้งานได้ |
+| Zontes 125X / 125V | 800×416 | ✅ ใช้งานได้ |
+| Zontes 150X | 5 นิ้ว | ❓ ยังไม่ยืนยัน ถ้าคุณมีรุ่นนี้ ช่วยส่ง log ตอนเชื่อมต่อมาด้วย |
 
-<br/>
+ต้องใช้มือถือ Android 10 ขึ้นไป
 
-<img src="docs/screenshots/ridescreen/movil/01_inicio_parada.png" width="230" alt="Pantalla principal con la moto aparcada"/>&nbsp;
-<img src="docs/screenshots/ridescreen/movil/02_inicio_conectado.png" width="230" alt="Pantalla principal conectado al cuadro"/>&nbsp;
-<img src="docs/screenshots/ridescreen/movil/13_viajes.png" width="230" alt="Viajes guardados"/>
+## ติดตั้ง
 
-</div>
+1. ดาวน์โหลดไฟล์ **APK** ล่าสุดจากหน้า **Releases** ของ repository นี้
+2. เปิดไฟล์บนมือถือเพื่อติดตั้ง (ถ้าระบบถาม ให้อนุญาต "ติดตั้งแอปที่ไม่รู้จัก")
+3. เปิดแอปแล้วทำตาม**คู่มือ 5 ขั้นตอน**: อนุญาตสิทธิ์ ตั้งค่า Android Auto แล้วสแกน QR บนหน้าปัด ใช้เวลาประมาณ 3 นาที
+4. ครั้งต่อไปแตะ **CONNECT** ครั้งเดียวก็เชื่อมต่อได้
 
-## ¿Qué es?
+## มีอะไรบ้าง
 
-**RideScreen AA** pone **Google Maps, Waze, la música y el Asistente** de Android Auto en el cuadro de tu moto, por Wi‑Fi y sin cables, desde un móvil Android. Funciona con los cuadros **EasyConn / Carbit** (los que muestran un QR de MotoPlay) y está probada a diario en la **Zontes 125X / ZT125T‑X** y la **125V**, y confirmada en la **368K** y la **368E**.
+### 🔌 การเชื่อมต่อ
+- Android Auto ไร้สายบนหน้าปัด หรือสะท้อนหน้าจอมือถือ
+- ใช้ปุ่มที่แฮนด์ควบคุมได้: เลื่อน เลือก ย้อนกลับ และหมุนปุ่ม
+- เชื่อมต่อใหม่อัตโนมัติเมื่อสัญญาณหลุด
 
-Además de proyectar, la app **registra tus viajes**, te dice **dónde aparcaste** (con foto), lleva el **mantenimiento**, busca la **gasolina más barata**, **avisa a tus contactos si te caes** y tiene **app para el reloj Wear OS**.
+### 🎛️ หน้าปัดของฉัน
+- **เทมเพลตหน้าปัด** หลายแบบ (Pro, Cyberpunk, Dragon, Racing, Touring, Space, Gold, Rosso ฯลฯ) หรือแบบช่องข้อมูลที่จัดเองได้
+- เลือก**สีแยกตามเทมเพลต** และเลือกได้ว่าจะ**แสดงหรือซ่อน**อะไร
+- **สถานะ GPS** (ความแม่นยำ ดาวเทียม อายุของตำแหน่ง) **แผนที่ในหน้าปัด** และ**มุมเอียง + แรง G**
+- **เตือนความเร็วเกิน**, **หรี่จอตอนกลางคืน**
+- **เอฟเฟกต์**: แอนิเมชันต้อนรับ เข็มกวาด เข็มนุ่มนวล และไฟเรืองแสงตามความเร็ว
+- **น้ำมันใกล้หมด** แสดงปั๊มที่ใกล้ที่สุดพร้อมระยะทางและทิศทาง (เกจน้ำมันเป็นค่าประมาณจากบันทึกการเติม เพราะรถไม่ส่งระดับน้ำมันให้มือถือ)
+- ปุ่มแฮนด์บนหน้าปัดของฉัน: ▼/OK = แผนที่เต็มจอ · ▲ = ซ่อนแผงขวา · หมุน = ซูม · ย้อนกลับ = หน้าปกติ
 
-Está basada en [OpenCfMoto](https://github.com/zanderp/open-cfmoto), de Alexandru (zanderp), sin el que nada de esto existiría. **No es una app oficial de Zontes ni de CFMoto.** Software libre con licencia AGPL‑3.0.
+### 🗺️ แผนที่และทริป
+- แผนที่ OpenStreetMap ใช้แบบออฟไลน์ได้ และนำทางด้วยไฟล์ GPX
+- บันทึกทริปอัตโนมัติ ดูเส้นทาง สถิติ และสร้างวิดีโอสรุปทริป
 
-## Instalación
+### 🛵 รถของคุณ
+- สมุดบำรุงรักษาและแจ้งเตือนรอบเปลี่ยนน้ำมันเครื่อง/อะไหล่
+- ปั๊มน้ำมันใกล้ตัวพร้อมราคาน้ำมันไทย
+- จดจำจุดจอดรถ
 
-1. Descarga **`RideScreen-AA-….apk`** de la [última versión](https://github.com/mgb1982/ridescreen-aa/releases/latest) (en *Assets*).
-2. Si Android avisa de **Play Protect**, es porque la app aún no está en Play Store: **Más detalles → Instalar de todas formas**.
-3. Sigue la **[guía paso a paso](https://ridescreen.app/guia/)**: permisos, el servidor de unidad principal de Android Auto y el QR del cuadro (interfaz 3).
-4. Las siguientes versiones te las ofrece la propia app.
+### 🆘 ความปลอดภัย (ทดลอง, เปิดหรือปิดได้)
+- ตรวจจับการล้ม และมีปุ่มโทร **1669** ในประเทศไทย แอปแค่เปิดหน้าโทรออกให้ ผู้ขับต้องกดโทรเอง
 
-<p align="center">
-<img src="docs/screenshots/ridescreen/movil/05_primera_conexion_wifi_apagada.png" width="200" alt="Primera conexión"/>&nbsp;
-<img src="docs/screenshots/ridescreen/movil/07_ajustar_pantalla_al_cuadro.png" width="200" alt="Ajustar la pantalla al cuadro"/>&nbsp;
-<img src="docs/screenshots/ridescreen/movil/08_esperando_a_la_moto.png" width="200" alt="Esperando a la moto"/>
-</p>
+### ⌚ นาฬิกา Wear OS
+- แอปคู่สำหรับนาฬิกา: ดูจุดจอดรถ เข็มทิศชี้ไปที่รถ และสั่นเตือนเมื่อต้องเลี้ยว
 
-## Qué incluye
+## ถ้ามีปัญหา
 
-### 🔌 Conexión
-- **Conecta sola al arrancar la moto**: por el Bluetooth del cuadro, o esperando su Wi‑Fi en modo ahorro.
-- **Ajusta la imagen al cuadro con flechas**, viendo el resultado en directo en la moto (también paneles verticales).
-- **«Ok Google»** y el botón de voz del intercomunicador o del reloj.
-- Si Android Auto no arranca, la app te lleva directa a reiniciar su **servidor de unidad principal**.
+เปิดแอป ไปที่เมนู**ช่วยเหลือ ▸ 📤 แชร์บันทึก (log)** แล้วส่ง log ให้ผู้ดูแล log ไม่มีรหัส Wi‑Fi ของรถ และจะส่งออกเฉพาะตอนที่คุณกดแชร์เองเท่านั้น
 
-### 🅿️ Tu moto
-- **Dónde aparcaste**, guardado al apagar la moto, con **foto** opcional del sitio, distancia y cómo llegar andando.
-- **⛽ Gasolineras cerca** con el precio oficial de la Gasolina 95 (España), ordenadas por precio o distancia.
-- **🔧 Libreta de mantenimiento** (aceite, correa, frenos, ITV, seguro…) y **repostajes** con tu consumo real.
+## ติดต่อและสนับสนุน
 
-<p align="center">
-<img src="docs/screenshots/ridescreen/movil/09_aparcamiento_opciones.png" width="200" alt="Aparcamiento"/>&nbsp;
-<img src="docs/screenshots/ridescreen/movil/12_gasolineras.png" width="200" alt="Gasolineras cerca"/>&nbsp;
-<img src="docs/screenshots/ridescreen/movil/22_mantenimiento.png" width="200" alt="Mantenimiento"/>
-</p>
+💬 **Telegram: [@AZURE11S](https://t.me/AZURE11S)** สำหรับติดต่อผู้พัฒนา ส่งไอเดีย แจ้งปัญหา ขอให้รองรับรถรุ่นใหม่ หรือสนับสนุนการพัฒนา
 
-### 🏍️ Tus viajes
-- Cada salida se guarda sola: **ruta coloreada por velocidad**, km, tiempos y nombre automático («Sants → Zona Franca»).
-- **Mapa de calor** de todo lo que has rodado, **récords**, **trofeos** y **tu año en moto** para compartir.
-- **🚦 Tus semáforos**: dónde más paras, cuánto esperas y cuál de tus caminos es de verdad más rápido.
-- **🎬 Vídeo del viaje**: tus clips (Ray‑Ban Meta, cámara de acción…) con la ruta, la velocidad y la hora encima.
-- **📍 Ruta en directo**: un enlace privado para que te sigan en el mapa.
+ในแอปกดได้ที่ **เกี่ยวกับ → ❤ สนับสนุนโปรเจกต์** หรือปุ่ม **ติดต่อและสนับสนุน · Telegram**
 
-<p align="center">
-<img src="docs/screenshots/ridescreen/movil/15_viaje_por_velocidad.png" width="200" alt="Viaje coloreado por velocidad"/>&nbsp;
-<img src="docs/screenshots/ridescreen/movil/16_mapa_de_calor.png" width="200" alt="Mapa de calor"/>&nbsp;
-<img src="docs/screenshots/ridescreen/movil/17_semaforos.png" width="200" alt="Tus semáforos"/>&nbsp;
-<img src="docs/screenshots/ridescreen/movil/19_video_del_viaje.png" width="200" alt="Vídeo del viaje"/>
-</p>
-<p align="center">
-<img src="docs/screenshots/ridescreen/imagenes/03_fotograma_video_recreacion.png" width="560" alt="Fotograma de un vídeo del viaje con mapa, velocidad y hora"/>
-</p>
+## ความเป็นส่วนตัว
 
-### 🆘 Detector de caídas (experimental, opcional)
-Si vas en moto y hay un golpe fuerte, el móvil se queda quieto y acaba tumbado, suena una **alarma de 60 s** en el móvil y en el reloj. Si nadie pulsa **«Estoy bien»**, envía un **SMS con tu ubicación** a hasta 3 contactos, y otro a los 5 minutos. Se puede simular y mandar un SMS de prueba. Nunca llama a emergencias por su cuenta y **no es un dispositivo de seguridad certificado**.
+แอปไม่มีบัญชีผู้ใช้และไม่มีโฆษณา ข้อมูลการขี่เก็บไว้ในมือถือของคุณ รายละเอียดดูที่ [PRIVACY.md](PRIVACY.md)
 
-<p align="center">
-<img src="docs/screenshots/ridescreen/movil/24_detector_de_caidas.png" width="200" alt="Detector de caídas"/>&nbsp;
-<img src="docs/screenshots/ridescreen/movil/25_alarma_de_caida.png" width="200" alt="Alarma de caída"/>&nbsp;
-<img src="docs/screenshots/ridescreen/movil/26_sms_al_contacto.png" width="200" alt="SMS al contacto"/>
-</p>
+## Build จากซอร์สโค้ด
 
-### ⌚ Reloj Wear OS
-Velocidad y próxima maniobra, vibraciones de giro, **brújula hacia tu moto aparcada**, trofeos, la alarma de caída y una **cruceta** para manejar Android Auto (también en relojes sin bisel).
+```bash
+./gradlew :app:assembleGithubDebug
+# ได้ไฟล์ app/build/outputs/apk/github/debug/app-github-debug.apk
+```
 
-<p align="center">
-<img src="docs/screenshots/ridescreen/reloj/01_brujula_hacia_tu_moto.png" width="150" alt="Brújula hacia tu moto"/>&nbsp;
-<img src="docs/screenshots/ridescreen/reloj/03_aviso_de_giro.png" width="150" alt="Aviso de giro"/>&nbsp;
-<img src="docs/screenshots/ridescreen/reloj/06_cruceta_sin_bisel.png" width="150" alt="Cruceta"/>&nbsp;
-<img src="docs/screenshots/ridescreen/reloj/07_alarma_de_caida.png" width="150" alt="Alarma de caída en el reloj"/>
-</p>
+## เครดิต
 
-> Las capturas son recreaciones fieles de la app (mismos textos, colores y distribución), hechas para no mostrar datos personales. **[Ver todas](docs/CAPTURAS.md).**
+ZRide Screen ต่อยอดจากโปรเจกต์โอเพนซอร์สเหล่านี้ ขอบคุณผู้พัฒนาทุกท่าน:
 
-## Si algo falla
-En la app, **❓ Ayuda → Compartir registros**, y pásalo por el grupo contando qué ha pasado. Los registros ocultan números de serie y contraseñas. La app envía **informes anónimos de errores** (sin ubicación ni datos personales; ver [privacidad](PRIVACY.md)).
+- **RideScreen AA** โดย Manel (mgb1982): <https://github.com/mgb1982/ridescreen-aa>
+- **OpenCfMoto** โดย Alexandru (zanderp): <https://github.com/zanderp/open-cfmoto>
+- **headunit-revived** (ระบบรับภาพ Android Auto) และชุมชน open-cfmoto
 
-## Apoya el proyecto
-RideScreen AA es gratis y sin anuncios. Si te resulta útil, puedes [invitarme a un café en Ko‑fi](https://ko-fi.com/mgb1982) ☕. Y sobre todo, gracias a **Alexandru (zanderp)** por [OpenCfMoto](https://github.com/zanderp/open-cfmoto).
+รายชื่อทั้งหมดอยู่ในไฟล์ [NOTICE](NOTICE) และหน้า "เกี่ยวกับ" ในแอป
 
----
+## สัญญาอนุญาต (License)
 
-## 🇬🇧 In English
+ZRide Screen, © 2026 Harajuku เป็นซอฟต์แวร์เสรีภายใต้ **GNU Affero General Public License v3.0 หรือใหม่กว่า** (AGPL‑3.0‑or‑later)
 
-**RideScreen AA** puts **Android Auto** (Google Maps, Waze, music, Assistant) on your motorbike's **EasyConn / Carbit dash** over Wi‑Fi, from an Android phone — no root, no PC. It's a fork of [OpenCfMoto](https://github.com/zanderp/open-cfmoto) by Alexandru (zanderp), tuned and tested daily on the **Zontes 125X / 125V** (also confirmed on the **368K** and **368E**), with extras:
+- ข้อความสัญญาฉบับทางการ (ภาษาอังกฤษ): [LICENSE](LICENSE)
+- สรุปภาษาไทย (ไม่เป็นทางการ): [LICENSE-TH.md](LICENSE-TH.md)
+- ลิขสิทธิ์ของผู้พัฒนาแต่ละส่วน: [NOTICE](NOTICE)
 
-- **Auto‑connect** when the bike starts (dash Bluetooth or Wi‑Fi in low‑power mode); **live screen fit** with arrows; voice assistant.
-- **Parking spot** with photo and walking directions; **cheapest petrol nearby** (Spain); **maintenance log** and real fuel consumption.
-- **Ride log** coloured by speed, heat map, records, trophies, year in review; **traffic‑light analysis**; **ride video** with map/speed overlay; **live location sharing**.
-- **Crash detection** (experimental, opt‑in): alarm on phone and watch, then an SMS with your location to up to 3 contacts. Not a certified safety device.
-- **Wear OS app**: next turn, compass to your parked bike, D‑pad for Android Auto, crash alarm.
-
-The app is in Spanish, Catalan and English. Download the APK from **[Releases](https://github.com/mgb1982/ridescreen-aa/releases/latest)**. The original OpenCfMoto documentation (supported bikes, handlebar buttons, protocol notes) is kept in **[docs/OPENCFMOTO-README.md](docs/OPENCFMOTO-README.md)**.
-
-## Licencia · License
-AGPL‑3.0‑or‑later. Ver [LICENSE](LICENSE) y [NOTICE](NOTICE). Not affiliated with Zontes, CFMoto or Google. Android Auto is a trademark of Google LLC.
+Zontes, CFMOTO, MotoPlay, EasyConn, Carbit, Android, Android Auto และ Google เป็นเครื่องหมายการค้าของเจ้าของแต่ละราย โปรเจกต์นี้ไม่มีส่วนเกี่ยวข้องและไม่ได้รับการรับรองจากบริษัทเหล่านั้น

@@ -46,7 +46,8 @@ class GpxVoice(context: Context) : TextToSpeech.OnInitListener {
             // Heads-up further out at speed, execute nearer to the junction.
             val prepareM = (speedMps * 14.0).coerceIn(150.0, 700.0)
             val executeM = (speedMps * 1.6).coerceIn(25.0, 60.0)
-            val phrase = turn.instr.takeIf { it.isNotBlank() } ?: dirPhrase(turn.dir)
+            val thai = ThaiDate.isThai()
+            val phrase = (if (thai) turn.instrTh else turn.instr).takeIf { it.isNotBlank() } ?: dirPhrase(turn.dir)
             when {
                 // At the junction: short, no distance — "turn right onto X" / "turn right".
                 d <= executeM -> {
@@ -60,7 +61,7 @@ class GpxVoice(context: Context) : TextToSpeech.OnInitListener {
                 d <= prepareM -> {
                     if (preparedIdx != turn.index) {
                         preparedIdx = turn.index
-                        val dist = GpxNav.roundedSpokenDistance(d, units)
+                        val dist = GpxNav.roundedSpokenDistance(d, units, thai)
                         speak(res.getString(R.string.hc_dash_tts_in_dist, dist, phrase))
                     }
                 }
@@ -90,6 +91,10 @@ class GpxVoice(context: Context) : TextToSpeech.OnInitListener {
         if (!changed && !due) return
         lastJoinDir = dir
         lastOffTrackSpeakMs = now
+        if (ThaiDate.isThai()) {
+            speak("${GpxNav.joinRouteSpeakTh(dir)} ห่าง ${GpxNav.roundedSpokenDistance(offTrackM, units, thai = true)}")
+            return
+        }
         val dist = GpxNav.formatDistance(offTrackM, units)
         speak("${GpxNav.joinRouteSpeak(dir).replaceFirstChar { it.uppercase() }}, $dist")
     }

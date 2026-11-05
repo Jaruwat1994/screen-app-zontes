@@ -205,7 +205,7 @@ class GpxActivity : AppCompatActivity() {
             }
             MapPlaces.setHome(
                 this,
-                MapPlace("Home", near.first, near.second, "home", getString(R.string.hc_act_set_from_map_hub)),
+                MapPlace(getString(R.string.dest_home), near.first, near.second, "home", getString(R.string.hc_act_set_from_map_hub)),
             )
             refreshSettingsUi()
             refreshLists()
@@ -516,7 +516,7 @@ class GpxActivity : AppCompatActivity() {
         val replacing = MapPlaces.parked(this) != null
         MapPlaces.setParked(
             this,
-            MapPlace("Parked", near.first, near.second, "parking", getString(R.string.hc_act_marked_from_map_hub)),
+            MapPlace(getString(R.string.f1_place_parked), near.first, near.second, "parking", getString(R.string.hc_act_marked_from_map_hub)),
         )
         refreshSettingsUi()
         refreshLists()

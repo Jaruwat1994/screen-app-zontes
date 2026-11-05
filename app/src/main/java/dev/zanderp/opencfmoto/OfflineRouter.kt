@@ -106,7 +106,7 @@ object OfflineRouter {
                     onResult(out.routes)
                 }
             } catch (e: Exception) {
-                onError(e.message ?: ctx.getString(R.string.hc_dash_circuit_error))
+                onError(AppHttp.userMessage(e, R.string.hc_dash_circuit_error))
             }
         }
     }

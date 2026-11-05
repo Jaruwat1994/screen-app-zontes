@@ -16,7 +16,7 @@ android {
     val abiFilter = (project.findProperty("abi") as String?)?.trim().orEmpty()
 
     defaultConfig {
-        applicationId = "th.co.chaixi.zridescreen"
+        applicationId = "app.anonymouse.zridescreen"
         minSdk = 29
         targetSdk = 36
         versionCode = 77
@@ -60,7 +60,7 @@ android {
     }
 
     // Two distribution channels (see docs/PLAY-STORE.md):
-    //  github — what riders install from GitHub Releases: applicationId th.co.chaixi.zridescreen, in-app
+    //  github — what riders install from GitHub Releases: applicationId app.anonymouse.zridescreen, in-app
     //           update check, Ko-fi link. One ABI (APK size).
     //  play   — Google Play: same applicationId, no self-update (Play policy), donations through
     //           Google Play Billing (Play forbids external payment links), all ABIs (the AAB is split by Play).

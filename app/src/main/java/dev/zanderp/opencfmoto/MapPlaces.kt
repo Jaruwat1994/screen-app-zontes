@@ -48,10 +48,10 @@ object MapPlaces {
             removeMarker(ctx, old)
             removeHistory(ctx, old)
         }
-        val pin = place.copy(category = "parking", name = place.name.ifBlank { "Parked" })
+        val pin = place.copy(category = "parking", name = place.name.ifBlank { ctx.getString(R.string.f1_place_parked) })
         save(ctx, KEY_PARKED, listOf(pin))
         addMarker(ctx, pin)
-        pushHistory(ctx, pin.copy(subtitle = "Parked here"))
+        pushHistory(ctx, pin.copy(subtitle = ctx.getString(R.string.f1_place_parked_here)))
     }
 
     fun clearParked(ctx: Context) {
@@ -74,7 +74,7 @@ object MapPlaces {
     }
 
     fun setHome(ctx: Context, place: MapPlace) {
-        val home = place.copy(category = "home", name = place.name.ifBlank { "Home" }, subtitle = "Home")
+        val home = place.copy(category = "home", name = place.name.ifBlank { ctx.getString(R.string.dest_home) }, subtitle = ctx.getString(R.string.dest_home))
         save(ctx, KEY_HOME, listOf(home))
         addFavorite(ctx, home)
         addMarker(ctx, home)

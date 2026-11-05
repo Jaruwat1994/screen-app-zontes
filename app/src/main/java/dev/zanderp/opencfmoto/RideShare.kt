@@ -64,7 +64,7 @@ object RideShare {
             activity.getString(R.string.share_avg) to trip.avgKmh.toString(),
             activity.getString(R.string.share_max) to trip.maxKmh.toString(),
         )
-        val date = SimpleDateFormat("EEEE d MMMM yyyy", Locale.getDefault()).format(Date(trip.start))
+        val date = ThaiDate.format("EEEE d MMMM yyyy", trip.start)
             .replaceFirstChar { it.titlecase(Locale.getDefault()) }
         val name = TripNames.cached(activity, trip)
         val badge = Records.badge(activity, trip)
@@ -89,7 +89,7 @@ object RideShare {
         )
         val title = activity.getString(
             R.string.share_all_title,
-            SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(Date(since)),
+            ThaiDate.format("MMM yyyy", since),
         )
         if (!heat) {
             build(activity, tracks, title, stats, "all-rides", null)

@@ -47,6 +47,16 @@ class MaintenanceScheduleTest {
         assertEquals(true, Maintenance.isThailand(java.util.Locale.forLanguageTag("en-US")))   // ZRide default: Thai
     }
 
+    @Test fun manual_plan_follows_the_garage_model() {
+        assertEquals(Maintenance.Plan.Z368G, Maintenance.planFor(BikePicker.Model.Z368G))
+        assertEquals(Maintenance.Plan.Z368G, Maintenance.planFor(BikePicker.Model.Z368E))
+        assertEquals(Maintenance.Plan.Z368D, Maintenance.planFor(BikePicker.Model.Z368D))
+        assertEquals(Maintenance.Plan.Z150X, Maintenance.planFor(BikePicker.Model.Z150X))
+        assertEquals(Maintenance.Plan.Z125X, Maintenance.planFor(BikePicker.Model.Z125V))
+        assertEquals(null, Maintenance.planFor(BikePicker.Model.OTHER))
+        assertEquals(null, Maintenance.planFor(null))
+    }
+
     @Test fun plain_interval_unchanged() {
         assertEquals(9000.0, next(null, 3000, 6000.0, 7000.0))
         assertNull(next(null, 3000, null, 7000.0))

@@ -129,4 +129,11 @@ class GpxNavTest {
         val still = nav.progress(0.01, 0.00005, speedMps = 8f)!!
         assertTrue(still.nearestIndex <= 2)
     }
+
+    @Test
+    fun thaiInstructionGrammar() {
+        assertEquals("เลี้ยวขวาเข้าสู่ ถ.วิภาวดี", GpxNav.instructionTh("turn", "right", "ถ.วิภาวดี", null))
+        assertEquals("ที่วงเวียน ใช้ทางออกที่ 2", GpxNav.instructionTh("roundabout", null, null, 2))
+        assertEquals("400 เมตร", GpxNav.roundedSpokenDistance(320.0, MapUnits.METRIC, thai = true))
+    }
 }

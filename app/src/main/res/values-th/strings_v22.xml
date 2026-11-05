@@ -15,8 +15,8 @@
     <string name="crash_close">ปิด</string>
     <string name="crash_sms_someone">ผู้ขับขี่</string>
     <string name="crash_sms_no_location">ไม่ทราบตำแหน่ง</string>
-    <string name="crash_sms_body">🆘 ZRide Screen: %1$s อาจล้มรถจักรยานยนต์และไม่ตอบสนองมา %2$d s ตำแหน่ง: %3$s (%4$s) ข้อความอัตโนมัติ</string>
-    <string name="crash_sms_followup">🆘 ZRide Screen, อัปเดต: %1$s ยังไม่ตอบสนอง (แจ้งเตือนครั้งแรกหลัง %2$d s) ตำแหน่งปัจจุบัน: %3$s (%4$s) ข้อความอัตโนมัติ</string>
+    <string name="crash_sms_body">🆘 ZRide Screen: %1$s อาจรถล้ม และไม่ตอบสนองมา %2$d วินาที ตำแหน่ง: %3$s (เวลา %4$s น.) ถ้าติดต่อไม่ได้ โทร %5$s (เจ็บป่วยฉุกเฉิน) — ข้อความอัตโนมัติ</string>
+    <string name="crash_sms_followup">🆘 ZRide Screen อัปเดต: %1$s ยังไม่ตอบสนอง (แจ้งครั้งแรกหลัง %2$d วินาที) ตำแหน่งล่าสุด: %3$s (เวลา %4$s น.) ถ้าติดต่อไม่ได้ โทร %5$s — ข้อความอัตโนมัติ</string>
     <string name="crash_sms_test_prefix">[ทดสอบ, โปรดเพิกเฉย]</string>
     <string name="crash_title">ตรวจจับการล้ม (ทดลอง)</string>
     <string name="crash_how">ขณะขี่ โทรศัพท์จะคอยจับแรงกระแทกรุนแรงที่ตามด้วยรถและโทรศัพท์หยุดนิ่ง จากนั้นจะส่งเสียงเตือน 60 s บนโทรศัพท์และนาฬิกา หากไม่มีใครแตะ \"ฉันไม่เป็นไร\" จะส่งข้อความถึงผู้ติดต่อสูงสุด 3 คนพร้อมลิงก์แผนที่ตำแหน่งของคุณ และส่งซ้ำอีกครั้งใน 5 นาทีต่อมา แอปจะไม่โทรหาหน่วยฉุกเฉินเอง</string>

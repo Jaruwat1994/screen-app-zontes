@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="guide_progress">Step %1$d of %2$d</string>
+    <string name="guide_skip">Skip</string>
+    <string name="guide_next">Next</string>
+    <string name="guide_back">Back</string>
+    <string name="guide_done">Done</string>
+    <string name="guide_open">Setup guide</string>
+
+    <string name="guide_welcome_title">Welcome to ZRide Screen</string>
+    <string name="guide_welcome_body">Put maps, music and your ride data on your Zontes dash.\n\nThis guide takes about 3 minutes: a few permissions, Android Auto, then you scan the QR on the dash and you\'re connected. After that, one tap on CONNECT is all it takes.</string>
+
+    <string name="guide_perms_title">Allow access</string>
+    <string name="guide_perms_body">• Camera: scan the QR on the dash\n• Location: Android needs it to find and join the bike\'s Wi-Fi\n• Nearby devices: talk to the dash over Wi-Fi and Bluetooth\n• Notifications: keep running while you ride\n\nNothing leaves your phone.</string>
+    <string name="guide_perms_btn">Allow</string>
+
+    <string name="guide_aa_title">Android Auto</string>
+    <string name="guide_aa_body">ZRide Screen sends Android Auto (Google Maps, Waze, Spotify…) to the dash, so it must be installed.\n\nOne-time switch, in Android Auto\'s settings:\n1. Scroll down and tap \"Version\" 10 times (developer mode)\n2. Tap ⋮ (top right) → \"Start head unit server\"\n\nAfter a phone restart, only step 2 again.</string>
+    <string name="guide_aa_btn">Open Android Auto</string>
+
+    <string name="guide_bike_title">At the bike</string>
+    <string name="guide_bike_body">1. Switch the ignition on.\n2. On the dash, open the phone-connection screen (MotoPlay / EasyConnect) and leave it open.\n3. A QR with the Wi-Fi name and password appears. That is the one to scan. Not the app-download or vehicle-info QR.\n\nOn the phone: Wi-Fi and Bluetooth on, VPN off, and close the official bike app.</string>
+
+    <string name="guide_connect_title">Scan and connect</string>
+    <string name="guide_connect_body">Tap the button and point the camera at the QR on the dash.\n\nAndroid may ask to join the bike\'s Wi-Fi. Tap Connect. After a few seconds the picture appears on the dash.\n\nThe bike is saved: next time just tap CONNECT, no scan.</string>
+    <string name="guide_connect_btn">Scan the dash QR</string>
+    <string name="guide_trouble">Not working? \"Invalid QR\" means the wrong QR (see step 4). Stuck on connecting: switch the ignition off and on, then Connect again. Still stuck: Help → Send log.</string>
+</resources>

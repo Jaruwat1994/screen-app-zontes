@@ -42,6 +42,23 @@ object AppHttp {
     /** Thrown for non-2xx responses; [busy] marks rate-limit / temporary-unavailable states. */
     class HttpError(val code: Int, message: String, val busy: Boolean) : IOException(message)
 
+    /**
+     * Rider-facing (translated) text for a failed request. Exception messages stay English for
+     * logs; show this instead of `e.message`. [fallback] covers non-network failures.
+     */
+    fun userMessage(e: Throwable, fallback: Int = R.string.f1_net_failed): String {
+        val ctx = appContext ?: return e.message ?: "Network error"
+        return when {
+            e is HttpError && e.code == 429 -> ctx.getString(R.string.f1_net_busy)
+            e is HttpError && e.busy -> ctx.getString(R.string.f1_net_down, e.code)
+            e is HttpError -> ctx.getString(R.string.f1_net_http, e.code)
+            e is java.net.UnknownHostException || e is java.net.ConnectException ||
+                e is java.net.NoRouteToHostException -> ctx.getString(R.string.f1_net_offline)
+            e is java.net.SocketTimeoutException -> ctx.getString(R.string.f1_net_timeout)
+            else -> ctx.getString(fallback)
+        }
+    }
+
     private var appContext: Context? = null
     @Volatile private var heldCellular: Network? = null
     private var cellularCallback: ConnectivityManager.NetworkCallback? = null
