@@ -595,6 +595,8 @@
     <string name="notif_mirror_channel">Screen mirroring</string>
     <string name="notif_mirror_title">ZRide Screen</string>
     <string name="notif_mirror_text">Mirroring screen to bike</string>
+    <string name="notif_ride_gps_channel">Ride GPS</string>
+    <string name="notif_ride_gps_text">Keeping speed and map live on the bike</string>
     <string name="notif_media_channel">Bike button control</string>
     <string name="notif_media_title">Android Auto control</string>
     <string name="notif_media_text">Bike buttons drive Android Auto</string>

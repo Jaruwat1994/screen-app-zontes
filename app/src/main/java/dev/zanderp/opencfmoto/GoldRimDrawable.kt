@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Part of ZRide Screen (fork of RideScreen AA / OpenCfMoto). Free software under the GNU AGPL v3 or later.
+// Copyright (C) 2026 Harajuku. Part of ZRide Screen (fork of RideScreen AA / OpenCfMoto).
+// Free software under the GNU AGPL v3 or later; see LICENSE and NOTICE.
 package dev.zanderp.opencfmoto
 
 import android.animation.ValueAnimator

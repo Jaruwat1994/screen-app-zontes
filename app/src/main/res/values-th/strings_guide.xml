@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="guide_progress">ขั้นตอน %1$d จาก %2$d</string>
+    <string name="guide_skip">ข้าม</string>
+    <string name="guide_next">ถัดไป</string>
+    <string name="guide_back">ย้อนกลับ</string>
+    <string name="guide_done">เรียบร้อย</string>
+    <string name="guide_open">คู่มือเริ่มต้นใช้งาน</string>
+
+    <string name="guide_welcome_title">ยินดีต้อนรับสู่ ZRide Screen</string>
+    <string name="guide_welcome_body">แสดงแผนที่ เพลง และข้อมูลการขี่บนหน้าปัด Zontes ของคุณ\n\nใช้เวลาประมาณ 3 นาที: อนุญาตสิทธิ์ ตั้งค่า Android Auto แล้วสแกน QR บนหน้าปัดก็เชื่อมต่อได้ ครั้งต่อไปแค่แตะ CONNECT ครั้งเดียว</string>
+
+    <string name="guide_perms_title">อนุญาตการเข้าถึง</string>
+    <string name="guide_perms_body">• กล้อง: สแกน QR บนหน้าปัด\n• ตำแหน่ง: Android ต้องใช้เพื่อค้นหาและเชื่อมต่อ Wi‑Fi ของรถ\n• อุปกรณ์ใกล้เคียง: สื่อสารกับหน้าปัดผ่าน Wi‑Fi และบลูทูธ\n• การแจ้งเตือน: ให้แอปทำงานต่อขณะขี่\n\nไม่มีข้อมูลใดถูกส่งออกจากโทรศัพท์</string>
+    <string name="guide_perms_btn">อนุญาต</string>
+
+    <string name="guide_aa_title">Android Auto</string>
+    <string name="guide_aa_body">ZRide Screen ส่งภาพ Android Auto (Google Maps, Waze, Spotify…) ไปที่หน้าปัด จึงต้องติดตั้ง Android Auto ไว้\n\nตั้งค่าครั้งเดียวในการตั้งค่าของ Android Auto:\n1. เลื่อนลงล่างสุดแล้วแตะ \"Version\" 10 ครั้ง (โหมดนักพัฒนา)\n2. แตะ ⋮ (มุมขวาบน) → \"Start head unit server\"\n\nหลังรีสตาร์ทโทรศัพท์ ทำแค่ข้อ 2 ซ้ำ</string>
+    <string name="guide_aa_btn">เปิด Android Auto</string>
+
+    <string name="guide_bike_title">ที่ตัวรถ</string>
+    <string name="guide_bike_body">1. บิดกุญแจเปิดรถ\n2. บนหน้าปัด เปิดหน้าการเชื่อมต่อโทรศัพท์ (MotoPlay / EasyConnect) แล้วเปิดค้างไว้\n3. จะมี QR ที่มีชื่อ Wi‑Fi และรหัสผ่านขึ้นมา ให้สแกนอันนี้ ไม่ใช่ QR ดาวน์โหลดแอปหรือ QR ข้อมูลรถ\n\nที่โทรศัพท์: เปิด Wi‑Fi และบลูทูธ ปิด VPN และปิดแอปทางการของรถ</string>
+
+    <string name="guide_connect_title">สแกนและเชื่อมต่อ</string>
+    <string name="guide_connect_body">แตะปุ่มด้านล่างแล้วส่องกล้องไปที่ QR บนหน้าปัด\n\nAndroid อาจถามให้เชื่อมต่อ Wi‑Fi ของรถ ให้แตะ เชื่อมต่อ รอสักครู่ ภาพจะขึ้นบนหน้าปัด\n\nแอปจะจำรถไว้ ครั้งต่อไปแค่แตะ CONNECT ไม่ต้องสแกนอีก</string>
+    <string name="guide_connect_btn">สแกน QR บนหน้าปัด</string>
+    <string name="guide_trouble">ไม่สำเร็จ? ถ้าขึ้น \"QR ไม่ถูกต้อง\" แปลว่าสแกน QR ผิดอัน (ดูขั้นตอนที่ 4) ถ้าค้างที่กำลังเชื่อมต่อ ให้ปิดแล้วเปิดกุญแจรถใหม่ แล้วกด Connect อีกครั้ง ถ้ายังไม่ได้ ไปที่ ช่วยเหลือ → ส่ง log</string>
+</resources>

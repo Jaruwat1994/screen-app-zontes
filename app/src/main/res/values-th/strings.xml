@@ -595,6 +595,8 @@
     <string name="notif_mirror_channel">สะท้อนหน้าจอ</string>
     <string name="notif_mirror_title">ZRide Screen</string>
     <string name="notif_mirror_text">กำลังสะท้อนหน้าจอไปที่รถ</string>
+    <string name="notif_ride_gps_channel">GPS ระหว่างขี่</string>
+    <string name="notif_ride_gps_text">กำลังแสดงความเร็วและแผนที่บนหน้าปัดรถ</string>
     <string name="notif_media_channel">ควบคุมด้วยปุ่มบนรถ</string>
     <string name="notif_media_title">ควบคุม Android Auto</string>
     <string name="notif_media_text">ปุ่มบนรถควบคุม Android Auto</string>

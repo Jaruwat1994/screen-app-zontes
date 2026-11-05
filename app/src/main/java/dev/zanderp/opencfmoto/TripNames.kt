@@ -76,6 +76,25 @@ object TripNames {
         return if (from == to) ctx.getString(R.string.trip_name_within, from) else "$from → $to"
     }
 
+    /**
+     * Street and area for the dash's "current location" (Nav Center), from a point rounded to about
+     * 100 m like [place]. Blocking (network); null when unknown.
+     */
+    fun street(lat: Double, lon: Double): Pair<String, String?>? {
+        val la = String.format(Locale.ROOT, "%.3f", lat)
+        val lo = String.format(Locale.ROOT, "%.3f", lon)
+        AppHttp.throttle("nominatim.openstreetmap.org", 1_100)
+        val body = AppHttp.getText(
+            "https://nominatim.openstreetmap.org/reverse?lat=$la&lon=$lo&format=jsonv2&zoom=17&addressdetails=1" +
+                "&accept-language=${Locale.getDefault().language}",
+        )
+        val addr = JSONObject(body).optJSONObject("address") ?: return null
+        fun first(vararg keys: String) = keys.map { addr.optString(it) }.firstOrNull { it.isNotBlank() }
+        val road = first("road", "pedestrian", "suburb", "village", "town", "city") ?: return null
+        val area = first("suburb", "city_district", "town", "city", "county", "state")?.takeIf { it != road }
+        return road.take(40) to area?.take(40)
+    }
+
     /** Neighbourhood-level name for a point, or null. */
     private fun place(lat: Double, lon: Double): String? {
         val la = String.format(Locale.ROOT, "%.3f", lat)

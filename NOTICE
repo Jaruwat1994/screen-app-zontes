@@ -1,3 +1,38 @@
+ZRide Screen
+============
+
+ลิขสิทธิ์ (C) 2026 Harajuku — สำหรับส่วนที่แก้ไขและโค้ดใหม่ใน ZRide Screen
+Copyright (C) 2026 Harajuku (modifications and new code in ZRide Screen).
+
+ZRide Screen เป็นฉบับแก้ไขของ RideScreen AA ซึ่งเป็นฉบับแก้ไขของ OpenCfMoto อีกทอดหนึ่ง
+(ประกาศของต้นฉบับอยู่ด้านล่าง) ZRide Screen แก้ไขและเพิ่มเติมงานนั้นตั้งแต่ปี 2026 ได้แก่
+ภาษาไทยและค่าเริ่มต้นสำหรับประเทศไทย, หน้าจอเฉพาะรถ Zontes, เทมเพลตหน้าปัด Pro และหน้าตั้งค่า,
+สถานะ GPS, แผนที่ในหน้าปัดและการควบคุมด้วยปุ่มแฮนด์, มุมเอียง, การหาปั๊มเมื่อน้ำมันใกล้หมด,
+เอฟเฟกต์หน้าปัด และฟีเจอร์อื่นๆ ประวัติ git บันทึกการแก้ไขทุกครั้งพร้อมวันที่
+
+ZRide Screen เป็นซอฟต์แวร์เสรี คุณแจกจ่ายซ้ำและ/หรือแก้ไขได้ภายใต้เงื่อนไขของ GNU Affero
+General Public License ที่เผยแพร่โดยมูลนิธิซอฟต์แวร์เสรี เวอร์ชัน 3 หรือ (ตามที่คุณเลือก)
+เวอร์ชันใหม่กว่า ข้อความสัญญาฉบับเต็มอยู่ในไฟล์ LICENSE (ฉบับภาษาอังกฤษเป็นฉบับที่มีผลทางกฎหมาย
+สรุปภาษาไทยแบบไม่เป็นทางการอยู่ใน LICENSE-TH.md) โปรแกรมนี้แจกจ่าย "ตามสภาพ" โดยไม่มีการ
+รับประกันใดๆ ดูรายละเอียดในสัญญา
+
+ผู้ถือลิขสิทธิ์ (สรุป)
+  * ZRide Screen: (C) 2026 Harajuku
+  * RideScreen AA: (C) 2026 Manel (mgb1982) <https://github.com/mgb1982/ridescreen-aa>
+  * OpenCfMoto: (C) 2026 Alexandru <https://alexandru.rocks> และผู้ร่วมพัฒนา OpenCfMoto
+  * ระบบรับภาพ Android Auto (แพ็กเกจ dev.zanderp.opencfmoto.aa): ผู้พัฒนา headunit-revived
+    และโปรเจกต์ headunit รุ่นก่อนหน้า (AGPL-3.0)
+  รายละเอียด ไลบรารีที่ใช้ และสัญญาของแต่ละส่วน อยู่ในประกาศภาษาอังกฤษด้านล่าง
+
+เครื่องหมายการค้า
+  Zontes, CFMOTO, MotoPlay, EasyConn, Carbit, Android, Android Auto, Google และ Google Maps
+  เป็นเครื่องหมายการค้าของเจ้าของแต่ละราย ZRide Screen, RideScreen AA และ OpenCfMoto เป็น
+  โปรเจกต์อิสระ ไม่ใช่แอปทางการ ไม่มีส่วนเกี่ยวข้อง และไม่ได้รับการรับรองจากบริษัทเหล่านั้น
+
+--------------------------------------------------------------------------------
+ประกาศของต้นฉบับ (ภาษาอังกฤษ, ฉบับอ้างอิง) — Upstream notices (reference text)
+--------------------------------------------------------------------------------
+
 OpenCfMoto
 ==========
 
@@ -37,6 +72,14 @@ Copyright is held by the respective authors of each contribution:
   * Android Auto Projection receiver (the `dev.zanderp.opencfmoto.aa` package):
     portions Copyright (C) their original authors, ported from headunit-revived
     (see below). These files retain their original AGPLv3 attribution headers.
+
+  * RideScreen AA (Zontes 125X / 125V extras, Wear OS app, dash clock fixes,
+    trip extras): Copyright (C) 2026 Manel (mgb1982) <https://github.com/mgb1982/ridescreen-aa>.
+
+  * ZRide Screen (Thai / Zontes fork: Thai localisation, Pro dash templates and
+    editor, GPS status, embedded map and handlebar controls, lean angle,
+    low-fuel station finder, dash effects, and other changes since 2026):
+    Copyright (C) 2026 Harajuku.
 
 Holding copyright on your own contributions does not grant OpenCfMoto the right
 to relicense the incorporated AGPLv3 code under any other terms.
@@ -94,10 +137,11 @@ valhalla1.openstreetmap.de — please be polite with request volume.
 Trademarks
 --------------------------------------------------------------------------------
 
-CFMOTO, MotoPlay, EasyConn, Carbit, Android, Android Auto, Google, and Google
-Maps are trademarks of their respective owners. OpenCfMoto is an independent,
-unofficial project and is not affiliated with, endorsed by, or sponsored by any
-of them. These names are used only to describe interoperability.
+Zontes, CFMOTO, MotoPlay, EasyConn, Carbit, Android, Android Auto, Google, and
+Google Maps are trademarks of their respective owners. OpenCfMoto, RideScreen AA
+and ZRide Screen are independent, unofficial projects and are not affiliated
+with, endorsed by, or sponsored by any of them. These names are used only to
+describe interoperability.
 
 --------------------------------------------------------------------------------
 Fonts (visual test build)

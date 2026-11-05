@@ -115,4 +115,6 @@
     <string name="maint_coolant">Coolant</string>
     <string name="maint_pulleys">Pulley bushings (grease)</string>
     <string name="maint_steer_lock">Steering lock (clean and grease)</string>
+    <string name="home_refuel_shortcut">⛽ Filled up</string>
+    <string name="maint_refuel_saved">Fill-up of %1$s L saved</string>
 </resources>

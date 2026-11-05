@@ -174,7 +174,7 @@ jobs:
         with:
           name: ZRide-Screen-WearOS-${{ github.ref_name == 'main' && 'main' || 'test' }}-${{ github.run_number }}
           path: wear/build/outputs/apk/github/release/*.apk
-      # Google Play bundles (applicationId th.co.chaixi.zridescreen). Not uploadable yet: Play
+      # Google Play bundles (applicationId app.anonymouse.zridescreen). Not uploadable yet: Play
       # rejects debug-signed bundles — a real upload key comes with the Play Console setup.
       - uses: actions/upload-artifact@v4
         with:

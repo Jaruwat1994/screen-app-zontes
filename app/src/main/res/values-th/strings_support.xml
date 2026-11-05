@@ -4,7 +4,6 @@
     <string name="support_title">สนับสนุน ZRide Screen</string>
     <string name="support_title_play">เลี้ยงฉัน…</string>
     <string name="support_body">ZRide Screen ใช้ฟรีและไม่มีโฆษณา หากแอปช่วยให้ทริปของคุณดีขึ้น คุณเลี้ยงกาแฟฉันสักแก้วเพื่อช่วยค่าใช้จ่ายได้ (เช่น บัญชีนักพัฒนา Google Play) ขอบคุณ!</string>
-    <string name="support_kofi">เลี้ยงกาแฟฉัน (Ko-fi)</string>
     <string name="support_original">สนับสนุนผู้สร้าง OpenCfMoto</string>
     <string name="support_later">ไว้ทีหลัง</string>
     <string name="support_coffee">☕ กาแฟหนึ่งแก้ว</string>
@@ -12,4 +11,7 @@
     <string name="support_tank">⛽ น้ำมันเต็มถัง</string>
     <string name="support_thanks">ขอบคุณมาก! 🙌</string>
     <string name="support_unavailable">ยังสนับสนุนไม่ได้ในขณะนี้ โปรดลองใหม่ภายหลัง</string>
+    <string name="support_body_telegram">ZRide Screen ใช้ฟรีและไม่มีโฆษณา หากแอปช่วยให้การขี่ของคุณดีขึ้นและอยากสนับสนุนการพัฒนา ทักมาที่ Telegram (@AZURE11S) ได้เลย จะส่งช่องทางการสนับสนุนให้ ส่งไอเดีย แจ้งปัญหา หรือขอให้รองรับรถรุ่นใหม่ก็ทักมาได้เช่นกัน ขอบคุณครับ!</string>
+    <string name="support_telegram">Telegram @AZURE11S</string>
+    <string name="about_telegram">💬 ติดต่อและสนับสนุน · Telegram @AZURE11S</string>
 </resources>

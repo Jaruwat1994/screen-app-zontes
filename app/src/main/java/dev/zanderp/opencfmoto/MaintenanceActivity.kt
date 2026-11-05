@@ -218,26 +218,7 @@ class MaintenanceActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun askRefuel() {
-        val liters = number(null, getString(R.string.maint_liters), decimal = true)
-        val euros = number(null, getString(if (Maintenance.isThailand()) R.string.maint_th_baht else R.string.maint_euros), decimal = true)
-        val box = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; addView(liters); addView(euros) }
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.maint_refuel)
-            .setMessage(R.string.maint_refuel_dialog)
-            .setView(padded(box))
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val l = liters.text.toString().replace(',', '.').toDoubleOrNull()
-                if (l == null || l <= 0) {
-                    Toast.makeText(this, R.string.maint_liters_needed, Toast.LENGTH_SHORT).show()
-                } else {
-                    Maintenance.addRefuel(this, l, euros.text.toString().replace(',', '.').toDoubleOrNull())
-                    render()
-                }
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
-    }
+    private fun askRefuel() = askRefuel(this) { render() }
 
     /** Edit (or, with [t] null, create) a task: name, intervals, and when it was last done. */
     private fun editTask(t: Maintenance.Task?, book: Maintenance.Book) {
@@ -358,5 +339,36 @@ class MaintenanceActivity : AppCompatActivity() {
 
     companion object {
         fun start(ctx: Context) = ctx.startActivity(Intent(ctx, MaintenanceActivity::class.java))
+
+        /** "I filled up" dialog (litres, optional price); shared with the home screen's fuel shortcut. */
+        fun askRefuel(a: android.app.Activity, onSaved: () -> Unit) {
+            fun field(hintRes: Int) = EditText(a).apply {
+                inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+                hint = a.getString(hintRes)
+            }
+            val liters = field(R.string.maint_liters)
+            val price = field(if (Maintenance.isThailand()) R.string.maint_th_baht else R.string.maint_euros)
+            val pad = (22 * a.resources.displayMetrics.density).toInt()
+            val box = LinearLayout(a).apply {
+                orientation = LinearLayout.VERTICAL; setPadding(pad, pad / 5, pad, 0)
+                addView(liters); addView(price)
+            }
+            MaterialAlertDialogBuilder(a)
+                .setTitle(R.string.maint_refuel)
+                .setMessage(R.string.maint_refuel_dialog)
+                .setView(box)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    val l = liters.text.toString().replace(',', '.').toDoubleOrNull()
+                    if (l == null || l <= 0) {
+                        Toast.makeText(a, R.string.maint_liters_needed, Toast.LENGTH_SHORT).show()
+                    } else {
+                        Maintenance.addRefuel(a, l, price.text.toString().replace(',', '.').toDoubleOrNull())
+                        Toast.makeText(a, a.getString(R.string.maint_refuel_saved, liters.text.toString()), Toast.LENGTH_SHORT).show()
+                        onSaved()
+                    }
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+        }
     }
 }

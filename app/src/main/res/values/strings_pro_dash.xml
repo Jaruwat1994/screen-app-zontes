@@ -28,6 +28,49 @@
     <string name="dl_style_neoncity" translatable="false">Cyber Neon</string>
     <string name="dl_style_adventure" translatable="false">Adventure</string>
     <string name="dl_style_touring" translatable="false">Sport Touring</string>
+    <string name="dl_style_animal" translatable="false">Clean Animal</string>
+    <string name="dl_style_anime" translatable="false">Anime</string>
+    <string name="dl_style_space" translatable="false">Space Edition</string>
+    <string name="dl_style_gold" translatable="false">Black Gold</string>
+    <string name="dl_style_rosso" translatable="false">Rosso Corsa</string>
     <string name="pro_fuel">Fuel (est.)</string>
     <string name="pro_alt">Altitude</string>
+    <string name="pro_fuel_low">Low fuel</string>
+    <string name="pro_fuel_station">Fuel</string>
+    <string name="dl_style_gt">Midnight GT</string>
+    <string name="dl_style_papaya">Papaya</string>
+    <string name="dl_style_grand">Grand Tourer</string>
+    <string name="dl_style_noir">Noir</string>
+    <string name="dl_style_nav">Nav Live</string>
+    <string name="pro_charging">CHARGING</string>
+    <string name="pro_on_battery">ON BATTERY</string>
+    <string name="pro_phone_battery">Phone battery</string>
+    <string name="pro_battery_temp">Battery temp</string>
+    <string name="pro_normal">NORMAL</string>
+    <string name="pro_hot">HOT</string>
+    <string name="pro_storage">Storage free</string>
+    <string name="pro_cell">Mobile data</string>
+    <string name="pro_ready">READY</string>
+    <string name="pro_offline">OFF</string>
+    <string name="pro_pressure">Air pressure</string>
+    <string name="pro_range_short">Range</string>
+    <string name="dl_style_navc">Nav Center</string>
+    <string name="pro_location">LOCATION</string>
+    <string name="pro_here">Current location</string>
+    <string name="pro_finding">Finding the street…</string>
+    <string name="pro_live">NOW</string>
+    <string name="pro_avg_short">AVG</string>
+    <string name="pro_limit">ALERT</string>
+    <string name="pro_speed_gps">SPEED (GPS)</string>
+    <string name="dl_style_navt">Nav Pro (turn by turn)</string>
+    <string name="pro_navigation">Navigation</string>
+    <string name="pro_destination">Destination</string>
+    <string name="pro_no_destination">No destination yet</string>
+    <string name="pro_pick_destination">Pick one in the app\'s Map screen and tap Go</string>
+    <string name="pro_grade">Grade</string>
+    <string name="pro_gps_acc">GPS acc.</string>
+    <string name="pro_minutes">%1$d min</string>
+    <string name="pro_routing">Finding the route…</string>
+    <string name="pro_arrived">You have arrived</string>
+    <string name="pro_follow_route">Follow the route</string>
 </resources>

@@ -154,13 +154,14 @@ class VideoPipeline(
         if (projection != null) {
             log("[VIDEO] mirror mode (MediaProjection — whole screen or single app)")
             setupProjectionDisplay(projection)
-        } else if (GpxSession.active) {
+        } else if (GpxSession.active && !(GpxSession.mode == GpxSession.Mode.NAV_TO && DashLayout.load(context).navOnDash)) {
             log("[VIDEO] GPX viewer mode (Presentation)")
             // Soft AA→Map often runs on the main thread — set up immediately so the first IDR
             // already has map pixels (postponing left the dash on a frozen AA frame).
             if (Looper.myLooper() == Looper.getMainLooper()) setupGpxPresentation()
             else main.post { setupGpxPresentation() }
         } else {
+            // Also when navigating from the Map screen with "navigation on My Dash" on: DashNav guides.
             log("[VIDEO] own-content mode (Presentation)")
             if (Looper.myLooper() == Looper.getMainLooper()) setupDisplayAndPresentation()
             else main.post { setupDisplayAndPresentation() }
@@ -540,6 +541,8 @@ class VideoPipeline(
                 buf.limit(info.offset + info.size)
                 val bytes = ByteArray(info.size)
                 buf.get(bytes)
+                LinkStats.frames++
+                LinkStats.bytes += bytes.size
 
                 if (info.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0) {
                     codecConfig = bytes   // SPS/PPS — hold, prepend to next keyframe
@@ -821,4 +824,10 @@ class VideoPipeline(
         /** How many access units to capture before auto-stopping the dump (~20s at 30fps). */
         const val DUMP_CAP = 600
     }
+}
+
+/** Encoded video sent to the dash, for the dash's "FPS · Mbps" readout. One writer: the encoder thread. */
+object LinkStats {
+    @Volatile var frames = 0L
+    @Volatile var bytes = 0L
 }

@@ -126,6 +126,9 @@
             android:name=".DashLayoutActivity"
             android:exported="false" />
         <activity
+            android:name=".GuideActivity"
+            android:exported="false" />
+        <activity
             android:name=".YearInReviewActivity"
             android:exported="false" />
         <activity
@@ -151,6 +154,16 @@
             android:exported="false"
             android:launchMode="singleTop"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
+        <!-- Media sessions for the dash's now-playing line; notifications themselves are ignored (NowPlaying.kt). -->
+        <service
+            android:name=".MediaListener"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
         <service
             android:name=".BikeWatchService"
             android:exported="false"
@@ -223,6 +236,10 @@
             android:name=".TripVideoService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
+        <service
+            android:name=".RideGpsService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
         <service
             android:name=".ProjectionService"
             android:exported="false"

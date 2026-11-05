@@ -115,4 +115,6 @@
     <string name="maint_coolant">น้ำหล่อเย็น</string>
     <string name="maint_pulleys">บูชพูลเลย์ (อัดจาระบี)</string>
     <string name="maint_steer_lock">ล็อกคอ (ทำความสะอาดและอัดจาระบี)</string>
+    <string name="home_refuel_shortcut">⛽ เติมแล้ว</string>
+    <string name="maint_refuel_saved">บันทึกการเติม %1$s ลิตรแล้ว</string>
 </resources>

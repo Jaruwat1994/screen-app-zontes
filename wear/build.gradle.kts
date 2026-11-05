@@ -13,7 +13,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "th.co.chaixi.zridescreen"
+        applicationId = "app.anonymouse.zridescreen"
         minSdk = 30          // Wear OS 3 (Galaxy Watch 4 and newer)
         targetSdk = 36
         versionCode = 1
