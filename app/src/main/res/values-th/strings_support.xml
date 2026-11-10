@@ -13,5 +13,6 @@
     <string name="support_unavailable">ยังสนับสนุนไม่ได้ในขณะนี้ โปรดลองใหม่ภายหลัง</string>
     <string name="support_body_telegram">ZRide Screen ใช้ฟรีและไม่มีโฆษณา หากแอปช่วยให้การขี่ของคุณดีขึ้นและอยากสนับสนุนการพัฒนา ทักมาที่ Telegram (@AZURE11S) ได้เลย จะส่งช่องทางการสนับสนุนให้ ส่งไอเดีย แจ้งปัญหา หรือขอให้รองรับรถรุ่นใหม่ก็ทักมาได้เช่นกัน ขอบคุณครับ!</string>
     <string name="support_telegram">Telegram @AZURE11S</string>
+    <string name="about_community_discord">👥 คอมมูนิตี้ ZRide Screen · Discord</string>
     <string name="about_telegram">💬 ติดต่อและสนับสนุน · Telegram @AZURE11S</string>
 </resources>

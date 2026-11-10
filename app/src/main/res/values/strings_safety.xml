@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="safety_title">Ride safely</string>
+    <string name="safety_body">• Don\'t handle the phone while riding. Set the destination and the dash before you move; use the handlebar buttons on the way.\n\n• Routes and directions are suggestions. Map data can be incomplete or out of date (for example a road closed to motorcycles). Always follow road signs, traffic law and the conditions in front of you.\n\n• Speed, fuel, lean angle and weather are estimates, not the bike\'s instruments.\n\n• Crash detection is an aid only and may not trigger or may trigger falsely. It does not replace calling for help yourself.\n\nZRide Screen is free software provided as is, without warranty (GNU AGPL v3). It is not an official Zontes, Google or Android Auto app.</string>
+    <string name="safety_accept">I understand</string>
+</resources>

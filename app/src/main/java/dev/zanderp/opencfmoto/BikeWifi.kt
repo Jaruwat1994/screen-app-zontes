@@ -54,7 +54,8 @@ object BikeWifi {
      * Before (≤ v2 test builds) we retried forever: 494 joins in one night with the bike off.
      */
     @Volatile var onGiveUp: ((Context) -> Unit)? = null
-    const val GIVE_UP_AFTER_MS = 20 * 60_000L
+    // 5 min (was 20): a Map session on My Dash never parks, so this alone ends it once the bike is off.
+    const val GIVE_UP_AFTER_MS = 5 * 60_000L
     private var ssid: String = ""
     private var onAvailableCb: ((Network) -> Unit)? = null
     private var onLostCb: (() -> Unit)? = null

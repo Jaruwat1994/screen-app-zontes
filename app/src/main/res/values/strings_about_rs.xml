@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="rs_about_tagline">Wireless Android Auto on your Zontes dash, made for Thai riders. Based on RideScreen AA and OpenCfMoto.</string>
-    <string name="rs_about_community">Questions, ideas or a problem with your bike? Message us on Telegram @AZURE11S, or tap Report a problem to send the log.</string>
+    <string name="rs_about_community">Questions, ideas or a problem with your bike? Message us on Telegram @AZURE11S, join our Discord community, or tap Report a problem to send the log.</string>
     <string name="rs_about_issues">GitHub</string>
     <string name="rs_about_copyright">© 2026 Alexandru (zanderp), OpenCfMoto\n© 2026 Manel (mgb1982), RideScreen AA\n© 2026 Harajuku, ZRide Screen</string>
     <string name="rs_about_copyright_body">ZRide Screen, © 2026 Harajuku. It is a derivative of RideScreen AA, © 2026 Manel (mgb1982), which is a derivative of OpenCfMoto, © 2026 Alexandru (zanderp). Like them, it is free software under the GNU AGPL v3 or later: see LICENSE and NOTICE in the repository.</string>

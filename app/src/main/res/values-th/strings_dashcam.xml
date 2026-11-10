@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dvr_menu">กล้องรถ</string>
+    <string name="dvr_title">📹 กล้องรถ</string>
+    <string name="dvr_sub">กล้องหน้า/หลังของจอรถ ผ่าน Wi-Fi รถ (%1$s) — เชื่อมต่อรถก่อน</string>
+    <string name="dvr_front">กล้องหน้า</string>
+    <string name="dvr_rear">กล้องหลัง</string>
+    <string name="dvr_photos">รูปถ่าย</string>
+    <string name="dvr_refresh">↻ รีเฟรช</string>
+    <string name="dvr_live_probe">🔴 ตรวจหาภาพสด</string>
+    <string name="dvr_live_result">สิ่งที่จอรถตอบกลับ (บันทึกใน log แล้ว — ส่ง log มาเพื่อให้เราเพิ่มการดูสด):\n\n%1$s</string>
+    <string name="dvr_loading">กำลังโหลด…</string>
+    <string name="dvr_not_connected">ติดต่อกล้องที่ %1$s ไม่ได้ ให้แอปเชื่อมต่อรถก่อน (หรือต่อ Wi-Fi ZT_ ของรถ) แล้วกดรีเฟรช</string>
+    <string name="dvr_empty">ยังไม่มีไฟล์บันทึก</string>
+    <string name="dvr_download_all">⬇ บันทึกลงมือถือทั้งหมด (%1$d)</string>
+    <string name="dvr_download">บันทึกลงมือถือ</string>
+    <string name="dvr_downloading">กำลังบันทึก… %1$d%%</string>
+    <string name="dvr_saved">✓ อยู่ในมือถือแล้ว (แกลเลอรี › ZRide Dashcam)</string>
+    <string name="dvr_failed">✗ บันทึกไม่สำเร็จ — กด ⬇ เพื่อลองใหม่</string>
+</resources>

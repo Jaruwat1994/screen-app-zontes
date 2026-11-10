@@ -54,6 +54,7 @@
     <string name="dl_cat_touring">Touring &amp; adventure</string>
     <string name="dl_cat_neon">Cyber &amp; neon</string>
     <string name="dl_cat_fantasy">Fantasy &amp; anime</string>
+    <string name="dl_cat_premium">Premium</string>
     <string name="dl_pick_category">1. Pick a kind</string>
     <string name="dl_pick_template">2. Pick a dash</string>
     <string name="dl_tank_default">Default for your %1$s: %2$s L (maker\'s spec). Clear the box to go back to it.</string>

@@ -399,7 +399,7 @@ object CrashDetector : SensorEventListener {
         val here = currentLocation()
         val text = messageText(ctx, here, followUp, test)
         if (test && !forceSend) {
-            LogBus.log("[CRASH] simulation — would send to ${list.size} contact(s): $text")
+            LogBus.log("[CRASH] simulation — would send ${text.length} chars to ${list.size} contact(s)")  // the text holds name + exact position
             return list.map { it.name.ifBlank { it.number } }
         }
         if (!canSms(ctx)) {
@@ -415,7 +415,7 @@ object CrashDetector : SensorEventListener {
                 sms.sendMultipartTextMessage(c.number, null, parts, null, null)
                 sent += c.name.ifBlank { c.number }
             } catch (e: Exception) {
-                LogBus.log("[CRASH] SMS to ${c.name} failed: $e")
+                LogBus.log("[CRASH] SMS to contact failed: $e")
             }
         }
         LogBus.log("[CRASH] ${if (followUp) "follow-up " else ""}SMS sent to ${sent.size}/${list.size}")

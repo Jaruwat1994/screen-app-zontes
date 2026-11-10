@@ -40,6 +40,8 @@ object MapPrefs {
     private const val KEY_AVOID_TOLLS = "avoid_tolls"
     private const val KEY_AVOID_HIGHWAYS = "avoid_highways"
     private const val KEY_CIRCUIT_KM = "fun_circuit_km"
+    private const val KEY_GOOGLE_MAPS = "map_button_google"
+    private const val KEY_GOOGLE_VOICE = "google_voice_nav"
 
     private fun prefs(ctx: Context) =
         ctx.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
@@ -98,6 +100,20 @@ object MapPrefs {
     }
 
     /** Pitch the dash map and show extruded buildings when the style supports them. */
+    /** The home screen's Map button opens the Google Maps app instead of the in-app map. */
+    fun googleMaps(ctx: Context): Boolean = prefs(ctx).getBoolean(KEY_GOOGLE_MAPS, false)
+
+    fun setGoogleMaps(ctx: Context, on: Boolean) {
+        prefs(ctx).edit().putBoolean(KEY_GOOGLE_MAPS, on).apply()
+    }
+
+    /** Starting navigation from the Map screen also opens Google Maps turn-by-turn (voice + traffic). */
+    fun googleVoice(ctx: Context): Boolean = prefs(ctx).getBoolean(KEY_GOOGLE_VOICE, false)
+
+    fun setGoogleVoice(ctx: Context, on: Boolean) {
+        prefs(ctx).edit().putBoolean(KEY_GOOGLE_VOICE, on).apply()
+    }
+
     fun buildings3d(ctx: Context): Boolean = prefs(ctx).getBoolean(KEY_BUILDINGS_3D, true)
 
     fun setBuildings3d(ctx: Context, on: Boolean) {

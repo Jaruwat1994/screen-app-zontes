@@ -60,6 +60,7 @@ class TrafficLightsActivity : AppCompatActivity() {
 
         map = MapView(this).apply {
             setTileSource(TileSourceFactory.MAPNIK)
+            overlays.add(org.osmdroid.views.overlay.CopyrightOverlay(this@TrafficLightsActivity))
             setMultiTouchControls(true)
             setUseDataConnection(true)
             controller.setZoom(13.0)

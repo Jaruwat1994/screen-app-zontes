@@ -31,8 +31,18 @@ object LogRedactor {
         RegexOption.IGNORE_CASE,
     )
 
+    /** A Wi-Fi QR ("WIFI:S:name;T:WPA;P:secret;;"), e.g. the home network scanned by mistake. */
+    private val WIFI_QR_PASS = Regex("""(WIFI:[^\n]*?\bP:)([^;]*)""")
+    /**
+     * Shared logs end up in public issues: positions (decimal degrees, 4+ decimals) are cut to 2
+     * decimals, about 1 km, so home and work don't show. Other values rarely carry 4+ decimals.
+     */
+    private val PRECISE_DEGREES = Regex("""(-?\b\d{1,3}\.\d{2})\d{2,}""")
+
     fun redact(line: String): String {
         var s = line
+        s = WIFI_QR_PASS.replace(s) { m -> m.groupValues[1] + MASK }
+        s = PRECISE_DEGREES.replace(s) { m -> m.groupValues[1] }
         s = JSON_SECRET.replace(s) { m -> m.groupValues[1] + "\"$MASK\"" }
         s = URL_SECRET.replace(s) { m -> m.groupValues[1] + "=" + MASK }
         s = JSON_SERIAL.replace(s) { m -> m.groupValues[1] + "\"" + maskTail(m.groupValues[2]) + "\"" }

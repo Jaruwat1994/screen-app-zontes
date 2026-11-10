@@ -399,6 +399,67 @@
                     android:textSize="12sp"
                     android:lineSpacingExtra="2dp" />
 
+                <!-- Which map the home screen's Map button opens -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/setup_map_app"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="@string/setup_map_app_desc"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mapapp_inapp"
+                        style="@style/Widget.OpenCfMoto.Segment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:text="@string/setup_map_app_inapp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mapapp_google"
+                        style="@style/Widget.OpenCfMoto.Segment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:text="@string/setup_map_app_google" />
+                </LinearLayout>
+
+                <!-- ZRide routes on the dash + Google Maps voice on the phone -->
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_google_voice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/setup_google_voice"
+                    android:textColor="@color/text_primary" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/setup_google_voice_desc"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
                 <!-- Map theme (Maps day/night) -->
                 <TextView
                     android:layout_width="match_parent"

@@ -49,6 +49,12 @@ class CustomDashUi(
     private val dash: DashLayout.Layout,
     private val heightPx: Int,
     private val projected: Boolean,
+    /** ▲ on a PRO template: show this one instead (the pipeline rebuilds the dash). */
+    private val onSwitch: ((DashLayout.Style) -> Unit)? = null,
+    /** Off-screen panel beside Android Auto ([AaSidePanel]): live data, but no map and no handlebar keys (AA owns them). */
+    private val sidePanel: Boolean = false,
+    /** Phone "dash view" of My dash: live data like the bike, but the bike's dash owns keys and trip log. */
+    private val hudPreview: Boolean = false,
 ) {
     val root = FrameLayout(ctx)
     private val main = Handler(Looper.getMainLooper())
@@ -92,11 +98,14 @@ class CustomDashUi(
     /** Turn-by-turn on every template while the app's Map screen navigates (when [DashLayout.Layout.navOnDash]). */
     private val dashNav: DashNav? = if (projected && dash.navOnDash)
         DashNav(main) { pts -> routeLine = pts; routeDirty = true; mapDirty = true } else null
+    val guides: Boolean get() = dashNav != null
     /** Grid: the next turn floating over the tiles (PRO templates draw their own banner). */
     private var gridNav: TextView? = null
     private var pro: ProDashView? = null
     /** Range strip drawn over the live map in the PRO card (on the bike only). */
     private var proStrip: ProDashView? = null
+    /** Height climbed / descended this ride (Touring Nav); survives template switches. */
+    private val climb get() = sessionClimb
     private var photo: android.graphics.Bitmap? = null
     private var book: Pair<Long, ProBook>? = null
     private var sats = 0
@@ -173,6 +182,8 @@ class CustomDashUi(
         speedKmh = speedKmh(prev, loc)
         lastLoc = loc
         mapDirty = true
+        if (loc.provider == LocationManager.GPS_PROVIDER && loc.hasAltitude() &&
+            !(loc.hasVerticalAccuracy() && loc.verticalAccuracyMeters > 20f)) climb.add(loc.altitude, android.os.SystemClock.elapsedRealtime())
         // GPS course is only meaningful when moving; keep the last one when stopped.
         if (loc.hasBearing() && loc.speed > 1.2f) heading = loc.bearing
         dashNav?.onFix(loc)
@@ -196,13 +207,16 @@ class CustomDashUi(
 
     fun bind() {
         running = true
-        if (projected) {
+        if (projected && (sidePanel || hudPreview)) {
+            subscribeGps()
+            startLean()
+        } else if (projected) {
             TripAutoLog.setMapUiLive(ctx, true)  // same trip recording as the Map dash
             subscribeGps()
             startLean()
             MapInputBridge.keySink = keySink
             MapInputBridge.scrollSink = scrollSink
-            LogBus.log("[DASH] handlebar: ▼/OK map full screen · ▲ hide panel · knob zoom · back = normal")
+            LogBus.log("[DASH] handlebar: ▼/OK map full screen · ▲ hide panel (PRO: next ticked template) · knob zoom · back = normal")
         }
         placeMap()  // the editor's live preview shows the real map too (at SAMPLE_LAT/LON)
         main.post(ticker)
@@ -221,7 +235,7 @@ class CustomDashUi(
             val m = ctx.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             val providers = listOf(LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER).filter {
                 m.isProviderEnabled(it) && runCatching {
-                    m.requestLocationUpdates(it, if (it == LocationManager.GPS_PROVIDER) 0L else 2_000L, 0f, listener, Looper.getMainLooper())  // GPS: as fast as the chip gives
+                    m.requestLocationUpdates(it, if (it == LocationManager.GPS_PROVIDER) 500L else 2_000L, 0f, listener, Looper.getMainLooper())  // GPS: 2 Hz is plenty for the dash; faster chips just heat the phone
                 }.isSuccess
             }
             if (providers.isEmpty()) { if (log) LogBus.log("[DASH] location is off — speed waits for it"); return }
@@ -250,7 +264,7 @@ class CustomDashUi(
         sensors = null
         map?.let { runCatching { it.onPause(); it.onDestroy() } }
         map = null
-        if (projected) TripAutoLog.setMapUiLive(ctx, false)
+        if (projected && !sidePanel && !hudPreview) TripAutoLog.setMapUiLive(ctx, false)
     }
 
     // ---------------------------------------------------------------- layout
@@ -260,13 +274,26 @@ class CustomDashUi(
         if (dash.style.isPro) {
             photo = BikeMemory.selected(ctx)?.photoPath?.let { decodePhoto(it) }
             pro = ProDashView(ctx, dash.accent, dash.style, dash.accent2, dash.customColor, dash.hidden, dash.speedAlert, dash.effects, live = projected,
-                mapInCard = DashLayout.Part.LIVE_MAP !in dash.hidden).also { root.addView(it, FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)) }
-            // Live map in the right card: the map goes between the dash and this strip layer.
-            if (DashLayout.Part.LIVE_MAP !in dash.hidden) {
+                mapInCard = DashLayout.Part.LIVE_MAP !in dash.hidden || sidePanel).also { root.addView(it, FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)) }
+            pro?.sideOnly = sidePanel
+            pro?.sideFrac = dash.sideFrac
+            // Android Auto really runs in the card only once Premium is unlocked (the Play build sells it):
+            // until then the card keeps our live map, never an empty frame.
+            val aaInCard = DashLayout.usesAa(dash) && Premium.unlocked(ctx)
+            // In the editor, a template that runs Android Auto in its card shows a stand-in there, not our map.
+            pro?.aaCard = !projected && aaInCard
+            // Live map in the right card: the map goes between the dash and this strip layer (with Android Auto, AA is the map).
+            if (DashLayout.Part.LIVE_MAP !in dash.hidden && !sidePanel && !aaInCard) {
                 mapZoom = when (dash.style) {  // the map-first layouts have a big map: see more around
                     DashLayout.Style.NAV -> 16.0
                     DashLayout.Style.NAVC -> 15.5
                     DashLayout.Style.NAVT -> 16.5
+                    DashLayout.Style.ADVNAV -> 16.0
+                    DashLayout.Style.TOURNAV -> 15.5
+                    DashLayout.Style.TERRAIN -> 16.0
+                    DashLayout.Style.SMART -> 16.0
+                    DashLayout.Style.LIME -> 16.0
+                    DashLayout.Style.RACEBAR -> 15.5
                     else -> CARD_ZOOM
                 }
                 proStrip = ProDashView(ctx, dash.accent, dash.style, dash.accent2, dash.customColor, dash.hidden, cardStripOnly = true)
@@ -290,7 +317,7 @@ class CustomDashUi(
             gridNav = TextView(ctx).apply {
                 setTextColor(Color.WHITE)
                 typeface = Typeface.DEFAULT_BOLD
-                setTextSize(TypedValue.COMPLEX_UNIT_PX, px(0.065f))
+                setTextSize(TypedValue.COMPLEX_UNIT_PX, px(0.08f))
                 maxLines = 1
                 ellipsize = android.text.TextUtils.TruncateAt.END
                 gravity = Gravity.CENTER_VERTICAL
@@ -402,7 +429,10 @@ class CustomDashUi(
             p.data = d
             proStrip?.data = d
         }
-        proStrip?.visibility = if (!mapFull && mapHost.parent != null) View.VISIBLE else View.GONE
+        // The welcome plays on the dash view, under the live map: keep the map and its strip hidden until it ends.
+        val intro = pro?.introRunning == true
+        mapHost.visibility = if (intro) View.INVISIBLE else View.VISIBLE
+        proStrip?.visibility = if (!intro && !mapFull && mapHost.parent != null) View.VISIBLE else View.GONE
         gpsBadgeView?.apply {
             text = gpsText; setTextColor(gpsColor(level))
             visibility = if (!showGps || (pro != null && !mapFull)) View.GONE else View.VISIBLE
@@ -419,7 +449,7 @@ class CustomDashUi(
             val nav = navNow()
             v.visibility = if (nav == null) View.GONE else View.VISIBLE
             if (nav != null) {
-                val sz = px(0.1f).roundToInt()
+                val sz = px(0.13f).roundToInt()
                 val icon = nav.icon?.let { b -> android.graphics.drawable.BitmapDrawable(ctx.resources, b).apply { setBounds(0, 0, sz, sz); setTint(dash.accent) } }
                 v.setCompoundDrawables(icon, null, null, null)
                 v.text = listOfNotNull(nav.arrow?.takeIf { icon == null }, nav.dist.takeIf { it.isNotBlank() }, nav.text).joinToString("  ") +
@@ -478,8 +508,9 @@ class CustomDashUi(
         val gyro = m.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
         val grav = m.getDefaultSensor(Sensor.TYPE_GRAVITY)
         if (gyro == null || grav == null) { LogBus.log("[DASH] no gyroscope — no lean angle"); return }
-        m.registerListener(sensorListener, gyro, SensorManager.SENSOR_DELAY_GAME, main)
-        m.registerListener(sensorListener, grav, SensorManager.SENSOR_DELAY_GAME, main)
+        // Same ~50 Hz samples for the lean filter, but delivered in 0.2 s batches so the CPU can sleep in between.
+        m.registerListener(sensorListener, gyro, SensorManager.SENSOR_DELAY_GAME, SENSOR_BATCH_US, main)
+        m.registerListener(sensorListener, grav, SensorManager.SENSOR_DELAY_GAME, SENSOR_BATCH_US, main)
         m.getDefaultSensor(Sensor.TYPE_PRESSURE)?.let { m.registerListener(sensorListener, it, SensorManager.SENSOR_DELAY_NORMAL, main) }
         sensors = m
     }
@@ -512,13 +543,13 @@ class CustomDashUi(
         val n = dashNav
         val dest = n?.destination
         if (n != null && dest != null) {
-            val p = n.progress ?: return NavInfo("↑", null, "", ctx.getString(R.string.pro_routing), dest.name)
-            if (p.remainM < DashNav.ARRIVED_M) return NavInfo("⚑", null, "", ctx.getString(R.string.pro_arrived), dest.name)
+            val p = n.progress ?: return NavInfo("↑", DashNav.arrowIcon(GpxNav.TurnDir.STRAIGHT), "", ctx.getString(R.string.pro_routing), dest.name)
+            if (p.remainM < DashNav.ARRIVED_M) return NavInfo("⚑", DashNav.arrowIcon(GpxNav.TurnDir.ARRIVE), "", ctx.getString(R.string.pro_arrived), dest.name)
             val cue = p.upcomingTurn
             val thai = Locale.getDefault().language == "th"
             val say = cue?.let { (if (thai) it.instrTh else it.instr).ifBlank { it.shortLabel } } ?: ctx.getString(R.string.pro_follow_route)
             return NavInfo(
-                cue?.dir?.let { DashNav.arrow(it) } ?: "↑", null,
+                cue?.dir?.let { DashNav.arrow(it) } ?: "↑", DashNav.arrowIcon(cue?.dir ?: GpxNav.TurnDir.STRAIGHT),
                 cue?.let { DashNav.distance(it.distanceFromRiderM) } ?: "", say, dest.name,
                 DashNav.distance(p.remainM),
                 p.etaSec?.let { ctx.getString(R.string.pro_minutes, ((it + 59) / 60).toInt()) },
@@ -528,7 +559,7 @@ class CustomDashUi(
         if (!projected) return null
         val t = PhoneNav.current() ?: return null
         val (dist, say) = PhoneNav.split(t.title, t.text)
-        return NavInfo(if (t.icon == null) "↑" else null, t.icon, dist, say.ifBlank { t.title }, eta = t.sub)
+        return NavInfo("↑", t.icon ?: DashNav.arrowIcon(GpxNav.TurnDir.STRAIGHT), dist, say.ifBlank { t.title }, eta = t.sub)
     }
 
     private fun withNav(d: ProDashView.Data): ProDashView.Data {
@@ -540,6 +571,26 @@ class CustomDashUi(
     }
 
     /** Street and area of where the bike is (Nav Center), off the main thread. */
+    /** Posted speed limit near the bike (OpenStreetMap), refreshed every 120 m or minute, at most every 10 s. */
+    private fun findLimit() {
+        val here = lastLoc ?: return
+        val now = System.currentTimeMillis()
+        if (limitBusy || now - limitAt < 10_000L) return
+        if ((limitFrom?.distanceTo(here) ?: Float.MAX_VALUE) < 120f && now - limitAt < 60_000L) return
+        limitBusy = true
+        limitAt = now
+        OverpassClient.maxspeedAsync(here.latitude, here.longitude) { lim ->
+            main.post { limitBusy = false; limitFrom = here; limitKmh = lim.kmh }
+        }
+    }
+    private var limitKmh: Int? = null
+    private var wxAskAt = 0L
+    /** Service due or soon (text, due?) for the start-of-ride reminder on the dash. */
+    private var maintAlert: Pair<String, Boolean>? = null
+    private var limitAt = 0L
+    private var limitFrom: Location? = null
+    private var limitBusy = false
+
     private fun findPlace() {
         val here = lastLoc ?: return
         val now = System.currentTimeMillis()
@@ -726,7 +777,13 @@ class CustomDashUi(
     private fun onKey(code: Int) {
         when (code) {
             AaInput.KEY_DOWN, AaInput.KEY_ENTER -> { mapFull = !mapFull; placeMap() }
-            AaInput.KEY_UP -> side?.let { it.visibility = if (it.visibility == View.VISIBLE) View.GONE else View.VISIBLE }
+            AaInput.KEY_UP -> side?.let { it.visibility = if (it.visibility == View.VISIBLE) View.GONE else View.VISIBLE } ?: run {
+                // PRO templates have no side panel: ▲ goes to the next template the rider ticked.
+                val next = DashLayout.next(DashLayout.pages(ctx), dash.style)
+                if (next == null) LogBus.log("[DASH] ▲: tick two or more templates in the dash editor to switch between them")
+                else onSwitch?.invoke(next)
+                return
+            }
             AaInput.KEY_BACK -> { side?.visibility = View.VISIBLE; if (mapFull) { mapFull = false; placeMap() } }
             // Music from the handlebar: ◀ / ▶ change track, play/pause if the bike sends it.
             AaInput.KEY_LEFT, AaInput.KEY_PREVIOUS -> { NowPlaying.press(ctx, android.view.KeyEvent.KEYCODE_MEDIA_PREVIOUS); trackAt = 0L }
@@ -752,6 +809,12 @@ class CustomDashUi(
         sysStats()
         linkStats()
         if (dash.style == DashLayout.Style.NAVC || dash.style == DashLayout.Style.NAVT) findPlace()
+        findLimit()
+        // Temperature + rain for the top bar. RainCheck runs at most every 45 min but retries at once
+        // after a failure (no internet on the bike Wi-Fi): ask no more than every 5 min ourselves.
+        if (System.currentTimeMillis() - wxAskAt > 5 * 60_000L) { wxAskAt = System.currentTimeMillis(); RainCheck.runSoon(ctx) }
+        val wx = RainCheck.latest?.takeIf { System.currentTimeMillis() - it.at < 90 * 60_000L }
+        val rainSoon = wx?.rainInMin?.takeIf { it <= 60 }
         return ProDashView.Data(
             speedKmh = shownKmh(),
             clock = clock(),
@@ -778,6 +841,16 @@ class CustomDashUi(
             lean = leanNow?.let { leanText(it) + "  " + String.format(Locale.getDefault(), "%.1f G", kotlin.math.abs(lateralG((speedKmh ?: 0) / 3.6f, yawRate))) },
             bluetoothOn = bluetoothOn(),
             altitudeM = lastLoc?.takeIf { it.hasAltitude() }?.altitude?.roundToInt(),
+            climbM = climb.gainM.roundToInt(), descentM = climb.lossM.roundToInt(), altProfile = climb.profile(),
+            // Only while still near where it was looked up: 400 m on, it may be another road.
+            weather = when {
+                rainSoon != null -> "🌧 " + if (rainSoon == 0) ctx.getString(R.string.rain_now_short) else "$rainSoon'"
+                wx?.tempC != null -> "${RainCheck.icon(wx.code)} ${wx.tempC}°"
+                else -> null
+            },
+            weatherRain = rainSoon != null,
+            maintAlert = maintAlert?.first, maintOverdue = maintAlert?.second == true,
+            speedLimit = limitKmh?.takeIf { lastLoc?.let { l -> limitFrom?.distanceTo(l) }?.let { it < 400f } == true },
         )
     }
 
@@ -789,10 +862,12 @@ class CustomDashUi(
         phoneBattery = 63, phoneCharging = true, phoneMv = 4037, wifiDbm = -58, storageFreePct = 36, cellReady = true, pressureHpa = 1008.2f,
         media = "⏸ Song — Artist", videoFps = 30, linkMbps = 4.0f,
         placeRoad = "ถนนราชดำเนินกลาง", placeArea = "พระนคร", leanDeg = 24f, gpsAccM = 3,
+        speedLimit = 90, weather = "⛅ 28°", climbM = 436, descentM = 128, altProfile = floatArrayOf(96f, 110f, 128f, 121f, 150f, 171f, 163f, 188f, 201f, 195f, 209f, 214f, 205f, 199f, 214f),
     ).let { d ->
         // Sample guidance only on Nav Pro: elsewhere the banner appears just while navigating.
-        if (dash.style != DashLayout.Style.NAVT) d else d.copy(
-            navArrow = "↱", navTurnDist = "250 m", navTurnText = "เลี้ยวขวาเข้าสู่ ถ.วิภาวดีรังสิต", navDest = "นครพนม",
+        if (dash.style != DashLayout.Style.NAVT && dash.style != DashLayout.Style.TOURNAV && dash.style != DashLayout.Style.TERRAIN && dash.style != DashLayout.Style.SMART &&
+            dash.style != DashLayout.Style.LIME && dash.style != DashLayout.Style.RACEBAR) d else d.copy(
+            navArrow = "↱", navIcon = DashNav.arrowIcon(GpxNav.TurnDir.RIGHT), navTurnDist = "250 m", navTurnText = "เลี้ยวขวาเข้าสู่ ถ.วิภาวดีรังสิต", navDest = "นครพนม",
             navRemain = "12.4 km", navEta = ctx.getString(R.string.pro_minutes, 18),
         )
     }
@@ -855,7 +930,10 @@ class CustomDashUi(
         val now = System.currentTimeMillis()
         if (now - maintAt > 30_000L) {  // reads prefs: not every tick
             maintAt = now
-            maintText = Maintenance.mostUrgent(ctx)?.let { "${it.task.name}\n${Maintenance.statusText(ctx, it)}" } ?: "—"
+            val u = Maintenance.mostUrgent(ctx)
+            maintText = u?.let { "${Maintenance.nameOf(ctx, it.task)}\n${Maintenance.statusText(ctx, it)}" } ?: "—"
+            maintAlert = u?.takeIf { it.level == Maintenance.Level.DUE || it.level == Maintenance.Level.SOON }
+                ?.let { "🔧 ${Maintenance.nameOf(ctx, it.task)} · ${Maintenance.statusText(ctx, it)}" to (it.level == Maintenance.Level.DUE) }
         }
         return maintText
     }
@@ -922,6 +1000,9 @@ class CustomDashUi(
         const val STOP_KMH = 4
         /** No new fix for this long: the last speed is no longer true. */
         const val SPEED_STALE_MS = 3_000L
+        const val SENSOR_BATCH_US = 200_000
+        /** This ride's climb, kept when ▲ swaps the template (each swap builds a new dash). */
+        @Volatile var sessionClimb = Climb()
 
         /**
          * What the speedo shows for [kmh] from a fix [ageMs] old: 0 under [STOP_KMH]; once fixes stop

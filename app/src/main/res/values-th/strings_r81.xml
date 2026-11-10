@@ -3,7 +3,7 @@
     <!-- Bike switched off for a long time: stop waiting (battery). -->
     <string name="bike_gone_channel">ไม่พบรถ</string>
     <string name="bike_gone_title">หยุดรอรถแล้ว</string>
-    <string name="bike_gone_text">รถดับอยู่ 20 นาที แอปจึงหยุดค้นหารถเพื่อประหยัดแบตเตอรี่ แตะ เชื่อมต่อ เมื่อกลับมาที่รถ</string>
+    <string name="bike_gone_text">รถดับอยู่หลายนาที แอปจึงหยุดค้นหารถเพื่อประหยัดแบตเตอรี่ แตะ เชื่อมต่อ เมื่อกลับมาที่รถ</string>
 
     <!-- Trophies -->
     <string name="tr_channel">ถ้วยรางวัล</string>

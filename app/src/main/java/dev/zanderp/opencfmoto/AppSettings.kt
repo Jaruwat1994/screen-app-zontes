@@ -157,7 +157,8 @@ object AppSettings {
     fun setExternalControl(ctx: Context, on: Boolean) =
         prefs(ctx).edit().putBoolean(KEY_EXTERNAL_CONTROL, on).apply()
 
-    fun anonymousTelemetry(ctx: Context): Boolean = prefs(ctx).getBoolean(KEY_ANON_TELEMETRY, true)
+    /** Off until the rider turns it on (PRIVACY.md promises that; crash payloads carry log lines). */
+    fun anonymousTelemetry(ctx: Context): Boolean = prefs(ctx).getBoolean(KEY_ANON_TELEMETRY, false)
     fun setAnonymousTelemetry(ctx: Context, on: Boolean) {
         prefs(ctx).edit().putBoolean(KEY_ANON_TELEMETRY, on).apply()
         if (!on) AnonymousTelemetry.onDisabled(ctx)

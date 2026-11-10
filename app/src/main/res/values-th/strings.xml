@@ -124,6 +124,7 @@
     <string name="gpx_search_poi">ค้นหา / POI</string>
     <string name="gpx_search_openstreetmap">ค้นหาใน OpenStreetMap…</string>
     <string name="gpx_search">ค้นหา</string>
+    <string name="gpx_search_google">ค้นใน Google Maps (แล้วกดแชร์ → ZRide)</string>
     <string name="gpx_favorites_markers">รายการโปรด &amp; หมุด</string>
     <string name="gpx_history">ประวัติ</string>
     <string name="gpx_gpx_track">แทร็ก GPX</string>
@@ -256,7 +257,7 @@
     <string name="main_search_a_place_or_address">ค้นหาสถานที่หรือที่อยู่…</string>
     <string name="main_go">ไป</string>
     <string name="main_rider_tips">เคล็ดลับสำหรับผู้ขับขี่</string>
-    <string name="main_connect_start_android_auto_on_the_dash_becomes_s">• เชื่อมต่อ — เริ่ม Android Auto บนหน้าปัด (เปลี่ยนเป็นหยุดขณะเชื่อมต่ออยู่)\n• แผนที่ — แผนที่ / GPX ของ ZRide Screen (ไม่ใช่ Google Maps) สะท้อนหน้าจอ — แสดงหน้าจอโทรศัพท์\n• ขณะเชื่อมต่อ ปุ่มแผนที่ / สะท้อนหน้าจอ ใช้สลับสิ่งที่แสดงบนหน้าปัด\n• มุมมองหน้าปัด &amp; การควบคุม — HUD บนโทรศัพท์และ D-pad / ปุ่มที่แฮนด์</string>
+    <string name="main_connect_start_android_auto_on_the_dash_becomes_s">• เชื่อมต่อ — เริ่ม Android Auto บนหน้าปัด (เปลี่ยนเป็นหยุดขณะเชื่อมต่ออยู่)\n• แผนที่ — แผนที่ / GPX ของ ZRide Screen หรือแอป Google Maps (เลือกที่ ตั้งค่า → ปุ่มแผนที่) สะท้อนหน้าจอ — แสดงหน้าจอโทรศัพท์\n• ขณะเชื่อมต่อ ปุ่มแผนที่ / สะท้อนหน้าจอ ใช้สลับสิ่งที่แสดงบนหน้าปัด\n• มุมมองหน้าปัด &amp; การควบคุม — HUD บนโทรศัพท์และ D-pad / ปุ่มที่แฮนด์</string>
     <string name="main_about_credits">เกี่ยวกับ &amp; เครดิต</string>
     <string name="main_check_for_update">ตรวจหาอัปเดต</string>
     <string name="main_report_a_problem">รายงานปัญหา</string>

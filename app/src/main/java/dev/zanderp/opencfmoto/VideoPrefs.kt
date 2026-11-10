@@ -254,6 +254,16 @@ object VideoPrefs {
 
     /** Margins to advertise for the current AA [spec], or [AaMargins.NONE]. */
     fun aaMarginsFor(ctx: Context, spec: AaVideoSpec, ssid: String? = null): AaMargins {
+        if (AaSide.active) {
+            // AASIDE: Android Auto only gets the dash right of the panel; ask it to lay out for that shape.
+            val full = detectedPanelSize(ctx, ssid) ?: aspectTarget(ctx)
+            val card = AaSide.card
+            val w = Math.round(full.first * (card?.width() ?: (1f - AaSide.frac))).coerceAtLeast(16)
+            val h = Math.round(full.second * (card?.height() ?: 1f)).coerceAtLeast(16)
+            val margins = AaMargins.forAspect(spec, w, h)
+            LogBus.log("[match-aspect] AA template ${full.first}x${full.second} → AA area ${w}x$h margins ${margins.marginW}x${margins.marginH}")
+            return margins
+        }
         val mode = matchAspectMode(ctx)
         val panel = when (mode) {
             MatchAspectMode.OFF -> {

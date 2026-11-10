@@ -116,6 +116,19 @@
                             tools:text="v2.0.18" />
                     </LinearLayout>
 
+                    <TextView
+                        android:id="@+id/btn_lang"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_round_glass"
+                        android:contentDescription="@string/main_lang_desc"
+                        android:fontFamily="@font/archivo_black"
+                        android:gravity="center"
+                        android:textColor="@color/text_primary"
+                        android:textSize="13sp"
+                        tools:text="TH" />
+
                     <ImageButton
                         android:id="@+id/btn_hero_menu"
                         android:layout_width="48dp"
@@ -726,6 +739,7 @@
 
                             <com.google.android.material.button.MaterialButton android:id="@+id/btn_gpx" style="@style/HomeMore" android:background="@drawable/bg_more_item_active" android:text="@string/gpx_map" app:iconTint="@color/brand_gold" />
                             <com.google.android.material.button.MaterialButton android:id="@+id/btn_dash_screen" style="@style/HomeMore" android:text="@string/dl_more" />
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btn_dashcam" style="@style/HomeMore" android:text="@string/dvr_menu" />
                             <com.google.android.material.button.MaterialButton android:id="@+id/btn_mirror_start" style="@style/HomeMore" android:text="@string/main_mirror" />
                             <com.google.android.material.button.MaterialButton android:id="@+id/btn_aa_start" style="@style/HomeMore" android:text="@string/main_scan" />
                             <com.google.android.material.button.MaterialButton android:id="@+id/btn_devices" style="@style/HomeMore" android:text="@string/garage_garage" />

@@ -7,7 +7,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 /**
- * Valhalla turn-by-turn via the public OSM.de instance — no API key.
+ * Valhalla turn-by-turn, motorcycle profile, on [MapServer] (our server, or the public OSM.de
+ * instance under its fair-use policy) — no API key.
  *
  * Google-like Avoid highways = ban motorways/autostradă, but still take the fastest DN/trunk
  * roads. We use motorcycle costing with `exclude_highways=true` for that hard ban.
@@ -16,7 +17,6 @@ import org.json.JSONObject
  * 8–10 h country detours when a ~4.5 h DN route exists.
  */
 object ValhallaRouter {
-    private const val ROUTE_URL = "https://valhalla1.openstreetmap.de/route"
 
     private data class ParsedTrip(
         val route: OsrmRouter.Route,
@@ -39,9 +39,10 @@ object ValhallaRouter {
             for (v in vias) put(loc(v.lat, v.lon))
             put(loc(toLat, toLon))
         }
-        // Motorcycle + hard motorway exclude ≈ Google "Avoid highways" (DN ok, A2 out).
-        // Auto + use_highways=0 is too harsh and often picks slow DJ roads.
-        val profile = if (options.avoidHighways) "motorcycle" else "auto"
+        // Always the motorcycle profile (ZRide is for riders): it follows motorcycle=no on Thai
+        // expressways / motorways. "Avoid highways" adds the hard motorway exclude.
+        // (Auto + use_highways=0 was too harsh and often picked slow back roads.)
+        val profile = "motorcycle"
         val costing = JSONObject().apply {
             put("shortest", false)
             if (options.avoidHighways) put("exclude_highways", true)
@@ -62,11 +63,11 @@ object ValhallaRouter {
             "[route] Valhalla profile=$profile avoidHwy=${options.avoidHighways} " +
                 "avoidToll=${options.avoidTolls} alts=$alternatives vias=${vias.size}",
         )
-        AppHttp.throttle("valhalla1.openstreetmap.de", 500)
+        MapServer.throttle("valhalla", 500)
         AppHttp.ensureCellularUplink()
         val root = JSONObject(
             AppHttp.postJson(
-                ROUTE_URL,
+                MapServer.route,
                 body.toString(),
                 connectTimeoutMs = 25_000,
                 readTimeoutMs = 60_000,

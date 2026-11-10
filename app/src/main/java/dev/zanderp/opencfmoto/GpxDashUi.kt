@@ -1206,6 +1206,10 @@ class GpxDashUi(
                         onHeadingTick?.invoke()
                         if (moving) return // GPS course drives the map/needle while riding
                         if (headingUp) {
+                            // Stopped: engine vibration jitters the compass; turning the whole map (and
+                            // re-encoding it) for under 4° only heats the phone.
+                            val d = Math.abs(((az - lastMapBearing + 540f) % 360f) - 180f)
+                            if (d < 4f) return
                             lastMapBearing = az
                             quickNorth.rotation = -az
                             val loc = lastLoc

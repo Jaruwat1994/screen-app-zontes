@@ -53,6 +53,7 @@
     <string name="dl_cat_touring">ทัวริ่ง &amp; แอดเวนเจอร์</string>
     <string name="dl_cat_neon">ไซเบอร์ &amp; นีออน</string>
     <string name="dl_cat_fantasy">แฟนตาซี &amp; การ์ตูน</string>
+    <string name="dl_cat_premium">พรีเมียม</string>
     <string name="dl_pick_category">1. เลือกประเภท</string>
     <string name="dl_pick_template">2. เลือกหน้าปัด</string>
     <string name="dl_tank_default">ค่าเริ่มต้นของ %1$s: %2$s ลิตร (ตามสเปกผู้ผลิต) ลบช่องให้ว่างเพื่อกลับไปใช้ค่านี้</string>

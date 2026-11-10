@@ -152,7 +152,7 @@ object BikeLink {
         // Only for the AA flow: Map / Mirror never go through the gate (networkReady stays false there).
         if (networkReady && !aaVideoSteady) {
             LogBus.log("→ Wi-Fi back but Android Auto has no video yet — holding the dash link until it does")
-            try { p.stop() } catch (_: Exception) {}
+            try { p.stop(abandonNavigation = false) } catch (_: Exception) {}
             bikeNetwork = network
             networkReady = true
             proberStarted = false
@@ -169,7 +169,7 @@ object BikeLink {
         }
         LogBus.log("→ restarting bike link on re-acquired Wi-Fi")
         ConnectionState.set(Phase.PXC_CONNECTING, appContext?.getString(R.string.hc_main_detail_reconnecting).orEmpty())
-        try { p.stop() } catch (_: Exception) {}
+        try { p.stop(abandonNavigation = false) } catch (_: Exception) {}  // same ride: keep the route (a drop must not end navigation)
         bikeNetwork = network
         networkReady = true
         proberStarted = true

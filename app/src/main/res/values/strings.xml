@@ -124,6 +124,7 @@
     <string name="gpx_search_poi">Search / POI</string>
     <string name="gpx_search_openstreetmap">Search OpenStreetMap…</string>
     <string name="gpx_search">Search</string>
+    <string name="gpx_search_google">Search in Google Maps (then Share → ZRide)</string>
     <string name="gpx_favorites_markers">Favorites &amp; markers</string>
     <string name="gpx_history">History</string>
     <string name="gpx_gpx_track">GPX track</string>
@@ -256,7 +257,7 @@
     <string name="main_search_a_place_or_address">Search a place or address…</string>
     <string name="main_go">Go</string>
     <string name="main_rider_tips">Rider tips</string>
-    <string name="main_connect_start_android_auto_on_the_dash_becomes_s">• Connect — start Android Auto on the dash (becomes Stop while linked).\n• Map — ZRide Screen map / GPX (not Google Maps). Mirror — cast phone screen.\n• While connected, Map / Mirror switch what the dash shows.\n• Dash view &amp; Controls — phone HUD and D-pad / handlebar.</string>
+    <string name="main_connect_start_android_auto_on_the_dash_becomes_s">• Connect — start Android Auto on the dash (becomes Stop while linked).\n• Map — ZRide Screen map / GPX, or the Google Maps app (Settings → Map button). Mirror — cast phone screen.\n• While connected, Map / Mirror switch what the dash shows.\n• Dash view &amp; Controls — phone HUD and D-pad / handlebar.</string>
     <string name="main_about_credits">About &amp; credits</string>
     <string name="main_check_for_update">Check for update</string>
     <string name="main_report_a_problem">Report a problem</string>

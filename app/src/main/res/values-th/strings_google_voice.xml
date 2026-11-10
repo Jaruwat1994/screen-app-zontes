@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setup_google_voice">นำทางด้วย ZRide + เสียง Google</string>
+    <string name="setup_google_voice_desc">เมื่อเริ่มนำทางจากหน้าแผนที่ หน้าปัดยังแสดงเส้นทางและลูกศรของ ZRide เหมือนเดิม และเปิด Google Maps บนมือถือให้ด้วย เพื่อฟังเสียงบอกทางและดูสภาพจราจร</string>
+    <string name="map_phone_nav_running">Google Maps ยังนำทางค้างอยู่บนมือถือ ถ้า Android Auto บอกให้เปลี่ยนเป็นเส้นทางขับรถ ให้กดปิดการนำทางในมือถือ (X) แล้วค้นหาใหม่บน Android Auto หรือใน ZRide</string>
+    <string name="map_aa_driving_hint">เปิด Google Maps เป็นโหมดขับรถ เพราะ Android Auto บนหน้าปัดรับเฉพาะเส้นทางขับรถ เลือกปลายทางแล้วกดเริ่มได้เลย</string>
+</resources>

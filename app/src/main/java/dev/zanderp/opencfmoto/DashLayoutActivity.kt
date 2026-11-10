@@ -5,6 +5,7 @@ package dev.zanderp.opencfmoto
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import kotlin.math.roundToInt
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -158,7 +159,11 @@ class DashLayoutActivity : AppCompatActivity() {
                     if (on) setStroke(dp(3), color(R.color.brand_orange))
                 }
                 contentDescription = getString(st.label)
-                setOnClickListener { if (!on) update(DashLayout.load(this@DashLayoutActivity, st)) }
+                setOnClickListener {
+                    if (on) return@setOnClickListener
+                    val pick = { update(DashLayout.load(this@DashLayoutActivity, st)) }
+                    if (st.paid) Premium.requireOrPrompt(this@DashLayoutActivity) { pick() } else pick()
+                }
             }
             val bmp = thumbs[st]?.takeIf { it.first == l }?.second ?: thumb(l, pw, ph).also { thumbs[st] = l to it }
             card.addView(android.widget.ImageView(this).apply {
@@ -166,7 +171,7 @@ class DashLayoutActivity : AppCompatActivity() {
                 adjustViewBounds = true
                 alpha = if (on) 1f else 0.75f
             }, LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT))
-            card.addView(text(getString(st.label), 12f, if (on) R.color.brand_orange else R.color.text_primary, bold = on).apply {
+            card.addView(text(getString(st.label) + if (st.paid && !Premium.unlocked(this)) " 🔒" else "", 12f, if (on) R.color.brand_orange else R.color.text_primary, bold = on).apply {
                 gravity = Gravity.CENTER_HORIZONTAL
                 setPadding(0, dp(4), 0, 0)
             }, LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT))
@@ -175,6 +180,13 @@ class DashLayoutActivity : AppCompatActivity() {
         }
         body.addView(hs)
         selected?.let { v -> hs.post { hs.scrollTo((v.left - dp(24)).coerceAtLeast(0), 0) } }
+        // Handlebar ▲ cycles through the ticked templates while riding (PRO templates only: Grid uses ▲ itself).
+        if (layout.style.isPro) {
+            val pages = DashLayout.pages(this)
+            body.addView(switch(getString(R.string.dl_page), getString(R.string.dl_page_hint, pages.size, DashLayout.MAX_PAGES), layout.style in pages) {
+                DashLayout.setPage(this, layout.style, it); render()
+            })
+        }
     }
 
     /** ② Colours of the selected template only. */
@@ -214,8 +226,14 @@ class DashLayoutActivity : AppCompatActivity() {
         body.addView(section(getString(R.string.dl_step_show)))
         if (layout.style.isPro) {
             body.addView(text(getString(R.string.dl_show_hint), 12f, R.color.text_secondary).apply { setPadding(0, 0, 0, dp(6)) })
+            if (layout.style in DashLayout.SIDE_STYLES) sideWidth()
+            if (DashLayout.hasAaSwitch(layout.style)) body.addView(switch(getString(R.string.dl_aa_map), getString(R.string.dl_aa_map_hint), layout.aaMap) { on ->
+                // Android Auto in the map card is Premium; until bought the switch goes back off.
+                if (!on) update(layout.copy(aaMap = false))
+                else Premium.requireOrPrompt(this) { update(layout.copy(aaMap = true)) }.also { if (!Premium.unlocked(this)) render() }
+            })
             val group = ChipGroup(this)
-            for (p in DashLayout.Part.entries) {
+            for (p in if (layout.style.category == DashLayout.Category.PREMIUM) DashLayout.SIDE_PARTS else DashLayout.Part.entries) {
                 group.addView(Chip(this).apply {
                     text = getString(p.label)
                     isCheckable = true
@@ -357,6 +375,25 @@ class DashLayoutActivity : AppCompatActivity() {
         setTextColor(color(if (enabled) R.color.brand_orange else R.color.surface_high))
         isEnabled = enabled
         setOnClickListener { onClick() }
+    }
+
+    /** AASIDE: how wide the panel is; Android Auto takes the rest (applies on the next connect). */
+    private fun sideWidth() {
+        body.addView(text(getString(R.string.dl_aaside_hint), 12f, R.color.text_secondary).apply { setPadding(0, 0, 0, dp(6)) })
+        val label = text("", 15f, R.color.text_primary)
+        fun show(f: Float) { label.text = getString(R.string.dl_aaside_width, (f * 100).roundToInt()) }
+        show(layout.sideFrac)
+        body.addView(label)
+        body.addView(com.google.android.material.slider.Slider(this).apply {
+            valueFrom = DashLayout.SIDE_MIN * 100; valueTo = DashLayout.SIDE_MAX * 100; stepSize = 1f
+            value = (layout.sideFrac * 100).roundToInt().toFloat().coerceIn(valueFrom, valueTo)
+            addOnChangeListener { _, v, _ -> show(v / 100f) }
+            // Only on release: update() rebuilds this screen, which would end the drag.
+            addOnSliderTouchListener(object : com.google.android.material.slider.Slider.OnSliderTouchListener {
+                override fun onStartTrackingTouch(s: com.google.android.material.slider.Slider) {}
+                override fun onStopTrackingTouch(s: com.google.android.material.slider.Slider) { update(layout.copy(sideFrac = s.value / 100f)) }
+            })
+        })
     }
 
     private fun switch(title: String, hint: String?, on: Boolean, onChange: (Boolean) -> Unit) = LinearLayout(this).apply {

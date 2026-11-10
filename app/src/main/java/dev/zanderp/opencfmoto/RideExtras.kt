@@ -185,6 +185,22 @@ object RainCheck {
     private val io = Executors.newSingleThreadExecutor { r -> Thread(r, "rain-check").apply { isDaemon = true } }
     @Volatile private var lastRunAt = 0L
 
+    /** Temperature, WMO weather code and minutes until rain (null = none in 3 h) of the last check, for the dash. */
+    data class Weather(val tempC: Int?, val code: Int?, val rainInMin: Int?, val at: Long)
+    @Volatile var latest: Weather? = null
+        private set
+
+    /** WMO weather code → a glyph for the dash. */
+    fun icon(code: Int?): String = when (code) {
+        0 -> "☀"
+        1, 2, 3 -> "⛅"
+        45, 48 -> "🌫"
+        in 51..67, in 80..82 -> "🌧"
+        in 71..77, 85, 86 -> "❄"
+        in 95..99 -> "⛈"
+        else -> "🌡"
+    }
+
     fun runSoon(ctx: Context) {
         val now = System.currentTimeMillis()
         if (now - lastRunAt < MIN_INTERVAL_MS) return
@@ -217,7 +233,8 @@ object RainCheck {
         val body = AppHttp.getText(
             "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon" +
                 "&minutely_15=precipitation&forecast_minutely_15=12" +
-                "&hourly=precipitation_probability&forecast_hours=3&timezone=auto",
+                "&hourly=precipitation_probability&forecast_hours=3&timezone=auto" +
+                "&current=temperature_2m,weather_code",
         )
         val root = JSONObject(body)
         val mm = root.optJSONObject("minutely_15")?.optJSONArray("precipitation")
@@ -237,8 +254,16 @@ object RainCheck {
                 }
             }
         }
-        LogBus.log("[RAIN] next 3 h: first rain slot=$firstSlot max=${maxMm} mm/15min")
-        if (firstSlot < 0) return
+        val cur = root.optJSONObject("current")
+        latest = Weather(
+            cur?.optDouble("temperature_2m")?.takeIf { !it.isNaN() }?.let { Math.round(it).toInt() },
+            cur?.optInt("weather_code", -1)?.takeIf { it >= 0 },
+            firstSlot.takeIf { it >= 0 }?.let { it * 15 },
+            System.currentTimeMillis(),
+        )
+        LogBus.log("[RAIN] next 3 h: first rain slot=$firstSlot max=${maxMm} mm/15min, now ${latest?.tempC}°C code ${latest?.code}")
+        // The dash also asks for the weather; the phone notification stays the rider's choice.
+        if (firstSlot < 0 || !RideExtras.rain(ctx)) return
         val text = when {
             firstSlot == 0 -> ctx.getString(R.string.rain_now)
             else -> ctx.getString(R.string.rain_in_minutes, firstSlot * 15)

@@ -15,7 +15,44 @@ import kotlin.math.min
  * Phone internet required; results can be cached for the ride.
  */
 object OverpassClient {
-    private const val ENDPOINT = "https://overpass-api.de/api/interpreter"
+    /**
+     * Public Overpass servers. The main one often answers 502/504 when busy (riders saw "502" on the
+     * café / restaurant chips): every Overpass call in the app goes through [postRaw], which tries the
+     * next server and starts from the last one that worked.
+     */
+    private val ENDPOINTS = listOf(
+        "https://overpass-api.de/api/interpreter",
+        "https://overpass.private.coffee/api/interpreter",
+        "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+        "https://overpass.kumi.systems/api/interpreter",
+    )
+    @Volatile private var preferred = 0
+
+    /** Blocking. The raw answer of the first server that gives one; throws the last error if none does. */
+    fun postRaw(query: String, connectTimeoutMs: Int = 8_000, readTimeoutMs: Int = 20_000, maxBytes: Int? = null): String {
+        val body = "data=" + AppHttp.encode(query)
+        var last: Exception? = null
+        for (k in ENDPOINTS.indices) {
+            val i = (preferred + k) % ENDPOINTS.size
+            val url = ENDPOINTS[i]
+            val host = java.net.URI(url).host
+            try {
+                AppHttp.throttle(host, 1_000)  // Overpass fair use: a modest rate per server
+                val text = if (maxBytes != null) AppHttp.postForm(url, body, connectTimeoutMs, readTimeoutMs, maxBytes)
+                    else AppHttp.postForm(url, body, connectTimeoutMs, readTimeoutMs)
+                // A busy server can answer 200 with an HTML/"rate limited" page instead of JSON.
+                if (!text.trimStart().startsWith("{")) throw java.io.IOException("not JSON from $host")
+                preferred = i
+                return text
+            } catch (e: Exception) {
+                // Screen closed (executor shut down): stop, don't hammer the other servers.
+                if (e is InterruptedException || e is java.io.InterruptedIOException || Thread.currentThread().isInterrupted) throw e
+                last = e
+                LogBus.log("[overpass] $host failed: ${e.message} — trying the next server")
+            }
+        }
+        throw last ?: java.io.IOException("no Overpass server answered")
+    }
 
     data class SpeedLimit(val kmh: Int?, val label: String)
 
@@ -80,6 +117,10 @@ object OverpassClient {
         val key = tag.substringBefore('=').trim()
         val value = tag.substringAfter('=', "").trim()
         if (key.isEmpty() || value.isEmpty()) return emptyList()
+        // Photon answers in ~3 s; busy Overpass took 30 s+ for the same box (riders saw 502 / timeouts).
+        runCatching { photonNearby(key, value, lat, lon, radiusM * 8 / 1000, maxResults) }
+            .onFailure { LogBus.log("[nearby] photon failed: ${it.message} — falling back to Overpass") }
+            .getOrNull()?.takeIf { it.isNotEmpty() }?.let { return it }
         // Widen the search if the immediate area comes up empty (e.g. fuel out on the open road).
         for (r in intArrayOf(radiusM, radiusM * 3, radiusM * 8)) {
             val found = queryNearby(key, value, lat, lon, r, maxResults)
@@ -149,6 +190,33 @@ object OverpassClient {
             .map { it.first }
             .distinctBy { "${"%.5f".format(it.lat)},${"%.5f".format(it.lon)}" }
             .take(maxResults)
+    }
+
+    /**
+     * Blocking. OSM features tagged [key]=[value] nearest the rider, from Photon's reverse geocoder
+     * (komoot): far faster than the public Overpass servers. Nearest first; at most [limit] (Photon caps 50).
+     */
+    fun photonNearby(key: String, value: String, lat: Double, lon: Double, radiusKm: Int, limit: Int): List<MapPlace> {
+        val url = "${MapServer.photon}/reverse?lat=$lat&lon=$lon&radius=${radiusKm.coerceAtLeast(1)}" +
+            "&limit=${limit.coerceIn(1, 50)}&osm_tag=${AppHttp.encode("$key:$value")}"
+        MapServer.throttle("photon", 300)
+        val feats = JSONObject(AppHttp.getText(url, readTimeoutMs = 12_000)).optJSONArray("features") ?: return emptyList()
+        val out = ArrayList<Pair<MapPlace, Double>>(feats.length())
+        for (i in 0 until feats.length()) {
+            val f = feats.getJSONObject(i)
+            val c = f.optJSONObject("geometry")?.optJSONArray("coordinates") ?: continue
+            val plon = c.optDouble(0); val plat = c.optDouble(1)
+            if (plat.isNaN() || plon.isNaN()) continue
+            val p = f.optJSONObject("properties") ?: JSONObject()
+            fun s(k: String) = p.optString(k).takeIf { it.isNotBlank() }
+            val street = listOfNotNull(s("housenumber"), s("street")).joinToString(" ")
+            out += MapPlace(
+                name = s("name") ?: value.replace('_', ' ').replaceFirstChar { it.uppercase() },
+                lat = plat, lon = plon, category = value,
+                subtitle = listOfNotNull(street.takeIf { it.isNotBlank() }, s("district") ?: s("city")).joinToString(" · "),
+            ) to approxMetres(lat, lon, plat, plon)
+        }
+        return out.sortedBy { it.second }.map { it.first }
     }
 
     fun maxspeedNear(lat: Double, lon: Double, radiusM: Int = 25): SpeedLimit {
@@ -252,12 +320,7 @@ object OverpassClient {
         return points.filterIndexed { i, _ -> i % step == 0 || i == points.lastIndex }
     }
 
-    private fun post(query: String): JSONObject {
-        val body = "data=" + AppHttp.encode(query)
-        // Overpass fair-use: keep the request rate modest from a single client.
-        AppHttp.throttle("overpass-api.de", 1_000)
-        return JSONObject(AppHttp.postForm(ENDPOINT, body))
-    }
+    private fun post(query: String): JSONObject = JSONObject(postRaw(query))
 
     /** Rough metres between two lat/lon — used by tests / callers. */
     fun approxMetres(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {

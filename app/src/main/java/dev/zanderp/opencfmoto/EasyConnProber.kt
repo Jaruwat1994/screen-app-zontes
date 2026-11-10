@@ -144,6 +144,8 @@ class EasyConnProber(
     @Volatile private var bikeIp: Inet4Address? = null
     @Volatile private var network: Network? = null
     private val liveConns = AtomicInteger(0)
+    /** Bumped by [start]: connections and re-probe loops of an earlier session stop counting / looping. */
+    @Volatile private var session = 0
     @Volatile private var everConnected = false
     @Volatile private var reprobing = false
     @Volatile private var reconnectAttempts = 0
@@ -184,6 +186,7 @@ class EasyConnProber(
         mediaSeen = false
         controlOnlySessions = 0
         liveConns.set(0)
+        session++
         this.network = network
         dumpEnvironment(network)
 
@@ -332,7 +335,11 @@ class EasyConnProber(
         return true
     }
 
-    fun stop() {
+    /** The bike shows My Dash, which picks up a new Map-screen route on its own. */
+    val guidesOnMyDash: Boolean get() = running && video?.guidesOnMyDash == true
+
+    /** [abandonNavigation] false = a mode switch that keeps the just-picked [GpxSession] route. */
+    fun stop(abandonNavigation: Boolean = true) {
         running = false
         probed = false
         everConnected = false
@@ -341,7 +348,7 @@ class EasyConnProber(
         yunmo = null
         // Only stop the pipeline if we created it; the shared Android Auto pipeline is owned
         // by AndroidAutoService and must outlive a bike disconnect.
-        if (ownsVideo) video?.stop()
+        if (ownsVideo) video?.stop(abandonNavigation)
         video = null; ownsVideo = false
         heartbeatThread?.interrupt(); heartbeatThread = null
         synchronized(pointers) { cancelPendingUp(); pointers.clear(); aaIdOf.clear() }
@@ -642,11 +649,13 @@ class EasyConnProber(
                 reconnectAttempts = 0            // a fresh connection resets the retry budget
                 liveConns.incrementAndGet()
                 activeClients.add(client)
+                val gen = session
                 thread(name = "ec-conn-$port", isDaemon = true) {
                     try { readLoop(port, client) }
                     finally {
                         activeClients.remove(client)
-                        if (liveConns.decrementAndGet() == 0) onAllConnectionsClosed()
+                        // A connection from before a restart must not drive the new session's count below 0.
+                        if (gen == session && liveConns.decrementAndGet() == 0) onAllConnectionsClosed()
                     }
                 }
             }
@@ -689,9 +698,10 @@ class EasyConnProber(
         }
         reprobing = true
         if (controlOnlySessions == 0) ConnectionState.set(Phase.RECONNECTING, context.getString(R.string.hc_main_detail_attempt, reconnectAttempts + 1))
+        val gen = session
         thread(name = "ec-reprobe", isDaemon = true) {
             try {
-                while (running && liveConns.get() == 0 && reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                while (running && gen == session && liveConns.get() == 0 && reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
                     reconnectAttempts++
                     // Faster early retries (1s, 1.5s, 2s…) then cap — don't burn the budget on long waits.
                     val backoff = minOf(500L + 500L * reconnectAttempts, 4_000L)
@@ -711,7 +721,8 @@ class EasyConnProber(
                         if (ep != null) probeTarget(ep.host, ep.port, mi, network, attempts = 2)
                     }
                     if (!probed && running && liveConns.get() == 0) {
-                        tryYunmoFallback(bi, network)
+                        // Yunmo links don't count in liveConns: once it's up, stop re-probing (that restarted it every ~5 s).
+                        if (tryYunmoFallback(bi, network)) return@thread
                     }
                     // Give the dash a moment to connect back before deciding to try again.
                     try { Thread.sleep(2500) } catch (_: InterruptedException) { return@thread }

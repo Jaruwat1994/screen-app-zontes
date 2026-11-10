@@ -38,6 +38,11 @@ import java.util.concurrent.TimeUnit
  */
 @SuppressLint("MissingPermission")
 object PkeBattery {
+    // Warning levels (Manel, 22 Oct): one set for the app card and the dash, so they never disagree.
+    const val RED_RUNNING_V = 11.8f
+    const val ORANGE_RUNNING_V = 12.1f
+    const val RED_PARKED_V = 11.2f
+    const val ORANGE_PARKED_V = 11.5f
     private val UART_SERVICE: UUID = UUID.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E")
     private val UART_RX: UUID = UUID.fromString("6E400002-B5A3-F393-E0A9-E50E24DCCA9E") // phone → box
     private val UART_TX: UUID = UUID.fromString("6E400003-B5A3-F393-E0A9-E50E24DCCA9E") // box → phone

@@ -2,7 +2,7 @@
 <resources>
     <string name="bike_gone_channel">Moto no trobada</string>
     <string name="bike_gone_title">He deixat d\'esperar la moto</string>
-    <string name="bike_gone_text">La moto feia 20 minuts que estava apagada i l\'app ha deixat de buscar-la per estalviar bateria. Prem Connecta quan tornis a la moto.</string>
+    <string name="bike_gone_text">La moto feia uns minuts que estava apagada i l\'app ha deixat de buscar-la per estalviar bateria. Prem Connecta quan tornis a la moto.</string>
 
     <string name="tr_channel">Trofeus</string>
     <string name="tr_unlocked_title">🏆 Trofeu desbloquejat!</string>

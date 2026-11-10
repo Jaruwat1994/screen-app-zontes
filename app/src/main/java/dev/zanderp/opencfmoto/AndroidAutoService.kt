@@ -253,13 +253,10 @@ class AndroidAutoService : Service() {
     private fun parkAa() {
         if (aaParked) return
         aaParked = true
-        LogBus.log("[AA] bike Wi-Fi gone > ${GRACE_MS / 1000}s — parking Android Auto to save battery; watching for the bike")
-        ConnectionState.set(Phase.WAITING_FOR_BIKE, getString(R.string.hc_main_detail_resume_when_back))
-        tearDownAaKeepService()
-        updateNotification(
-            getString(R.string.hc_main_notif_waiting_bike),
-            getString(R.string.hc_main_notif_paused_battery),
-        )
+        // Bike switched off: stop for real (button back to Connect) instead of "waiting" with Stop showing
+        // until BikeWifi's give-up. RideStop keeps a low-power watcher that reconnects when the bike is back.
+        LogBus.log("[AA] bike Wi-Fi gone > ${GRACE_MS / 1000}s — bike off: stopping, watching for it in low power")
+        RideStop.stopAll(this, "bike gone for ${GRACE_MS / 1000}s")
     }
 
     /**

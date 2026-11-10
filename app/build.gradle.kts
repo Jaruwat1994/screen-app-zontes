@@ -31,11 +31,15 @@ android {
 
         // Default OpenRouteService key used when the rider hasn't entered their own. Supply it via
         // `-PorsApiKey=...`, an `orsApiKey` in gradle.properties, or the ORS_API_KEY env var so the
-        // key isn't hardcoded in source. Empty → routing falls back to the OSRM demo, then beeline.
+        // key isn't hardcoded in source. Empty → routing uses Valhalla (MapServer), then beeline.
         val orsDefaultKey = (project.findProperty("orsApiKey") as String?)
             ?: System.getenv("ORS_API_KEY")
             ?: ""
         buildConfigField("String", "ORS_API_KEY", "\"$orsDefaultKey\"")
+        // ZRide map server (server/ kit: Valhalla + Nominatim + Photon), e.g. -PmapServer=https://map.example.com
+        // or mapServer=… in gradle.properties. Empty → the public OSM community servers (testing only).
+        val mapServer = (project.findProperty("mapServer") as String?) ?: System.getenv("ZRIDE_MAP_SERVER") ?: ""
+        buildConfigField("String", "MAP_SERVER", "\"$mapServer\"")
 
         // Anonymous telemetry Worker base URL (no trailing slash). Empty disables uploads.
         // RideScreen AA builds get it from the TELEMETRY_URL repo variable (our own Worker in
@@ -89,7 +93,11 @@ android {
     // ZRide Screen release key: -PzrideKeystore=/path/zride-release.jks -PzrideKeystorePassword=…
     // (kept outside the repo, e.g. in $GRADLE_USER_HOME/gradle.properties; CI writes it from secrets).
     // Without it, release builds fall back to the debug key.
-    val zrideKeystore = (project.findProperty("zrideKeystore") as String?)?.takeIf { file(it).exists() }
+    // Asked for but missing (moved drive, typo) must fail, not quietly ship a debug-signed APK that
+    // riders could never update from to a properly signed one.
+    val zrideKeystore = (project.findProperty("zrideKeystore") as String?)?.also {
+        require(file(it).exists()) { "zrideKeystore=$it does not exist — fix the path or drop the property for a debug-signed build" }
+    }
     signingConfigs {
         create("debugRelease") {
             storeFile = file("${System.getProperty("user.home")}/.android/debug.keystore")
@@ -147,6 +155,10 @@ dependencies {
     implementation(libs.media3.transformer)
     implementation(libs.media3.effect)
     implementation(libs.media3.common)
+    // Dashcam: play the dash's DVR clips over the bike Wi-Fi (OkHttp pinned to that network).
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.ui)
+    implementation(libs.media3.okhttp)
     implementation(libs.maplibre)
     // Wear OS companion link (module :wear).
     implementation(libs.play.services.wearable)

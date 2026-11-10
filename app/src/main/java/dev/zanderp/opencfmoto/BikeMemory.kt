@@ -128,6 +128,16 @@ object BikeMemory {
         prefs(ctx).edit().putString("$KEY_TRANSPORT_PREFIX$ssid", transport).apply()
     }
 
+    /**
+     * The bike screen the rider used last: true = My Dash, false = Android Auto. Reconnects
+     * (auto-connect, Connect, widget, helmet remote) reopen that screen. Map and Mirror don't
+     * change it: Map needs a route picked again and Mirror needs screen-capture consent each time.
+     */
+    fun lastWasDash(ctx: Context): Boolean = prefs(ctx).getBoolean("last_screen_dash", false)
+    fun setLastWasDash(ctx: Context, dash: Boolean) {
+        prefs(ctx).edit().putBoolean("last_screen_dash", dash).apply()
+    }
+
     // ---- convenience accessors used across the app (selected bike) ----
     fun lastRaw(ctx: Context): String? = selected(ctx)?.raw
     fun lastQr(ctx: Context): QrData? = selected(ctx)?.qr

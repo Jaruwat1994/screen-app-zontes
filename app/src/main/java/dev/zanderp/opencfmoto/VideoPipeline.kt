@@ -74,6 +74,8 @@ class VideoPipeline(
     private var presentation: Presentation? = null
     private var drainThread: Thread? = null
     private var aaCompositor: AaCompositor? = null
+    /** AASIDE: the rider's panel left of Android Auto ([AaSide]). */
+    private var sidePanel: AaSidePanel? = null
     /** Letterbox scaler for MediaProjection (whole-screen or single-app) → bike encoder. */
     private var mirrorScaler: AaCompositor? = null
     private var projectionCallback: android.media.projection.MediaProjection.Callback? = null
@@ -86,6 +88,8 @@ class VideoPipeline(
     @Volatile private var running = false
     /** True after a successful [start] until [stop]. */
     val isAlive: Boolean get() = running
+    /** My Dash is on the bike and follows the Map screen's navigation by itself (no restart needed). */
+    val guidesOnMyDash: Boolean get() = running && customDashUi?.guides == true
 
     // The bitrate the encoder was configured with (the user's target). Adaptive tuning scales DOWN
     // from this; it is the ceiling. 0 until the encoder is created.
@@ -275,6 +279,7 @@ class VideoPipeline(
                 return
             }
             log("[VIDEO] bike canvas force-resize ${encoderW}x$encoderH → ${w}x$h")
+            drainThread = null  // the old drain ends with the old codec; createEncoder starts one for the new
             try {
                 codec?.stop()
             } catch (_: Exception) {}
@@ -304,7 +309,20 @@ class VideoPipeline(
             val usableH = (src.height - margins.marginH).coerceIn(16, src.height)
             aaCompositor?.setFrameCap(profileCap(power.fps))
             aaCompositor?.setSourceCrop(usableW.toFloat() / src.width, usableH.toFloat() / src.height)
+            // The bike's real canvas: re-place a map-card template's card for it (AA's shape was set at connect).
+            if (AaSide.active && AaSide.card != null) AaSide.cardFrac(context, DashLayout.load(context), w, h)?.let { AaSide.card = it }
+            aaCompositor?.setSide(if (AaSide.active) AaSide.frac else 0f)
+            aaCompositor?.setCard(if (AaSide.active) AaSide.card else null)
             aaCompositor?.setOutput(surf, w, h, usableW, usableH, fit)
+            if (AaSide.active) {
+                val card = AaSide.card != null
+                val sw = if (card) w else Math.round(w * AaSide.frac).coerceAtLeast(16)
+                val sh = if (card) h else (h - ScreenMargins.top - ScreenMargins.bottom).coerceAtLeast(16)
+                main.post {
+                    sidePanel?.release()
+                    sidePanel = if (running) AaSidePanel(context, sw, sh) { b -> aaCompositor?.setSidePanel(b) } else null
+                }
+            }
             log("[VIDEO] bike canvas ${w}x$h configured; AA source ${src.width}x${src.height} " +
                 "usable ${usableW}x$usableH (margins ${margins.marginW}x${margins.marginH}) → " +
                 "fit=$fit power=${power.fps}fps")
@@ -388,6 +406,7 @@ class VideoPipeline(
             val cb = object : android.media.projection.MediaProjection.Callback() {
                 override fun onStop() {
                     log("[MIRROR] MediaProjection stopped")
+                    if (ProjectionHolder.projection === projection) ProjectionHolder.projection = null  // dead: don't reuse it
                     ProjectionService.setKeepScreenOn(context, false)
                 }
 
@@ -410,9 +429,17 @@ class VideoPipeline(
             projection.registerCallback(cb, main)
 
             val flags = DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR
-            virtualDisplay = projection.createVirtualDisplay(
-                "OpenCfMotoMirror", initW, initH, density, flags, captureSurf, null, main,
-            )
+            val kept = ProjectionHolder.display?.takeIf { ProjectionHolder.projection === projection }
+            virtualDisplay = if (kept != null) {
+                kept.resize(initW, initH, density)
+                kept.surface = captureSurf
+                log("[MIRROR] re-using the capture display (no new screen-capture consent)")
+                kept
+            } else {
+                projection.createVirtualDisplay(
+                    "OpenCfMotoMirror", initW, initH, density, flags, captureSurf, null, main,
+                ).also { if (ProjectionHolder.projection === projection) ProjectionHolder.display = it }
+            }
             ProjectionService.setKeepScreenOn(context, true)
             // Fold / rotate: re-apply fit if metrics change without a content-resize callback.
             val displayListener = object : DisplayManager.DisplayListener {
@@ -447,20 +474,36 @@ class VideoPipeline(
             val pres = Presentation(context, display)
             val themed = ContextThemeWrapper(pres.context, R.style.Theme_OpenCfMoto)
             ScreenMargins.load(context)
-            val ui = CustomDashUi(
-                themed, DashLayout.load(context),
-                (height - ScreenMargins.top - ScreenMargins.bottom).coerceAtLeast(16), projected = true,
-            )
-            ui.root.setPadding(ScreenMargins.left, ScreenMargins.top, ScreenMargins.right, ScreenMargins.bottom)
-            ui.bind()
-            customDashUi = ui
-            pres.setContentView(ui.root)
+            CustomDashUi.sessionClimb = Climb()  // a fresh ride; template switches keep it
+            val layout = DashLayout.load(context)
+            showCustomDash(pres, themed, layout)
             pres.show()
             presentation = pres
-            log("[VIDEO] custom dash shown → ${width}x${height} ${DashLayout.load(context).widgets}")
+            log("[VIDEO] custom dash shown → ${width}x${height} ${layout.style} ${layout.widgets}")
         } catch (e: Exception) {
             log("[VIDEO] display/presentation failed: $e")
         }
+    }
+
+    /** Puts [layout] on the dash. The ▲ handlebar key swaps in the next ticked template: same display, no reconnect. */
+    private fun showCustomDash(pres: Presentation, themed: Context, layout: DashLayout.Layout) {
+        try { customDashUi?.release() } catch (_: Exception) {}
+        val ui = CustomDashUi(
+            themed, layout,
+            (height - ScreenMargins.top - ScreenMargins.bottom).coerceAtLeast(16), projected = true,
+            onSwitch = { st ->
+                main.post {  // not inside the old dash's own key callback
+                    if (!running || presentation !== pres) return@post
+                    DashLayout.select(context, st)
+                    showCustomDash(pres, themed, DashLayout.load(context))
+                    log("[DASH] ▲ → ${st.name}")
+                }
+            },
+        )
+        ui.root.setPadding(ScreenMargins.left, ScreenMargins.top, ScreenMargins.right, ScreenMargins.bottom)
+        ui.bind()
+        customDashUi = ui
+        pres.setContentView(ui.root)
     }
 
     @SuppressLint("MissingPermission")
@@ -530,13 +573,15 @@ class VideoPipeline(
     private fun drainLoop() {
         val codec = this.codec ?: return
         val info = MediaCodec.BufferInfo()
-        while (running) {
+        // Bound to this codec: a canvas resize swaps in a new one, which gets its own drain thread.
+        while (running && this.codec === codec) {
             val idx = try { codec.dequeueOutputBuffer(info, 100_000) } catch (e: Exception) {
                 log("[VIDEO] dequeue failed: $e"); break
             }
             if (idx < 0) continue
             val buf = try { codec.getOutputBuffer(idx) } catch (e: Exception) { null }
-            if (buf != null && info.size > 0) {
+            // Stop / resize can stop the codec mid-copy: its buffers then throw. End quietly, not crash the app.
+            if (buf != null && info.size > 0) try {
                 buf.position(info.offset)
                 buf.limit(info.offset + info.size)
                 val bytes = ByteArray(info.size)
@@ -586,6 +631,9 @@ class VideoPipeline(
                         }
                     }
                 }
+            } catch (e: IllegalStateException) {
+                if (running && this.codec === codec) log("[VIDEO] output buffer lost: $e")
+                break
             }
             try { codec.releaseOutputBuffer(idx, false) } catch (_: Exception) {}
         }
@@ -752,6 +800,8 @@ class VideoPipeline(
         if (dumpOut != null) log("[DUMP] stopped: $dumpPath ($dumpFrames frames) — Share Log to send it")
         dumpOut = null
         drainThread?.interrupt(); drainThread = null
+        sidePanel?.let { p -> main.post { p.release() } }
+        sidePanel = null
         try { aaCompositor?.release() } catch (_: Exception) {}
         aaCompositor = null
         try { mirrorScaler?.release() } catch (_: Exception) {}
@@ -789,7 +839,10 @@ class VideoPipeline(
             customDashUi = null
             try { presentation?.dismiss() } catch (_: Exception) {}
             presentation = null
-            try { virtualDisplay?.release() } catch (_: Exception) {}
+            // The projection's capture display outlives this pipeline (see ProjectionHolder.display): detach only.
+            val vd = virtualDisplay
+            if (vd != null && vd === ProjectionHolder.display) { try { vd.surface = null } catch (_: Exception) {} }
+            else try { vd?.release() } catch (_: Exception) {}
             virtualDisplay = null
         }
         try { codec?.stop() } catch (_: Exception) {}

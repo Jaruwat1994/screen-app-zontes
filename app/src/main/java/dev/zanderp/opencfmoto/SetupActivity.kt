@@ -160,6 +160,12 @@ class SetupActivity : AppCompatActivity() {
                     .show()
             }
         }
+        findViewById<MaterialButton>(R.id.mapapp_inapp).setOnClickListener { MapPrefs.setGoogleMaps(this, false); refreshOptions() }
+        findViewById<MaterialButton>(R.id.mapapp_google).setOnClickListener { MapPrefs.setGoogleMaps(this, true); refreshOptions() }
+        findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.switch_google_voice).apply {
+            isChecked = MapPrefs.googleVoice(this@SetupActivity)
+            setOnCheckedChangeListener { _, on -> MapPrefs.setGoogleVoice(this@SetupActivity, on) }
+        }
         findViewById<MaterialButton>(R.id.theme_auto).setOnClickListener { setMapTheme(MapTheme.AUTO) }
         findViewById<MaterialButton>(R.id.theme_day).setOnClickListener { setMapTheme(MapTheme.DAY) }
         findViewById<MaterialButton>(R.id.theme_night).setOnClickListener { setMapTheme(MapTheme.NIGHT) }
@@ -591,6 +597,9 @@ class SetupActivity : AppCompatActivity() {
             R.id.dpi_240 to 240,
             R.id.dpi_320 to 320,
         )
+        highlight(MapPrefs.googleMaps(this),
+            R.id.mapapp_inapp to false,
+            R.id.mapapp_google to true)
         highlight(theme,
             R.id.theme_auto to MapTheme.AUTO,
             R.id.theme_day to MapTheme.DAY,

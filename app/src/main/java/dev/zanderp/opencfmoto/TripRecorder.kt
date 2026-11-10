@@ -49,6 +49,7 @@ class TripRecorder(private val appContext: Context) : LocationListener {
     private var startTime = 0L
     private var lastFix: Location? = null
     private var lastFixAt = 0L
+    private var stopAnchor: Location? = null
     private var lastMovingAt = 0L
     private var hasFix = false
     private var lastAccuracy = 0
@@ -129,17 +130,24 @@ class TripRecorder(private val appContext: Context) : LocationListener {
         var speedMs = if (location.hasSpeed()) location.speed
             else if (dtMs in 1..5000) d / (dtMs / 1000f) else 0f
 
-        val moving = speedMs >= MIN_MOVING_MS
+        // Parked, the fix wanders a few metres and the chip reports a bogus 1–3 km/h: the trip/odo kept
+        // creeping up. Once stopped, the spot is pinned and we're moving again only after leaving it.
+        val anchor = stopAnchor ?: location.takeIf { prev == null }
+        val leftSpot = leftSpot(anchor?.distanceTo(location), if (location.hasAccuracy()) location.accuracy else 0f)
+        val moving = isMoving(speedMs, leftSpot)
+        stopAnchor = if (moving) null else anchor ?: location
         var bridged = false
         if (prev != null && moving && dtMs in 1..5000) {
-            distanceMeters += d
+            // Pulling away: count from the parking spot so the first metres aren't lost.
+            distanceMeters += anchor?.distanceTo(location) ?: d
             movingTimeMs += dtMs
-        } else if (prev != null && dtMs in 5001..MAX_GAP_BRIDGE_MS && d / (dtMs / 1000f) >= MIN_MOVING_MS) {
+        } else if (prev != null && leftSpot && dtMs in 5001..MAX_GAP_BRIDGE_MS && d / (dtMs / 1000f) >= MIN_MOVING_MS) {
             // Coming out of a tunnel (no fixes, or only poor ones we ignored): we kept moving the whole
             // time, so count the gap as a straight line instead of losing it. Same leg, no split.
             distanceMeters += d
             movingTimeMs += dtMs
             bridged = true
+            stopAnchor = null
             LogBus.log("[trip] bridged GPS gap: ${d.toInt()} m in ${dtMs / 1000} s (tunnel?)")
         }
         // A tunnel longer than IDLE_SPLIT_MS ending at a red light must not look like "parked".
@@ -148,8 +156,9 @@ class TripRecorder(private val appContext: Context) : LocationListener {
             // Parked long enough — bank this leg and start a fresh one, staying in recording mode.
             finalizeLeg(save = true)
             resetLeg()
-            speedMs = 0f
+            stopAnchor = location  // still parked here: the new leg mustn't count the drift either
         }
+        if (!moving && !bridged) speedMs = 0f  // parked: no ghost speed on the HUD or in max speed
 
         if (speedMs > maxSpeedMs) maxSpeedMs = speedMs
         curSpeedKmh = (speedMs * 3.6f).coerceAtLeast(0f).toInt()
@@ -191,6 +200,7 @@ class TripRecorder(private val appContext: Context) : LocationListener {
         startTime = System.currentTimeMillis()
         lastFix = null
         lastFixAt = 0L
+        stopAnchor = null
         lastMovingAt = 0L
     }
 
@@ -263,6 +273,7 @@ class TripRecorder(private val appContext: Context) : LocationListener {
         /** Latest GPS fix seen, kept across legs/stops (where the bike was parked: [Parking]). */
         @Volatile var lastSeen: Location? = null
 
+        private const val STOP_RADIUS_M = 15f            // + fix accuracy: drift inside this = still parked
         private const val MIN_MOVING_MS = 0.8f          // ~2.9 km/h below which we treat as stopped
         private const val IDLE_SPLIT_MS = 3 * 60_000L    // parked > 3 min → split into a new leg
         private const val MIN_SAVE_DISTANCE_M = 300.0    // don't save trivial legs (was 100: GPS noise passed it)
@@ -270,6 +281,14 @@ class TripRecorder(private val appContext: Context) : LocationListener {
         private const val MAX_ACCURACY_M = 35f           // worse fixes don't count toward a ride
         private const val MAX_GAP_BRIDGE_MS = 10 * 60_000L // GPS gap still counted as riding (long tunnels)
         private const val MAX_PLAUSIBLE_MS = 75f         // ~270 km/h between two fixes = a jump, not riding
+
+        /** Off the parking spot: no anchor (already riding), or further than the radius + fix accuracy.
+         *  The first fix of a leg anchors on itself, so it comes in as 0 m = still parked. */
+        internal fun leftSpot(anchorDistM: Float?, accuracyM: Float): Boolean =
+            anchorDistM == null || anchorDistM > STOP_RADIUS_M + accuracyM
+
+        /** Counts as riding only with real speed AND off the spot — parked drift has bogus 1–3 km/h. */
+        internal fun isMoving(speedMs: Float, leftSpot: Boolean): Boolean = speedMs >= MIN_MOVING_MS && leftSpot
 
         /** A fix good enough to build a track from: real (not mocked) and reasonably accurate. */
         private fun plausible(l: Location): Boolean {

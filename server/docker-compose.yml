@@ -1,0 +1,55 @@
+# ZRide Map Server — Thailand: motorcycle routing (Valhalla) + place search (Nominatim, Photon)
+# behind one HTTPS address. See README-TH.md. Image options change between releases: check each
+# image's README for the version you pull before the first import.
+services:
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN in .env}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    depends_on: [valhalla, nominatim, photon]
+
+  valhalla:
+    # Builds routing tiles from the Thailand extract on first start (~10–30 min), then serves /route.
+    image: ghcr.io/nilsnolde/docker-valhalla/valhalla:latest
+    restart: unless-stopped
+    environment:
+      tile_urls: https://download.geofabrik.de/asia/thailand-latest.osm.pbf
+      build_admins: "True"
+      build_time_zones: "True"
+      build_elevation: "False"
+      serve_tiles: "True"
+      server_threads: "4"
+    volumes: [valhalla_data:/custom_files]
+
+  nominatim:
+    # First start imports Thailand (~1–3 h, needs ~8 GB RAM while importing); then serves /search, /reverse.
+    image: mediagis/nominatim:4.5
+    restart: unless-stopped
+    shm_size: 1gb
+    environment:
+      PBF_URL: https://download.geofabrik.de/asia/thailand-latest.osm.pbf
+      REPLICATION_URL: https://download.geofabrik.de/asia/thailand-updates/
+      NOMINATIM_PASSWORD: ${NOMINATIM_PASSWORD:?set NOMINATIM_PASSWORD in .env}
+      IMPORT_STYLE: full
+    volumes: [nominatim_data:/var/lib/postgresql]
+
+  photon:
+    # Prebuilt Photon index for one country (search-as-you-type, nearby POI by tag).
+    image: rtuszik/photon-docker:latest
+    restart: unless-stopped
+    environment:
+      COUNTRY_CODE: th
+      UPDATE_STRATEGY: SEQUENTIAL
+      UPDATE_INTERVAL: 7d
+    volumes: [photon_data:/photon/data]
+
+volumes:
+  caddy_data:
+  valhalla_data:
+  nominatim_data:
+  photon_data:

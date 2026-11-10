@@ -1,5 +1,6 @@
 package dev.zanderp.opencfmoto
 
+import android.graphics.Bitmap
 import android.graphics.SurfaceTexture
 import android.opengl.EGL14
 import android.opengl.EGLConfig
@@ -9,6 +10,7 @@ import android.opengl.EGLExt
 import android.opengl.EGLSurface
 import android.opengl.GLES11Ext
 import android.opengl.GLES20
+import android.opengl.GLUtils
 import android.opengl.Matrix
 import android.os.Handler
 import android.os.HandlerThread
@@ -54,6 +56,11 @@ class AaCompositor(private val log: (String) -> Unit) {
     private var ppY = 0
     private var ppW = 0
     private var ppH = 0
+    // AASIDE: the preview shows the whole bike canvas (panel strip + AA) aspect-fit at scale [pcS],
+    // canvas top-left at ([pcX],[pcY]) in the view; 0 = AA alone, as above. Touch reads these too.
+    @Volatile private var pcS = 0f
+    @Volatile private var pcX = 0
+    @Volatile private var pcY = 0
     // AA source (decoder buffer) dims — the preview aspect-fits these; known from start(), independent
     // of whether the bike canvas (setOutput) is configured yet.
     @Volatile private var bufW = 0
@@ -91,6 +98,18 @@ class AaCompositor(private val log: (String) -> Unit) {
     @Volatile private var areaY = 0
     @Volatile private var areaWpx = 0
     @Volatile private var areaHpx = 0
+    // AASIDE: the left [sideFrac] of the dash is the rider's panel ([AaSidePanel]), uploaded as a
+    // plain 2D texture and drawn after Android Auto; AA itself is placed in what's left.
+    @Volatile private var sideFrac = 0f
+    /** Big-map template: AA goes in this card (fractions of the canvas) and the panel is the whole canvas under it. */
+    @Volatile private var card: android.graphics.RectF? = null
+    @Volatile private var sideX = 0
+    @Volatile private var sideW = 0
+    private var sideTex = 0
+    private var sideProgram = 0
+    private var sideAPosition = 0
+    private var sideATexCoord = 0
+    private var hasSide = false
     /** "Fit to dash" screen open: draw a yellow frame around the usable area on the bike. */
     @Volatile private var calibrating = false
 
@@ -252,6 +271,7 @@ class AaCompositor(private val log: (String) -> Unit) {
             } finally {
                 previewSurface = EGL14.EGL_NO_SURFACE
                 previewW = 0; previewH = 0
+                if (sidePreview === this) sidePreview = null
                 latch.countDown()
             }
         }
@@ -265,6 +285,19 @@ class AaCompositor(private val log: (String) -> Unit) {
      */
     private fun computePreviewRect() {
         if (previewW == 0 || previewH == 0 || bufW == 0 || bufH == 0) return
+        if ((sideW > 0 || card != null) && canvasW > 0 && canvasH > 0) {
+            // AASIDE: fit the whole bike canvas so the phone shows the dash as composed (panel + AA).
+            // The AA rect is the bike's [vpX]..[vpH] scaled; ppY is GL (bottom-origin) like the bike's.
+            pcS = minOf(previewW.toFloat() / canvasW, previewH.toFloat() / canvasH)
+            pcX = Math.round((previewW - canvasW * pcS) / 2)
+            pcY = Math.round((previewH - canvasH * pcS) / 2)
+            ppX = pcX + pc(vpX); ppW = pc(vpW); ppH = pc(vpH)
+            ppY = previewH - pcY - pc(vpY) - ppH
+            sidePreview = this
+            return
+        }
+        pcS = 0f
+        if (sidePreview === this) sidePreview = null
         val srcAspect = (bufW * cropU) / (bufH * cropV)
         val viewAspect = previewW.toFloat() / previewH
         if (srcAspect < viewAspect) {           // source narrower → fit height, bars left/right
@@ -274,6 +307,23 @@ class AaCompositor(private val log: (String) -> Unit) {
         }
         ppX = (previewW - ppW) / 2
         ppY = (previewH - ppH) / 2
+    }
+
+    /** Bike-canvas px → AASIDE preview px. */
+    private fun pc(v: Int) = Math.round(v * pcS)
+
+    /**
+     * AASIDE preview touch ([HudViewActivity]): a point in the phone preview → Android Auto source
+     * coords, via the bike canvas and [mapCanvasToSource]. Null on the panel strip (and left of it)
+     * or outside the drawn AA rect.
+     */
+    fun mapPreviewToSource(px: Float, py: Float): Pair<Int, Int>? {
+        val s = pcS
+        if (s <= 0f) return null
+        val cx = ((px - pcX) / s).toInt()
+        val cy = ((py - pcY) / s).toInt()
+        if (cx < sideX + sideW) return null
+        return mapCanvasToSource(cx, cy)
     }
 
     /**
@@ -307,7 +357,18 @@ class AaCompositor(private val log: (String) -> Unit) {
         // Inset by rider/profile screen margins so chrome (e.g. 800NK pull-down) stays black.
         val mT = ScreenMargins.top.coerceIn(0, canvasH)
         val mB = ScreenMargins.bottom.coerceIn(0, canvasH - mT)
-        val mL = ScreenMargins.left.coerceIn(0, canvasW)
+        card?.let { k ->
+            // Map-card template: Android Auto fills the card exactly (its margins match the card's shape).
+            sideX = 0; sideW = 0
+            areaX = Math.round(k.left * canvasW); areaY = Math.round(k.top * canvasH)
+            areaWpx = Math.round(k.width() * canvasW).coerceAtLeast(1); areaHpx = Math.round(k.height() * canvasH).coerceAtLeast(1)
+            vpX = areaX; vpY = areaY; vpW = areaWpx; vpH = areaHpx
+            computePreviewRect()
+            return
+        }
+        sideX = ScreenMargins.left.coerceIn(0, canvasW)
+        sideW = Math.round(canvasW * sideFrac).coerceIn(0, canvasW - sideX)
+        val mL = sideX + sideW
         val mR = ScreenMargins.right.coerceIn(0, canvasW - mL)
         val areaW = (canvasW - mL - mR).coerceAtLeast(1)
         val areaH = (canvasH - mT - mB).coerceAtLeast(1)
@@ -335,6 +396,7 @@ class AaCompositor(private val log: (String) -> Unit) {
         vpX = mL + (areaW - vpW) / 2
         vpY = mT + (areaH - vpH) / 2
         areaX = mL; areaY = mT; areaWpx = areaW; areaHpx = areaH
+        computePreviewRect()  // an AASIDE preview mirrors this layout
     }
 
     /** Live from the "Fit to dash" screen: change [ScreenFit] without reconnecting. */
@@ -347,12 +409,53 @@ class AaCompositor(private val log: (String) -> Unit) {
         }
     }
 
+    /** Map-card template: Android Auto in [k] (fractions of the canvas), the panel under it. Call before [setOutput]. */
+    fun setCard(k: android.graphics.RectF?) {
+        handler.post { card = k; computeViewport() }
+    }
+
+    /** AASIDE: keep the left [frac] of the dash for the panel. Call before [setOutput]. */
+    fun setSide(frac: Float) {
+        handler.post {
+            sideFrac = frac.coerceIn(0f, 0.6f)
+            computeViewport()
+        }
+    }
+
+    /** A new panel frame ([AaSidePanel] double-buffers, so [bmp] isn't drawn into while we upload). */
+    fun setSidePanel(bmp: Bitmap) {
+        handler.post {
+            if (sideTex == 0 || bmp.isRecycled) return@post
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, sideTex)
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0)
+            hasSide = true
+            pendingFrame = true  // the keep-alive tick draws it (AA may be static)
+        }
+    }
+
     /** Show / hide the yellow calibration frame on the dash. */
     fun setCalibration(on: Boolean) {
         handler.post {
             calibrating = on
             if (hasContent) drawFrame()
         }
+    }
+
+    /** The AASIDE panel in its strip (GL viewport), over anything a FILL-sized Android Auto spilled there. */
+    private fun drawSide(x: Int, y: Int, w: Int, h: Int) {
+        GLES20.glViewport(x, y, w, h)
+        GLES20.glUseProgram(sideProgram)
+        quad.position(0)
+        GLES20.glVertexAttribPointer(sideAPosition, 2, GLES20.GL_FLOAT, false, 16, quad)
+        GLES20.glEnableVertexAttribArray(sideAPosition)
+        quad.position(2)
+        GLES20.glVertexAttribPointer(sideATexCoord, 2, GLES20.GL_FLOAT, false, 16, quad)
+        GLES20.glEnableVertexAttribArray(sideATexCoord)
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, sideTex)
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
+        GLES20.glDisableVertexAttribArray(sideAPosition)
+        GLES20.glDisableVertexAttribArray(sideATexCoord)
     }
 
     /** GL (bottom-left origin) frame around the usable area, drawn with scissored clears. */
@@ -481,7 +584,22 @@ class AaCompositor(private val log: (String) -> Unit) {
         // never paint outside the bike encoder surface.
         val clipW = if (target === windowSurface) canvasW else previewW
         val clipH = if (target === windowSurface) canvasH else previewH
-        if (clipW > 0 && clipH > 0) {
+        val sidePv = target !== windowSurface && pcS > 0f
+        val k = card
+        if (k != null && hasSide) {
+            // Map-card template: the whole template first, Android Auto then goes into its card.
+            if (target === windowSurface) drawSide(0, 0, canvasW, canvasH)
+            else if (sidePv) drawSide(pcX, previewH - pcY - pc(canvasH), pc(canvasW), pc(canvasH))
+        }
+        if (k != null && (target === windowSurface || sidePv)) {
+            GLES20.glEnable(GLES20.GL_SCISSOR_TEST)
+            if (target === windowSurface) GLES20.glScissor(areaX, canvasH - areaY - areaHpx, areaWpx, areaHpx)
+            else GLES20.glScissor(pcX + pc(areaX), previewH - pcY - pc(areaY + areaHpx), pc(areaWpx), pc(areaHpx))
+        } else if (sidePv) {
+            // AASIDE preview: clip to the scaled bike canvas, as the bike clips to its own.
+            GLES20.glEnable(GLES20.GL_SCISSOR_TEST)
+            GLES20.glScissor(pcX, previewH - pcY - pc(canvasH), pc(canvasW), pc(canvasH))
+        } else if (clipW > 0 && clipH > 0) {
             GLES20.glEnable(GLES20.GL_SCISSOR_TEST)
             GLES20.glScissor(0, 0, clipW, clipH)
         }
@@ -507,6 +625,11 @@ class AaCompositor(private val log: (String) -> Unit) {
         GLES20.glDisableVertexAttribArray(aPosition)
         GLES20.glDisableVertexAttribArray(aTexCoord)
         GLES20.glDisable(GLES20.GL_SCISSOR_TEST)
+        if (target === windowSurface && hasSide && sideW > 0) {
+            drawSide(sideX, canvasH - areaY - areaHpx, sideW, areaHpx)
+        } else if (sidePv && hasSide && k == null) {
+            drawSide(pcX + pc(sideX), previewH - pcY - pc(areaY + areaHpx), pc(sideW), pc(areaHpx))
+        }
         if (calibrating && target === windowSurface) drawCalibrationFrame()
 
         // Monotonic presentation time so repeated (keep-alive) frames aren't dropped as duplicate PTS.
@@ -516,6 +639,7 @@ class AaCompositor(private val log: (String) -> Unit) {
 
     fun release() {
         handler.removeCallbacks(keepAlive)
+        if (sidePreview === this) sidePreview = null
         handler.post {
             try { inputSurface?.release() } catch (_: Exception) {}
             try { if (::surfaceTexture.isInitialized) surfaceTexture.release() } catch (_: Exception) {}
@@ -598,6 +722,23 @@ class AaCompositor(private val log: (String) -> Unit) {
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR)
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE)
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE)
+
+        // AASIDE panel: a bitmap (row 0 = top) on the same quad, so v is flipped.
+        sideProgram = linkProgram(
+            "attribute vec4 aPosition; attribute vec4 aTexCoord; varying vec2 vTexCoord;" +
+                " void main() { gl_Position = aPosition; vTexCoord = vec2(aTexCoord.x, 1.0 - aTexCoord.y); }",
+            "precision mediump float; varying vec2 vTexCoord; uniform sampler2D sTexture;" +
+                " void main() { gl_FragColor = texture2D(sTexture, vTexCoord); }",
+        )
+        sideAPosition = GLES20.glGetAttribLocation(sideProgram, "aPosition")
+        sideATexCoord = GLES20.glGetAttribLocation(sideProgram, "aTexCoord")
+        GLES20.glGenTextures(1, ids, 0)
+        sideTex = ids[0]
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, sideTex)
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR)
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR)
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE)
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE)
     }
 
     private fun linkProgram(vsSrc: String, fsSrc: String): Int {
@@ -627,5 +768,11 @@ class AaCompositor(private val log: (String) -> Unit) {
             throw RuntimeException("shader compile failed: $err")
         }
         return s
+    }
+
+    companion object {
+        /** The compositor whose phone preview currently shows the AASIDE canvas (touch → [mapPreviewToSource]). */
+        @Volatile var sidePreview: AaCompositor? = null
+            private set
     }
 }

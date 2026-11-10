@@ -90,6 +90,11 @@ object PhoneNav {
  * stored or sent.
  */
 class MediaListener : NotificationListenerService() {
+    /** Bound (app start, or access just granted): pick up a navigation already running, so its exit button is known. */
+    override fun onListenerConnected() {
+        runCatching { activeNotifications }.getOrNull()?.forEach { onNotificationPosted(it) }
+    }
+
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         if (sbn.packageName !in PhoneNav.APPS || !sbn.isOngoing) return
         val e = sbn.notification.extras
@@ -104,9 +109,19 @@ class MediaListener : NotificationListenerService() {
             }
         }.getOrNull()
         PhoneNav.latest = PhoneNav.Turn(sbn.packageName, title, text, sub, icon, System.currentTimeMillis())
+        if (sbn.key != loggedNav) {
+            loggedNav = sbn.key
+            LogBus.log("[NAV] ${sbn.packageName} navigating on the phone → turns on the dash")
+        }
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
         if (sbn.packageName == PhoneNav.latest?.app && sbn.isOngoing) PhoneNav.latest = null
+        if (sbn.key == loggedNav) loggedNav = null
+    }
+
+    private companion object {
+        /** Notification already logged (one line per navigation, not per update). */
+        @Volatile var loggedNav: String? = null
     }
 }

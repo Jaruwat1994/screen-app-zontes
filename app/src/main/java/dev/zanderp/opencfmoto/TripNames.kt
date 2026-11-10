@@ -83,9 +83,9 @@ object TripNames {
     fun street(lat: Double, lon: Double): Pair<String, String?>? {
         val la = String.format(Locale.ROOT, "%.3f", lat)
         val lo = String.format(Locale.ROOT, "%.3f", lon)
-        AppHttp.throttle("nominatim.openstreetmap.org", 1_100)
+        MapServer.throttle("nominatim", 1_100)
         val body = AppHttp.getText(
-            "https://nominatim.openstreetmap.org/reverse?lat=$la&lon=$lo&format=jsonv2&zoom=17&addressdetails=1" +
+            "${MapServer.nominatim}/reverse?lat=$la&lon=$lo&format=jsonv2&zoom=17&addressdetails=1" +
                 "&accept-language=${Locale.getDefault().language}",
         )
         val addr = JSONObject(body).optJSONObject("address") ?: return null
@@ -100,9 +100,9 @@ object TripNames {
         val la = String.format(Locale.ROOT, "%.3f", lat)
         val lo = String.format(Locale.ROOT, "%.3f", lon)
         val lang = Locale.getDefault().language
-        AppHttp.throttle("nominatim.openstreetmap.org", 1_100)
+        MapServer.throttle("nominatim", 1_100)
         val body = AppHttp.getText(
-            "https://nominatim.openstreetmap.org/reverse?lat=$la&lon=$lo&format=jsonv2&zoom=16&addressdetails=1" +
+            "${MapServer.nominatim}/reverse?lat=$la&lon=$lo&format=jsonv2&zoom=16&addressdetails=1" +
                 "&accept-language=$lang",
         )
         val addr = JSONObject(body).optJSONObject("address") ?: return null

@@ -31,6 +31,7 @@ class RideGpsService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onDestroy() {
+        running = false
         try { wake?.takeIf { it.isHeld }?.release() } catch (_: Exception) {}
         try { wifi?.takeIf { it.isHeld }?.release() } catch (_: Exception) {}
         super.onDestroy()
@@ -49,6 +50,7 @@ class RideGpsService : Service() {
             .build()
         try {
             ServiceCompat.startForeground(this, NOTIF_ID, n, if (Build.VERSION.SDK_INT >= 29) ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION else 0)
+            running = true
             if (wake == null) wake = getSystemService(android.os.PowerManager::class.java)
                 .newWakeLock(android.os.PowerManager.PARTIAL_WAKE_LOCK, "ZRide:RideGps").apply { setReferenceCounted(false); acquire(4 * 60 * 60 * 1000L) }
             @Suppress("DEPRECATION") // still the reliable screen-off, no-power-save mode (as in AndroidAutoService)
@@ -66,6 +68,9 @@ class RideGpsService : Service() {
     companion object {
         private const val CHANNEL = "zride_ride_gps"
         private const val NOTIF_ID = 4417
+        /** In the foreground now: starting it again from the background would be refused, and isn't needed. */
+        @Volatile var running = false
+            private set
 
         fun start(ctx: Context) {
             val granted = listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)

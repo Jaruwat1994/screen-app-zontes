@@ -250,7 +250,7 @@ object ColorPicker {
                 while (o.outWidth / (s * 2) >= 1080) s *= 2
                 BitmapFactory.decodeFile(path, BitmapFactory.Options().apply { inSampleSize = s })
             }.getOrNull()
-        } ?: BitmapFactory.decodeResource(a.resources, R.drawable.home_hero)
+        } ?: BitmapFactory.decodeResource(a.resources, stockHero(BikeMemory.selected(a)?.name) ?: R.drawable.home_hero_368g)
         val img = ImageView(a).apply { setImageBitmap(bmp); adjustViewBounds = true; scaleType = ImageView.ScaleType.FIT_XY }
         val dialog = AlertDialog.Builder(a).setTitle(R.string.cp_eyedropper_hint).setView(img)
             .setNegativeButton(R.string.dash_cancel, null).create()

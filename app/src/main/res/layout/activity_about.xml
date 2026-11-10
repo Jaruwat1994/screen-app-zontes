@@ -118,6 +118,15 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/about_telegram" />
 
+                <!-- ZRide Screen community: Discord (AboutActivity.URL_COMMUNITY). -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_about_community"
+                    style="@style/Widget.OpenCfMoto.Button.Tonal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/about_community_discord" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_about_discord"
                     style="@style/Widget.OpenCfMoto.Segment"

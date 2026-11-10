@@ -158,4 +158,18 @@ class DashLayoutTest {
         assertEquals("1.2 กม." to "ตรงไป", PhoneNav.split("1.2 กม.", "ตรงไป"))
         assertEquals("" to "Head north on Main St · toward Oak Ave", PhoneNav.split("Head north on Main St", "toward Oak Ave"))
     }
+
+    @Test fun paid_templates() {
+        val paid = DashLayout.Style.entries.filter { it.paid }.map { it.name }.toSet()
+        assertEquals(setOf("NAV", "NAVC", "NAVT", "ADVNAV", "TOURNAV", "AASIDE", "AACLUSTER", "AABAR", "AARIGHT", "AASPORT", "AAGAUGE", "AARACE"), paid)
+    }
+
+    @Test fun handlebar_pages_cycle() {
+        val p = listOf(DashLayout.Style.NAVT, DashLayout.Style.ADVNAV, DashLayout.Style.TOURNAV)
+        assertEquals(DashLayout.Style.ADVNAV, DashLayout.next(p, DashLayout.Style.NAVT))
+        assertEquals(DashLayout.Style.NAVT, DashLayout.next(p, DashLayout.Style.TOURNAV))  // wraps
+        assertEquals(DashLayout.Style.NAVT, DashLayout.next(p, DashLayout.Style.GT))       // not ticked: first
+        assertEquals(null, DashLayout.next(listOf(DashLayout.Style.GT), DashLayout.Style.GT))
+        assertEquals(null, DashLayout.next(emptyList(), DashLayout.Style.GT))
+    }
 }

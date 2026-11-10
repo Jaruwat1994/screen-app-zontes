@@ -87,7 +87,7 @@
     <string name="watch_text">Modalità a basso consumo: si collega quando accendi la moto</string>
     <string name="watch_stop">Smetti di aspettare</string>
     <string name="watch_setting">Continua ad aspettare la moto in modalità a basso consumo</string>
-    <string name="watch_setting_desc">Dopo 20 minuti senza la moto, invece di arrendersi, l\'app controlla ogni tanto se il Wi-Fi della moto è attivo (esiste solo con il quadro acceso) e si collega da sola. Nessun wake lock: è più rapida quando guardi il telefono.</string>
+    <string name="watch_setting_desc">Dopo alcuni minuti senza la moto, invece di arrendersi, l\'app controlla ogni tanto se il Wi-Fi della moto è attivo (esiste solo con il quadro acceso) e si collega da sola. Nessun wake lock: è più rapida quando guardi il telefono.</string>
     <string name="crash_restricted_title">Android blocca gli SMS per le app installate da un APK</string>
     <string name="crash_restricted_steps">È una protezione di Android (\"impostazioni limitate\") per le app che non arrivano da uno store. Si sblocca una volta sola:\n\n1. Tocca \"Apri le impostazioni dell\'app\".\n2. Tocca ⋮ (in alto a destra) → \"Consenti impostazioni limitate\" e conferma.\n3. Vai in Autorizzazioni → SMS → Consenti.\n4. Torna qui.\n\nSe non vedi \"Consenti impostazioni limitate\", prova prima una volta ad attivare gli SMS in Autorizzazioni, poi l\'opzione compare.</string>
     <string name="crash_restricted_open">Apri le impostazioni dell\'app</string>

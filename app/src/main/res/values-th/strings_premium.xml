@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="premium_title">ZRide Premium</string>
+    <string name="premium_body">ปลดล็อก ZRide Premium:\n• ธีม Android Auto คู่กับหน้าปัด (Google Maps หรือ Waze แสดงข้างเกจของคุณ)\n• ธีมหน้าปัดแผนที่ใหญ่\n• แผนที่รวมทุกทริปและ heat map\n• ดูคลิปกล้องหน้าปัด\n• สมุดบำรุงรักษาและแจ้งเตือนเช็กระยะ\n\nจ่ายครั้งเดียว ใช้ได้ตลอดไป ติดตั้งแอปใหม่หรือเปลี่ยนมือถือก็กู้คืนได้ ถ้าใช้บัญชี Google เดิม</string>
+    <string name="premium_buy">ซื้อ</string>
+    <string name="premium_buy_price">ซื้อ — %1$s</string>
+    <string name="premium_unavailable">ตอนนี้ยังซื้อผ่าน Google Play ไม่ได้ ลองเช็กอินเทอร์เน็ตและ Play Store แล้วลองใหม่อีกครั้ง</string>
+    <string name="premium_pending">รอการชำระเงินอยู่ จะปลดล็อกพรีเมียมให้ทันทีที่ Google Play ยืนยัน</string>
+    <string name="premium_thanks">ปลดล็อกพรีเมียมแล้ว ขอบคุณที่สนับสนุน ZRide Screen!</string>
+</resources>

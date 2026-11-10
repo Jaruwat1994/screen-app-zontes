@@ -10,6 +10,16 @@ import org.maplibre.android.MapLibre
 class OpenCfMotoApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        // Which screen was up: a crash's stack often names only framework views (LinearLayout…).
+        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+            override fun onActivityResumed(a: android.app.Activity) = LogBus.log("[UI] ${a.javaClass.simpleName}")
+            override fun onActivityCreated(a: android.app.Activity, b: android.os.Bundle?) {}
+            override fun onActivityStarted(a: android.app.Activity) {}
+            override fun onActivityPaused(a: android.app.Activity) {}
+            override fun onActivityStopped(a: android.app.Activity) {}
+            override fun onActivitySaveInstanceState(a: android.app.Activity, b: android.os.Bundle) {}
+            override fun onActivityDestroyed(a: android.app.Activity) {}
+        })
         try {
             LogBus.includeSecrets = AppSettings.includeSecretsInLogs(this)
         } catch (_: Exception) {

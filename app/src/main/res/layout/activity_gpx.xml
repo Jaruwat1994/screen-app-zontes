@@ -130,6 +130,15 @@
                     android:text="@string/gpx_search" 
                     android:minHeight="48dp"/>
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/gpx_search_google_btn"
+                    style="@style/Widget.OpenCfMoto.Button.Tonal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/gpx_search_google"
+                    android:minHeight="48dp"/>
+
                 <LinearLayout
                     android:id="@+id/gpx_results"
                     android:layout_width="match_parent"

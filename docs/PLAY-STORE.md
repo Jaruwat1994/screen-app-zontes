@@ -23,6 +23,7 @@ means installing the Play app separately.
 - [ ] Export / import of bikes + trips, to move from the GitHub app to the Play app.
 - [ ] Play Console account (25 USD, identity verification) + payments profile for in-app products.
 - [ ] Upload key (real keystore, CI secret) — Play rejects debug-signed bundles.
+- [ ] Create the one-time product `zride_premium` (149 THB, non-consumable; see `Premium.kt` in src/play).
 - [ ] Create the three in-app products (suggested 2 €, 5 €, 10 €).
 - [ ] Store listing: name "RideScreen", short/long description, icon 512 px, feature graphic,
       screenshots (phone + Wear OS), privacy policy URL (PRIVACY.md).

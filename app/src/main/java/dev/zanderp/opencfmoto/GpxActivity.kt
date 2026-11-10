@@ -11,6 +11,7 @@ import android.content.res.ColorStateList
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
+import kotlin.concurrent.thread
 import android.provider.OpenableColumns
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -177,6 +178,24 @@ class GpxActivity : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.gpx_open_map).setOnClickListener { openGpxOnPhoneMap() }
         projectBtn.setOnClickListener { startGpxProjection() }
         findViewById<MaterialButton>(R.id.gpx_search_btn).setOnClickListener { runSearch() }
+        // OSM is thin on Thai shops/cafés: hand the query to Google Maps; its Share → ZRide comes back via SharedPlace.
+        findViewById<MaterialButton>(R.id.gpx_search_google_btn).setOnClickListener {
+            val q = Uri.encode(searchEdit.text?.toString()?.trim().orEmpty())
+            // Pinned to the Maps app: an unpinned geo: intent would also match ZRide's own geo: filter.
+            val app = Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=$q")).setPackage("com.google.android.apps.maps")
+            val web = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/maps/search/?api=1&query=$q"))
+            runCatching { startActivity(app) }.recoverCatching { startActivity(web) }
+        }
+        // Places appear while typing (like Google Maps); the Search key still runs the full search.
+        searchEdit.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
+            override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
+            override fun afterTextChanged(e: android.text.Editable?) {
+                searchEdit.removeCallbacks(suggestRun)
+                suggestGen++
+                if ((e?.trim()?.length ?: 0) >= NominatimSearch.SUGGEST_MIN_CHARS) searchEdit.postDelayed(suggestRun, SUGGEST_DELAY_MS)
+            }
+        })
         searchEdit.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 runSearch(); true
@@ -263,6 +282,12 @@ class GpxActivity : AppCompatActivity() {
         intent.getStringExtra(EXTRA_SEARCH)?.takeIf { it.isNotBlank() }?.let { q ->
             searchEdit.setText(q)
             searchEdit.post { runSearch() }
+        }
+        // Shared from Google Maps (ShareToNavActivity): navigate straight away, to the bike.
+        if (intent.hasExtra(EXTRA_NAV_LAT) && intent.hasExtra(EXTRA_NAV_LON)) {
+            val place = MapPlace(intent.getStringExtra(EXTRA_NAV_NAME).orEmpty(), intent.getDoubleExtra(EXTRA_NAV_LAT, 0.0), intent.getDoubleExtra(EXTRA_NAV_LON, 0.0))
+            intent.removeExtra(EXTRA_NAV_LAT)
+            navigateTo(place)
         }
     }
 
@@ -653,6 +678,24 @@ class GpxActivity : AppCompatActivity() {
         MapPlaces.pushHistory(this, place)
         GpxSession.prepareNavTo(place, overlays())
         launchSession(toBike = toBike)
+        if (toBike && MapPrefs.googleVoice(this)) startGoogleVoice(applicationContext, place)
+    }
+
+    /**
+     * "ZRide + Google voice": the dash keeps ZRide's own route (DashNav beats PhoneNav in
+     * CustomDashUi.navNow), Google Maps runs turn-by-turn on the phone for voice + traffic.
+     * Delayed so MainActivity takes the GPX start first; Maps then stays in front on the phone.
+     */
+    private fun startGoogleVoice(app: Context, place: MapPlace) {
+        val q = String.format(java.util.Locale.US, "%.6f,%.6f", place.lat, place.lon)
+        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+            // Two-wheeler (l) where Maps supports it, else driving.
+            listOf("l", "d").any { mode ->
+                val i = Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=$q&mode=$mode"))
+                    .setPackage(NavApps.GOOGLE_PKG).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                i.resolveActivity(app.packageManager) != null && runCatching { app.startActivity(i) }.isSuccess
+            }
+        }, GOOGLE_VOICE_DELAY_MS)
     }
 
     /** Phone Dash preview by default; [toBike] joins the bike when a QR is saved. */
@@ -944,10 +987,38 @@ class GpxActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
+    /** Bumped on every keystroke and full search: suggestions for older text are dropped. */
+    private var suggestGen = 0
+    private val suggestRun = Runnable { suggestNow() }
+
+    private fun suggestNow() {
+        val q = searchEdit.text?.toString()?.trim().orEmpty()
+        if (q.length < NominatimSearch.SUGGEST_MIN_CHARS) return
+        val gen = suggestGen
+        val near = lastKnown()
+        thread(name = "place-suggest", isDaemon = true) {
+            val offline = runCatching { OfflinePoiIndex.search(this, q, near?.first, near?.second) }.getOrDefault(emptyList())
+            val online = runCatching { NominatimSearch.suggest(q, near?.first, near?.second) }.getOrDefault(emptyList())
+            val list = (online + offline).distinctBy { "${it.name}|${"%.4f".format(it.lat)}" }.take(12)
+            runOnUiThread {
+                // Typed on since, or nothing found yet: keep what's on screen rather than flash "no results".
+                if (gen != suggestGen || isFinishing || isDestroyed || list.isEmpty()) return@runOnUiThread
+                showResults(list)
+            }
+        }
+    }
+
     private fun runSearch() {
+        searchEdit.removeCallbacks(suggestRun)
+        suggestGen++
         val q = searchEdit.text?.toString().orEmpty()
         if (q.isBlank()) {
             Toast.makeText(this, getString(R.string.gpx_type_place_name), Toast.LENGTH_SHORT).show()
+            return
+        }
+        // A pasted Google Maps / geo link: handle it like a share, not a text search.
+        if (Regex("""^(https?://|geo:)""", RegexOption.IGNORE_CASE).containsMatchIn(q.trim())) {
+            startActivity(Intent(this, ShareToNavActivity::class.java).setAction(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT, q.trim()))
             return
         }
         resultsBox.removeAllViews()
@@ -1170,6 +1241,21 @@ class GpxActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_SEARCH = "search_query"
+        /** Pause after the last keystroke before asking for places. */
+        private const val SUGGEST_DELAY_MS = 350L
+        /** Let MainActivity start the GPX session before Google Maps covers it. */
+        private const val GOOGLE_VOICE_DELAY_MS = 1500L
+        private const val EXTRA_NAV_LAT = "nav_lat"
+        private const val EXTRA_NAV_LON = "nav_lon"
+        private const val EXTRA_NAV_NAME = "nav_name"
+
+        /** Navigate to [place] as if picked in search (from a shared Google Maps place). */
+        fun startNavTo(ctx: Context, place: MapPlace) {
+            ctx.startActivity(
+                Intent(ctx, GpxActivity::class.java)
+                    .putExtra(EXTRA_NAV_LAT, place.lat).putExtra(EXTRA_NAV_LON, place.lon).putExtra(EXTRA_NAV_NAME, place.name),
+            )
+        }
 
         private val OFFLINE_SEGMENT_IDS = setOf(
             R.id.gpx_offline_detail_std,

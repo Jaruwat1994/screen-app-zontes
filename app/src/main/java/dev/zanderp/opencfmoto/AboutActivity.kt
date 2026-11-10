@@ -54,6 +54,7 @@ class AboutActivity : AppCompatActivity() {
         // RideScreen AA donations (Ko-fi on GitHub builds, Google Play Billing on the Play build).
         findViewById<MaterialButton>(R.id.btn_about_kofi).setOnClickListener { Support.open(this) }
         findViewById<MaterialButton>(R.id.btn_about_telegram).setOnClickListener { openUrl(URL_TELEGRAM) }
+        findViewById<MaterialButton>(R.id.btn_about_community).setOnClickListener { openUrl(URL_COMMUNITY) }
         findViewById<MaterialButton>(R.id.btn_about_license).setOnClickListener {
             openUrl(URL_NOTICE)
         }
@@ -77,6 +78,8 @@ class AboutActivity : AppCompatActivity() {
         const val URL_KOFI = "https://ko-fi.com/alexandrupopa"
         /** ZRide Screen maintainer: contact, support and donations (Telegram @AZURE11S). */
         const val URL_TELEGRAM = "https://t.me/AZURE11S"
+        /** ZRide Screen community Discord (not the OpenCfMoto one, URL_DISCORD). */
+        const val URL_COMMUNITY = "https://discord.gg/sJEyEuA7U"
         private const val URL_NOTICE =
             "https://github.com/Jaruwat1994/screen-app-zontes/blob/main/NOTICE"
 

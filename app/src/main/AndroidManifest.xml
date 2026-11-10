@@ -95,7 +95,7 @@
         android:theme="@style/Theme.OpenCfMoto">
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout|density|uiMode"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden|navigation|smallestScreenSize|screenLayout|density|uiMode"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
@@ -122,6 +122,30 @@
         <activity
             android:name=".MaintenanceActivity"
             android:exported="false" />
+        <activity
+            android:name=".DashcamActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:exported="false" />
+        <!-- Google Maps "Share" / geo: links → our own route, so the dash map draws the blue line. -->
+        <activity
+            android:name=".ShareToNavActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:label="@string/share_nav_label"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="geo" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".DashLayoutActivity"
             android:exported="false" />
@@ -291,6 +315,12 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/connect_widget_info" />
         </receiver>
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data android:name="autoStoreLocales" android:value="true" />
+        </service>
     </application>
 
 </manifest>

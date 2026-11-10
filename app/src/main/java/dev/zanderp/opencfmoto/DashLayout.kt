@@ -42,22 +42,44 @@ object DashLayout {
     enum class Category(val label: Int) {
         BASIC(R.string.dl_cat_basic), SPORT(R.string.dl_cat_sport), LUXURY(R.string.dl_cat_luxury),
         TOURING(R.string.dl_cat_touring), NEON(R.string.dl_cat_neon), FANTASY(R.string.dl_cat_fantasy),
+        PREMIUM(R.string.dl_cat_premium),
     }
 
     enum class Style(val label: Int, val category: Category) {
         GRID(R.string.dl_style_grid, Category.BASIC), PRO(R.string.dl_style_pro, Category.BASIC), NAV(R.string.dl_style_nav, Category.BASIC),
         NAVC(R.string.dl_style_navc, Category.BASIC),
+        SMART(R.string.dl_style_smart, Category.BASIC),
+        LIME(R.string.dl_style_lime, Category.BASIC),
         NAVT(R.string.dl_style_navt, Category.BASIC),
-        RACING(R.string.dl_style_racing, Category.SPORT), ROSSO(R.string.dl_style_rosso, Category.SPORT),
+        ADVNAV(R.string.dl_style_advnav, Category.BASIC),
+        RACING(R.string.dl_style_racing, Category.SPORT), RACEBAR(R.string.dl_style_racebar, Category.SPORT), ROSSO(R.string.dl_style_rosso, Category.SPORT),
         GT(R.string.dl_style_gt, Category.SPORT), PAPAYA(R.string.dl_style_papaya, Category.SPORT),
         GOLD(R.string.dl_style_gold, Category.LUXURY), GRAND(R.string.dl_style_grand, Category.LUXURY),
         NOIR(R.string.dl_style_noir, Category.LUXURY),
         TOURING(R.string.dl_style_touring, Category.TOURING), ADVENTURE(R.string.dl_style_adventure, Category.TOURING),
+        TOURNAV(R.string.dl_style_tournav, Category.TOURING),
+        TERRAIN(R.string.dl_style_terrain, Category.TOURING),
         CYBER(R.string.dl_style_cyber, Category.NEON), NEONCITY(R.string.dl_style_neoncity, Category.NEON),
         NEON(R.string.dl_style_neon, Category.NEON), SPACE(R.string.dl_style_space, Category.NEON),
         DRAGON(R.string.dl_style_dragon, Category.FANTASY), ANIME(R.string.dl_style_anime, Category.FANTASY),
-        ANIMAL(R.string.dl_style_animal, Category.FANTASY);
+        ANIMAL(R.string.dl_style_animal, Category.FANTASY),
+        /** Android Auto (Google Maps / Waze, its own route line) on the right, our gauge panel on the left ([AaSide]). */
+        AASIDE(R.string.dl_style_aaside, Category.PREMIUM),
+        /** Car-style cluster: round speedo left, Android Auto in the middle, ride info right. */
+        AACLUSTER(R.string.dl_style_aacluster, Category.PREMIUM),
+        /** Android Auto across the top, a slim speed + info bar along the bottom. */
+        AABAR(R.string.dl_style_aabar, Category.PREMIUM),
+        /** AASIDE mirrored: Android Auto left, the panel on the right ([Layout.sideFrac] wide). */
+        AARIGHT(R.string.dl_style_aaright, Category.PREMIUM),
+        /** The rider's sport-cluster mockup: big speed, speed bar and ride rows left, Android Auto right. */
+        AASPORT(R.string.dl_style_aasport, Category.PREMIUM),
+        /** The rider's round-gauge mockup: big speed arc, lean ladder, status and fuel panels left, Android Auto right. */
+        AAGAUGE(R.string.dl_style_aagauge, Category.PREMIUM),
+        /** The rider's orange "368G" mockup: name plate, segmented speed band, panels left, Android Auto right. */
+        AARACE(R.string.dl_style_aarace, Category.PREMIUM);
         val isPro get() = this != GRID
+        /** Needs [Premium] (play build): the Android Auto templates and the big-map ones. */
+        val paid get() = category == Category.PREMIUM || this in BIG_MAP
         /** A template with its own palette (Cyberpunk, Dragon…), unless the rider picks colours. */
         val themed get() = this != GRID && this != PRO
     }
@@ -105,7 +127,38 @@ object DashLayout {
         val effects: Set<Fx> = Fx.entries.toSet(),
         /** Navigation from the app's Map screen shows on My Dash (any template), not on the Map dash. */
         val navOnDash: Boolean = true,
+        /** [Style.AASIDE]: share of the dash width the left panel takes; Android Auto gets the rest. */
+        val sideFrac: Float = SIDE_DEFAULT,
+        /** Gauge templates ([usesAa]): Android Auto (Google Maps / Waze) in the map card instead of OpenStreetMap. */
+        val aaMap: Boolean = true,
     )
+
+    /**
+     * [l] connects through Android Auto (AASIDE, or any gauge template showing AA in its map card). Every
+     * template but the grid has a map card; the small ones (Pro, supercar, Race Bar: about a third of the
+     * dash) shrink AA, the rider still wanted it for real turn-by-turn on all of them.
+     */
+    fun usesAa(l: Layout): Boolean = l.aaMap && l.style.isPro
+
+    /** Templates with the Android Auto / motorcycle (ZRide map) switch. */
+    fun hasAaSwitch(s: Style): Boolean = s.isPro
+
+    const val SIDE_MIN = 0.2f
+    const val SIDE_MAX = 0.45f
+    const val SIDE_DEFAULT = 0.3f
+    /** What [Style.AASIDE]'s panel can show, top to bottom (the speed is always there). */
+    val SIDE_PARTS = listOf(
+        Part.FUEL, Part.TRIP, Part.ODO, Part.RIDE_TIME, Part.AVG, Part.MAX_SPEED, Part.RANGE, Part.ALTITUDE,
+        Part.HEADING, Part.LEAN, Part.BIKE_BATTERY, Part.PHONE_TEMP, Part.TYRE, Part.MAINTENANCE, Part.GPS,
+    )
+    /** Premium templates drawn from the rider's mockups: everything shows on a fresh pick (no short side-panel list). */
+    private val BIG_MAP = setOf(Style.NAV, Style.NAVC, Style.NAVT, Style.ADVNAV, Style.TOURNAV)
+
+    private val OWN_PANEL_STYLES = setOf(Style.AASPORT.name, Style.AAGAUGE.name, Style.AARACE.name)
+    /** Templates with an adjustable panel width ([Layout.sideFrac]). */
+    val SIDE_STYLES = setOf(Style.AASIDE, Style.AARIGHT)
+    /** A fresh [Style.AASIDE]: a short list that fits a narrow panel; the rider ticks more. */
+    private val SIDE_HIDDEN = setOf(Part.AVG, Part.MAX_SPEED, Part.RANGE, Part.ALTITUDE, Part.HEADING, Part.LEAN, Part.TYRE, Part.MAINTENANCE)
 
     val DEFAULT = Layout(
         listOf(Widget.SPEED, Widget.CLOCK, Widget.TRIP, Widget.RIDE_TIME, Widget.HEADING, Widget.PHONE),
@@ -143,7 +196,8 @@ object DashLayout {
     fun load(ctx: Context, style: Style?): Layout {
         val p = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val saved = p.getString("style", null)
-        val st = style?.name ?: saved
+        // A paid template saved before a refund (or picked in a github build) falls back to the default.
+        val st = style?.name ?: saved?.takeUnless { s -> Style.entries.firstOrNull { it.name == s }?.paid == true && !Premium.unlocked(ctx) }
         val k = "$st."
         val legacy = !p.contains(k + "accent") && st == saved
         fun int(key: String) = when {
@@ -155,12 +209,40 @@ object DashLayout {
         val tank = p.getFloat("tank", 0f).takeIf { it > 0f } ?: autoTank(ctx)
         return parse(
             p.getString("widgets", null), int("accent"), st, tank, int("accent2"),
-            p.getBoolean(k + "custom", legacy && p.getBoolean("custom", false)), p.getString(k + "hidden", null),
+            p.getBoolean(k + "custom", legacy && p.getBoolean("custom", false)),
+            p.getString(k + "hidden", null) ?: if (st !in OWN_PANEL_STYLES && Style.entries.firstOrNull { it.name == st }?.category == Category.PREMIUM) formatSet(SIDE_HIDDEN) else null,
         ).copy(
             speedAlert = p.getInt("alert", 0), nightDim = p.getBoolean("night_dim", true),
             effects = p.getString("fx", null)?.let { parseSet<Fx>(it) } ?: Fx.entries.toSet(),
             navOnDash = p.getBoolean("nav_on_dash", true),
+            sideFrac = p.getFloat("side_frac", SIDE_DEFAULT).coerceIn(SIDE_MIN, SIDE_MAX),
+            aaMap = p.getBoolean("aa_on", true),  // Android Auto by default (big-screen templates)
         )
+    }
+
+    /** Most templates the ▲ handlebar key cycles through. */
+    const val MAX_PAGES = 4
+
+    /** Templates the ▲ handlebar key cycles through on the bike, in the order the rider ticked them. */
+    fun pages(ctx: Context): List<Style> =
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString("pages", null)
+            ?.split(',')?.mapNotNull { n -> Style.entries.firstOrNull { it.name == n } }?.distinct().orEmpty()
+
+    fun setPage(ctx: Context, st: Style, on: Boolean) {
+        val l = pages(ctx).filter { it != st } + if (on) listOf(st) else emptyList()
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .putString("pages", l.takeLast(MAX_PAGES).joinToString(",") { it.name }).apply()
+    }
+
+    /** The template after [current] in [pages] (the first one if [current] isn't ticked); null = nothing to switch to. */
+    internal fun next(pages: List<Style>, current: Style): Style? {
+        if (pages.isEmpty() || pages == listOf(current)) return null
+        return pages[(pages.indexOf(current) + 1) % pages.size]
+    }
+
+    /** Make [st] the selected template (its own colours and parts come with it). */
+    fun select(ctx: Context, st: Style) {
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString("style", st.name).apply()
     }
 
     /** Tank size of the Zontes model picked in the Garage (0 = unknown model). */
@@ -172,7 +254,7 @@ object DashLayout {
             .putString("widgets", format(l)).putString("style", l.style.name)
             .putFloat("tank", if (l.tankLiters == autoTank(ctx)) 0f else l.tankLiters)  // follows the bike model unless changed
             .putInt("alert", l.speedAlert).putBoolean("night_dim", l.nightDim).putString("fx", formatSet(l.effects))
-            .putBoolean("nav_on_dash", l.navOnDash)
+            .putBoolean("nav_on_dash", l.navOnDash).putFloat("side_frac", l.sideFrac).putBoolean("aa_on", l.aaMap)
             .putInt(k + "accent", l.accent)
             .apply { if (l.accent2 != null) putInt(k + "accent2", l.accent2) else remove(k + "accent2") }
             .putBoolean(k + "custom", l.customColor).putString(k + "hidden", formatSet(l.hidden)).apply()

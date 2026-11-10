@@ -70,7 +70,8 @@ object GpxOsmdroid {
     /** Build a [MapView] with cellular-pinned tile downloads. */
     fun createMapView(context: Context): MapView {
         configure(context)
-        return MapView(context, cellularTileProvider(context))
+        // ODbL: "© OpenStreetMap contributors" wherever OSM tiles show.
+        return MapView(context, cellularTileProvider(context)).also { it.overlays.add(org.osmdroid.views.overlay.CopyrightOverlay(context)) }
     }
 
     /** Total bytes of the interactive raster tile cache on disk. */

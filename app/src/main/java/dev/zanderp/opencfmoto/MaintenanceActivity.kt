@@ -79,7 +79,7 @@ class MaintenanceActivity : AppCompatActivity() {
         for (t in book.tasks.filter { it.enabled }.sortedByDescending { Maintenance.status(book, it).fraction }) {
             val s = Maintenance.status(book, t)
             card { c ->
-                c.addView(text(t.name, 16f, R.color.text_primary, bold = true))
+                c.addView(text(Maintenance.nameOf(this, t), 16f, R.color.text_primary, bold = true))
                 val col = when (s.level) {
                     Maintenance.Level.DUE -> R.color.status_error
                     Maintenance.Level.SOON -> R.color.status_busy
@@ -129,7 +129,7 @@ class MaintenanceActivity : AppCompatActivity() {
                 val what = when (e.kind) {
                     "fuel" -> "⛽ " + String.format(Locale.getDefault(), "%.2f L", e.liters ?: 0.0) +
                         (e.euros?.let { String.format(Locale.getDefault(), " · %.2f ${Maintenance.currency}", it) } ?: "")
-                    else -> "🔧 " + (book.tasks.firstOrNull { it.id == e.taskId }?.name ?: e.taskId.orEmpty()) +
+                    else -> "🔧 " + (book.tasks.firstOrNull { it.id == e.taskId }?.let { Maintenance.nameOf(this, it) } ?: e.taskId.orEmpty()) +
                         " · " + Maintenance.fmtKm(e.km)
                 }
                 body.addView(text("${ThaiDate.format(df, e.at)} — $what", 13f, R.color.text_secondary))
@@ -181,7 +181,7 @@ class MaintenanceActivity : AppCompatActivity() {
     private fun askDone(t: Maintenance.Task, odo: Double?) {
         val input = number(odo?.let { String.format(Locale.ROOT, "%.0f", it) }, getString(R.string.maint_odometer_input))
         MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.maint_done_title, t.name))
+            .setTitle(getString(R.string.maint_done_title, Maintenance.nameOf(this, t)))
             .setMessage(R.string.maint_done_dialog)
             .setView(padded(input))
             .setPositiveButton(R.string.maint_done) { _, _ ->
@@ -209,7 +209,7 @@ class MaintenanceActivity : AppCompatActivity() {
         MaterialAlertDialogBuilder(this)
             .setTitle(p.label)
             .setMessage(getString(R.string.maint_plan_msg, p.label, String.format(Locale.getDefault(), "%,d", p.cycleKm), p.source,
-                tasks.joinToString("\n") { "• " + it.name + "  —  " + planInterval(it) }))
+                tasks.joinToString("\n") { "• " + Maintenance.nameOf(this, it) + "  —  " + planInterval(it) }))
             .setPositiveButton(R.string.maint_plan_apply) { _, _ ->
                 Maintenance.applyPlan(this, tasks)
                 render()
@@ -222,7 +222,7 @@ class MaintenanceActivity : AppCompatActivity() {
 
     /** Edit (or, with [t] null, create) a task: name, intervals, and when it was last done. */
     private fun editTask(t: Maintenance.Task?, book: Maintenance.Book) {
-        val name = EditText(this).apply { setText(t?.name.orEmpty()); hint = getString(R.string.maint_task_name) }
+        val name = EditText(this).apply { setText(t?.let { Maintenance.nameOf(this@MaintenanceActivity, it) }.orEmpty()); hint = getString(R.string.maint_task_name) }
         val first = number(t?.firstKm?.toString(), getString(R.string.maint_first_km))
         val km = number(t?.everyKm?.toString(), getString(R.string.maint_interval_km))
         val months = number(t?.everyMonths?.toString(), getString(R.string.maint_interval_months))
@@ -338,7 +338,7 @@ class MaintenanceActivity : AppCompatActivity() {
     private fun color(id: Int) = ContextCompat.getColor(this, id)
 
     companion object {
-        fun start(ctx: Context) = ctx.startActivity(Intent(ctx, MaintenanceActivity::class.java))
+        fun start(a: android.app.Activity) = Premium.requireOrPrompt(a) { a.startActivity(Intent(a, MaintenanceActivity::class.java)) }
 
         /** "I filled up" dialog (litres, optional price); shared with the home screen's fuel shortcut. */
         fun askRefuel(a: android.app.Activity, onSaved: () -> Unit) {

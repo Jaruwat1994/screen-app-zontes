@@ -22,9 +22,9 @@ object RideStop {
         BikeWifi.onGiveUp = { ctx -> stopAll(ctx) }
     }
 
-    fun stopAll(ctx: Context) {
+    fun stopAll(ctx: Context, why: String = "bike not seen for ${BikeWifi.GIVE_UP_AFTER_MS / 60_000} min") {
         val app = ctx.applicationContext
-        LogBus.log("→ stopping everything (bike not seen for ${BikeWifi.GIVE_UP_AFTER_MS / 60_000} min)")
+        LogBus.log("→ stopping everything ($why)")
         // v2.2: keep waiting for the bike's Wi-Fi in low-power mode (started before the AA service
         // stops, while we're still allowed to start a foreground service).
         val watching = AppSettings.waitForBike(app) && BikeWatchService.start(app, BikeWatchService.Mode.LONG)

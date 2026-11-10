@@ -34,7 +34,6 @@ object OfflineRoadGraph {
     private const val MAGIC = 0x4F43524F // 'OCRO'
     private const val VERSION = 1
     private const val DIR = "offline_routing"
-    private const val OVERPASS = "https://overpass-api.de/api/interpreter"
     private const val MAX_ROADS_BYTES = 64 * 1024 * 1024 // road JSON can be large for a big area
     private const val SNAP_MAX_M = 3_000.0              // give up if start/dest is off-network
 
@@ -143,11 +142,7 @@ object OfflineRoadGraph {
             >;
             out skel qt;
         """.trimIndent()
-        AppHttp.throttle("overpass-api.de", 1_000)
-        val body = "data=" + AppHttp.encode(q)
-        return JSONObject(
-            AppHttp.postForm(OVERPASS, body, readTimeoutMs = 120_000, maxBytes = MAX_ROADS_BYTES),
-        )
+        return JSONObject(OverpassClient.postRaw(q, connectTimeoutMs = 20_000, readTimeoutMs = 120_000, maxBytes = MAX_ROADS_BYTES))
     }
 
     private class Built(

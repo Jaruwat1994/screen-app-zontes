@@ -100,7 +100,8 @@ object Support {
     }
 
     private fun consume(p: Purchase) {
-        if (p.purchaseState != Purchase.PurchaseState.PURCHASED) return
+        // Only donations are consumable; never consume the non-consumable Premium unlock.
+        if (p.purchaseState != Purchase.PurchaseState.PURCHASED || !p.products.all { it in PRODUCTS }) return
         val c = client ?: return
         c.consumeAsync(ConsumeParams.newBuilder().setPurchaseToken(p.purchaseToken).build()) { r, _ ->
             if (r.responseCode == BillingClient.BillingResponseCode.OK) {

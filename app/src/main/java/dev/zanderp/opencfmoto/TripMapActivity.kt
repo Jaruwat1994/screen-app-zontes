@@ -401,8 +401,9 @@ class TripMapActivity : AppCompatActivity() {
             ctx.startActivity(Intent(ctx, TripMapActivity::class.java).putExtra(EXTRA_ID, id))
         }
 
-        fun startAll(ctx: Context) {
-            ctx.startActivity(Intent(ctx, TripMapActivity::class.java).putExtra(EXTRA_ALL, true))
+        /** Every ride / heat map is premium; one trip's map ([start]) stays free. */
+        fun startAll(a: android.app.Activity) = Premium.requireOrPrompt(a) {
+            a.startActivity(Intent(a, TripMapActivity::class.java).putExtra(EXTRA_ALL, true))
         }
     }
 }

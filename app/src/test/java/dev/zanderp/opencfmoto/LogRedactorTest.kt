@@ -22,6 +22,15 @@ class LogRedactorTest {
     }
 
     @Test
+    fun redactsWifiQrPasswordAndPrecisePositions() {
+        val wifi = LogRedactor.redact("scanned WIFI:S:Home;T:WPA;P:hunter22;;")
+        assertFalse(wifi.contains("hunter22"))
+        assertTrue(wifi.contains("S:Home"))
+        assertEquals("dest 13.75,100.50 'Home'", LogRedactor.redact("dest 13.756331,100.501765 'Home'"))
+        assertEquals("4.0 Mbps 13.7 V", LogRedactor.redact("4.0 Mbps 13.7 V"))  // ordinary numbers stay
+    }
+
+    @Test
     fun updateCheckerVersionCompare() {
         assertTrue(UpdateChecker.isNewer("v1.0.16", "1.0.15"))
         assertFalse(UpdateChecker.isNewer("1.0.15", "1.0.16"))

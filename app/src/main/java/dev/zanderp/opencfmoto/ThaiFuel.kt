@@ -17,12 +17,6 @@ import java.util.Locale
  */
 object ThaiFuel {
     private const val PRICE_URL = "https://oil-price.bangchak.co.th/ApiOilPrice2/th"
-    private val OVERPASS = listOf(
-        "https://overpass-api.de/api/interpreter",
-        "https://overpass.kumi.systems/api/interpreter",
-        "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
-        "https://overpass.private.coffee/api/interpreter",
-    )
     private const val PRICE_CACHE_MS = 3 * 3600_000L
     private const val STATIONS_CACHE_MS = 30 * 60_000L
 
@@ -79,25 +73,28 @@ object ThaiFuel {
         synchronized(stationCache) {
             stationCache[key]?.let { if (System.currentTimeMillis() - it.first < STATIONS_CACHE_MS) return it.second }
         }
+        val list = runCatching { photonStations(here, radiusKm) }
+            .onFailure { LogBus.log("[FUEL-TH] photon failed: ${it.message} — trying Overpass") }
+            .getOrNull()?.takeIf { it.isNotEmpty() }
+            ?: overpassStations(here, radiusKm)
+        synchronized(stationCache) { stationCache[key] = System.currentTimeMillis() to list }
+        return list
+    }
+
+    /** Fast source (~3 s). No opening hours here; Overpass has them but often takes 30 s+ or 502s. */
+    private fun photonStations(here: Location, radiusKm: Int): List<FuelStations.Station> =
+        OverpassClient.photonNearby("amenity", "fuel", here.latitude, here.longitude, radiusKm, 50).map {
+            val dist = FloatArray(1)
+            Location.distanceBetween(here.latitude, here.longitude, it.lat, it.lon, dist)
+            FuelStations.Station(it.lat, it.lon, Double.NaN, brand = it.name, address = it.subtitle, town = "", hours = "", distanceM = dist[0])
+        }.filter { it.distanceM <= radiusKm * 1000f }
+
+    private fun overpassStations(here: Location, radiusKm: Int): List<FuelStations.Station> {
         val q = String.format(
             Locale.ROOT, "[out:json][timeout:25];nwr[\"amenity\"=\"fuel\"](around:%d,%.5f,%.5f);out center tags;",
             radiusKm * 1000, here.latitude, here.longitude,
         )
-        var body: String? = null
-        var last: Exception? = null
-        for (url in OVERPASS) {
-            try {
-                AppHttp.throttle(java.net.URI(url).host, 1_000)
-                body = AppHttp.postForm(url, "data=" + AppHttp.encode(q), connectTimeoutMs = 8_000, readTimeoutMs = 20_000)
-                break
-            } catch (e: Exception) {
-                last = e
-                LogBus.log("[FUEL-TH] stations from ${java.net.URI(url).host} failed: ${e.message}")
-            }
-        }
-        val list = parseStations(body ?: throw (last ?: java.io.IOException("no Overpass")), here)
-        synchronized(stationCache) { stationCache[key] = System.currentTimeMillis() to list }
-        return list
+        return parseStations(OverpassClient.postRaw(q, connectTimeoutMs = 8_000, readTimeoutMs = 35_000), here)
     }
 
     internal fun parseStations(body: String, here: Location?): List<FuelStations.Station> {

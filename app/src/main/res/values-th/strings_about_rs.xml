@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="rs_about_tagline">Android Auto ไร้สายบนหน้าปัด Zontes ทำมาเพื่อผู้ขับขี่ไทย พัฒนาต่อยอดจาก RideScreen AA และ OpenCfMoto</string>
-    <string name="rs_about_community">มีคำถาม ไอเดีย หรือรถมีปัญหา? ทักมาที่ Telegram @AZURE11S หรือกด แจ้งปัญหา / ส่ง log</string>
+    <string name="rs_about_community">มีคำถาม ไอเดีย หรือรถมีปัญหา? ทักมาที่ Telegram @AZURE11S เข้าร่วมคอมมูนิตี้ใน Discord หรือกด แจ้งปัญหา / ส่ง log</string>
     <string name="rs_about_issues">GitHub</string>
     <string name="rs_about_copyright">© 2026 Alexandru (zanderp), OpenCfMoto\n© 2026 Manel (mgb1982), RideScreen AA\n© 2026 Harajuku, ZRide Screen</string>
     <string name="rs_about_copyright_body">ZRide Screen, © 2026 Harajuku เป็นงานต่อยอดจาก RideScreen AA, © 2026 Manel (mgb1982) ซึ่งต่อยอดจาก OpenCfMoto, © 2026 Alexandru (zanderp) และเช่นเดียวกับต้นฉบับ เป็นซอฟต์แวร์เสรีภายใต้ GNU AGPL v3 หรือใหม่กว่า: ดู LICENSE และ NOTICE ใน repository</string>

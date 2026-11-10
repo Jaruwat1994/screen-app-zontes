@@ -41,11 +41,22 @@ class HudViewActivity : AppCompatActivity() {
     private lateinit var gpxHost: FrameLayout
     private lateinit var hint: TextView
     private lateinit var titleView: TextView
-    private var attached = false
+    private var attachedPipe: VideoPipeline? = null
+    private var shownLive: Boolean? = null
+    /** Opened while still connecting, the HUD kept "start Android Auto" after AA went live: re-check every second. */
+    private val watchLive = object : Runnable {
+        override fun run() {
+            if (AaVideoBridge.pipeline != null != shownLive) refreshMode(forceReload = false)
+            attachPreview()
+            surface.postDelayed(this, 1000L)
+        }
+    }
     private var noSessionToastAt = 0L
     private var fullscreen = false
     private var gpxPreview = false
     private var gpxUi: GpxDashUi? = null
+    /** My dash (a template without Android Auto), drawn here with live data. */
+    private var dashUi: CustomDashUi? = null
     private var boundSessionKey: String? = null
     private lateinit var insetsController: WindowInsetsControllerCompat
 
@@ -88,18 +99,12 @@ class HudViewActivity : AppCompatActivity() {
                     LogBus.log("[HUD] no AA pipeline — preview will show once Android Auto is live")
                     return
                 }
-                if (!attached) {
-                    pipe.setPreviewSurface(holder.surface, width, height)
-                    attached = true
-                    LogBus.log("[HUD] preview surface attached ${width}x$height")
-                } else {
-                    pipe.updatePreviewSize(width, height)
-                }
+                if (pipe === attachedPipe) pipe.updatePreviewSize(width, height) else attachPreview()
             }
             override fun surfaceDestroyed(holder: SurfaceHolder) {
-                if (attached) {
-                    AaVideoBridge.pipeline?.clearPreviewSurface()
-                    attached = false
+                attachedPipe?.let {
+                    it.clearPreviewSurface()
+                    attachedPipe = null
                     LogBus.log("[HUD] preview surface detached")
                 }
             }
@@ -140,6 +145,7 @@ class HudViewActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         refreshMode(forceReload = false)
+        surface.post(watchLive)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -149,12 +155,14 @@ class HudViewActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
+        surface.removeCallbacks(watchLive)
         if (isFinishing) stopGpxPreview()
         super.onPause()
     }
 
     override fun onDestroy() {
         stopGpxPreview()
+        stopDashPreview()
         super.onDestroy()
     }
 
@@ -166,6 +174,7 @@ class HudViewActivity : AppCompatActivity() {
         // there's no bike pipeline. This keeps a previously-opened preview from sticking over the
         // real HUD once the bike connects.
         val live = AaVideoBridge.pipeline != null
+        shownLive = live
         val wantGpx = !live && GpxSession.active
         if (wantGpx) {
             val key = sessionKey()
@@ -174,8 +183,12 @@ class HudViewActivity : AppCompatActivity() {
                 key != boundSessionKey
             intent.removeExtra(EXTRA_FORCE_RELOAD)
             startGpxPreview(reload = needReload)
+        } else if (!live && ProjectionHolder.projection == null) {
+            stopGpxPreview()
+            startDashPreview()
         } else {
             stopGpxPreview()
+            stopDashPreview()
             val live = AaVideoBridge.pipeline != null
             hint.visibility = if (live) View.GONE else View.VISIBLE
             surface.visibility = View.VISIBLE
@@ -190,7 +203,19 @@ class HudViewActivity : AppCompatActivity() {
         }
     }
 
+    /** Hand the HUD surface to the live AA pipeline (a reconnect brings a new one). */
+    private fun attachPreview() {
+        val pipe = AaVideoBridge.pipeline
+        if (pipe == null) { attachedPipe = null; return }  // that session ended with its pipeline
+        val h = surface.holder
+        if (gpxPreview || pipe === attachedPipe || !h.surface.isValid || surface.width == 0) return
+        pipe.setPreviewSurface(h.surface, surface.width, surface.height)
+        attachedPipe = pipe
+        LogBus.log("[HUD] preview surface attached ${surface.width}x${surface.height}")
+    }
+
     private fun startGpxPreview(reload: Boolean) {
+        stopDashPreview()
         if (gpxPreview && gpxUi != null && !reload) {
             hint.visibility = View.GONE
             return
@@ -249,6 +274,30 @@ class HudViewActivity : AppCompatActivity() {
             GpxSession.Mode.FREE_RIDE -> getString(R.string.hc_act_map_preview)
         }
         LogBus.log("[HUD] Map preview bound (${GpxSession.mode} '${GpxSession.trackName}')")
+    }
+
+    /** No Android Auto and no Map session: My dash itself, live data (what the bike shows in My dash mode). */
+    private fun startDashPreview() {
+        if (dashUi != null) return
+        gpxHost.removeAllViews()
+        val w = gpxHost.width.takeIf { it > 0 } ?: resources.displayMetrics.widthPixels
+        val ui = CustomDashUi(this, DashLayout.load(this), (w * ProDashView.DESIGN_H / ProDashView.DESIGN_W).toInt(), projected = true, hudPreview = true)
+        gpxHost.addView(ui.root, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+        ui.bind()
+        dashUi = ui
+        gpxHost.visibility = View.VISIBLE
+        surface.visibility = View.GONE
+        hint.visibility = View.GONE
+        titleView.text = getString(R.string.hud_dash_view)
+        LogBus.log("[HUD] My dash preview (${DashLayout.load(this).style})")
+    }
+
+    private fun stopDashPreview() {
+        val ui = dashUi ?: return
+        dashUi = null
+        try { ui.release() } catch (_: Exception) {}
+        gpxHost.removeAllViews()
+        gpxHost.visibility = View.GONE
     }
 
     private fun stopGpxPreview() {
@@ -328,6 +377,8 @@ class HudViewActivity : AppCompatActivity() {
     }
 
     private fun mapToSource(vx: Float, vy: Float): Pair<Int, Int>? {
+        // AASIDE: the preview shows the whole dash (panel + AA); the compositor knows that layout.
+        AaCompositor.sidePreview?.let { return it.mapPreviewToSource(vx, vy) }
         val vw = surface.width
         val vh = surface.height
         val sw = BikeProfileHolder.aaUsableWidth

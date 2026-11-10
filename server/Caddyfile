@@ -1,0 +1,21 @@
+# One address, three services. HTTPS certificate is automatic (Let's Encrypt) for {$DOMAIN}.
+# No access log (Caddy logs requests only if asked): route requests carry start/end points.
+{$DOMAIN} {
+	encode gzip
+	# Valhalla keeps its own paths (/route, /status).
+	handle /route* {
+		reverse_proxy valhalla:8002
+	}
+	handle /status* {
+		reverse_proxy valhalla:8002
+	}
+	handle_path /nominatim/* {
+		reverse_proxy nominatim:8080
+	}
+	handle_path /photon/* {
+		reverse_proxy photon:2322
+	}
+	handle {
+		respond "ZRide map server" 200
+	}
+}

@@ -246,6 +246,33 @@ object Maintenance {
         Task("service", ctx.getString(R.string.maint_service), 6000, 12, null, null),
     ) + paperworkTasks(ctx)
 
+    /** Every built-in task name: saved in the language of the day, so mapped back to show it in the current one. */
+    private val NAME_RES = intArrayOf(
+        R.string.maint_service, R.string.maint_oil, R.string.maint_oil_engine, R.string.maint_oil_filter,
+        R.string.maint_gear_oil, R.string.maint_air, R.string.maint_valves, R.string.maint_belt, R.string.maint_pulleys,
+        R.string.maint_steer_lock, R.string.maint_spark, R.string.maint_brake_fluid, R.string.maint_brake_fluid_check,
+        R.string.maint_coolant, R.string.maint_coolant_check, R.string.maint_brakes, R.string.maint_tyres,
+        R.string.maint_cvt_filter, R.string.maint_cvt_filter_check, R.string.maint_steer_bearing, R.string.maint_fork_oil,
+        R.string.maint_shocks, R.string.maint_brake_hose, R.string.maint_th_act, R.string.maint_th_tax,
+        R.string.maint_th_inspection, R.string.maint_insurance, R.string.maint_itv,
+    )
+    private val LANGS = listOf("en", "th", "es", "ca", "it", "de", "fr", "pt", "pl", "cs", "ro", "nl", "hu", "tr", "ko", "bg")
+
+    @Volatile private var byName: Map<String, Int>? = null
+
+    /** A task's name in the app's current language; a name the rider typed themselves is shown as is. */
+    fun nameOf(ctx: Context, t: Task): String {
+        val map = byName ?: HashMap<String, Int>().also { m ->
+            for (lang in LANGS) {
+                val conf = android.content.res.Configuration(ctx.resources.configuration).apply { setLocale(Locale(lang)) }
+                val res = ctx.createConfigurationContext(conf).resources
+                NAME_RES.forEach { m.putIfAbsent(res.getString(it), it) }
+            }
+            byName = m
+        }
+        return map[t.name]?.let(ctx::getString) ?: t.name
+    }
+
     private fun taskJson(t: Task) = JSONObject().put("id", t.id).put("name", t.name).put("on", t.enabled).apply {
         t.everyKm?.let { put("km", it) }
         t.everyMonths?.let { put("months", it) }
@@ -432,6 +459,7 @@ object Maintenance {
     /** On connecting to the bike: one heads-up per item that is due or close (not repeated daily). */
     fun checkDue(ctx: Context) {
         val app = ctx.applicationContext
+        if (!Premium.unlocked(app)) return // the logbook is premium; its notification would open it ungated
         val b = load(app)
         val prefs = app.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val due = b.tasks.filter { it.enabled }.map { status(b, it) }
@@ -439,7 +467,7 @@ object Maintenance {
             .filter { s -> prefs.getString("notified_${b.bikeKey}_${s.task.id}", null) != s.level.name }
         if (due.isEmpty()) return
         prefs.edit().apply { due.forEach { putString("notified_${b.bikeKey}_${it.task.id}", it.level.name) } }.apply()
-        val lines = due.map { "${it.task.name}: ${statusText(app, it)}" }
+        val lines = due.map { "${nameOf(app, it.task)}: ${statusText(app, it)}" }
         LogBus.log("[MAINT] due: ${lines.joinToString(" · ")}")
         val nm = app.getSystemService(NotificationManager::class.java) ?: return
         nm.createNotificationChannel(

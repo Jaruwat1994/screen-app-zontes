@@ -3,7 +3,7 @@
     <!-- Bike switched off for a long time: stop waiting (battery). -->
     <string name="bike_gone_channel">Bike not found</string>
     <string name="bike_gone_title">Stopped waiting for the bike</string>
-    <string name="bike_gone_text">The bike was off for 20 minutes, so the app stopped looking for it to save battery. Tap Connect when you\'re back on the bike.</string>
+    <string name="bike_gone_text">The bike was off for a few minutes, so the app stopped looking for it to save battery. Tap Connect when you\'re back on the bike.</string>
 
     <!-- Trophies -->
     <string name="tr_channel">Trophies</string>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setup_google_voice">Navigate with ZRide + Google voice</string>
+    <string name="setup_google_voice_desc">When you start a route from the Map screen, the dash keeps ZRide\'s route line and arrows, and Google Maps also opens on the phone for voice guidance and traffic.</string>
+    <string name="map_phone_nav_running">Google Maps is still navigating on the phone. If Android Auto asks you to switch to driving directions, end that navigation on the phone (X), then search again on Android Auto or in ZRide.</string>
+    <string name="map_aa_driving_hint">Google Maps opens in driving mode: Android Auto on the dash only accepts driving routes. Choose the destination and tap Start.</string>
+</resources>

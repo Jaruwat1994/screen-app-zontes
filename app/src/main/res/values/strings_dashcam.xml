@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dvr_menu">Dashcam</string>
+    <string name="dvr_title">📹 Dashcam</string>
+    <string name="dvr_sub">The dash\'s own cameras over the bike Wi-Fi (%1$s). Connect to the bike first.</string>
+    <string name="dvr_front">Front</string>
+    <string name="dvr_rear">Rear</string>
+    <string name="dvr_photos">Photos</string>
+    <string name="dvr_refresh">↻ Refresh</string>
+    <string name="dvr_live_probe">🔴 Live view check</string>
+    <string name="dvr_live_result">What the dash answered (also in the log — send it to us so we can add live view):\n\n%1$s</string>
+    <string name="dvr_loading">Loading…</string>
+    <string name="dvr_not_connected">Can\'t reach the dashcam at %1$s. Connect the app to the bike (or join the bike\'s ZT_ Wi-Fi), then tap Refresh.</string>
+    <string name="dvr_empty">Nothing recorded here yet.</string>
+    <string name="dvr_download_all">⬇ Save all to phone (%1$d)</string>
+    <string name="dvr_download">Save to phone</string>
+    <string name="dvr_downloading">Saving… %1$d%%</string>
+    <string name="dvr_saved">✓ On the phone (Gallery › ZRide Dashcam)</string>
+    <string name="dvr_failed">✗ Save failed — tap ⬇ to retry</string>
+</resources>

@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="bike_gone_channel">Moto non trovata</string>
     <string name="bike_gone_title">Smesso di aspettare la moto</string>
-    <string name="bike_gone_text">La moto è rimasta spenta per 20 minuti, quindi l\'app ha smesso di cercarla per risparmiare batteria. Tocca Collega quando sei di nuovo in sella.</string>
+    <string name="bike_gone_text">La moto è rimasta spenta per alcuni minuti, quindi l\'app ha smesso di cercarla per risparmiare batteria. Tocca Collega quando sei di nuovo in sella.</string>
     <string name="tr_channel">Trofei</string>
     <string name="tr_unlocked_title">🏆 Trofeo sbloccato!</string>
     <string name="tr_screen_title">Trofei</string>

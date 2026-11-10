@@ -89,10 +89,6 @@ object TrafficLights {
 
     private const val CACHE_MAX_AGE_MS = 60L * 24 * 3600_000L
     private const val FAIL_BACKOFF_MS = 30L * 60_000L
-    private val OVERPASS = listOf(
-        "https://overpass-api.de/api/interpreter",
-        "https://overpass.kumi.systems/api/interpreter",
-    )
 
     private fun readCell(f: File): List<DoubleArray>? {
         if (!f.isFile || System.currentTimeMillis() - f.lastModified() >= CACHE_MAX_AGE_MS) return null
@@ -132,15 +128,10 @@ object TrafficLights {
                     String.format(Locale.ROOT, "node[\"highway\"=\"traffic_signals\"](%.4f,%.4f,%.4f,%.4f);", sLat, w, sLat + CELL_DEG, w + CELL_DEG)
                 }
                 val q = "[out:json][timeout:40];($parts);out skel;"
-                var body: String? = null
-                for (url in OVERPASS) {
-                    try {
-                        AppHttp.throttle(java.net.URI(url).host, 1_000)
-                        body = AppHttp.postForm(url, "data=" + AppHttp.encode(q), connectTimeoutMs = 10_000, readTimeoutMs = 45_000)
-                        break
-                    } catch (e: Exception) {
-                        LogBus.log("[TL] signals from ${java.net.URI(url).host} failed: ${e.message}")
-                    }
+                val body = try {
+                    OverpassClient.postRaw(q, connectTimeoutMs = 10_000, readTimeoutMs = 45_000)
+                } catch (e: Exception) {
+                    LogBus.log("[TL] signals failed on every Overpass server: ${e.message}"); null
                 }
                 if (body == null) {
                     failed = true
@@ -341,10 +332,10 @@ object TrafficLights {
     fun fetchName(ctx: Context, j: Junction): String? {
         cachedName(ctx, j)?.let { return it }
         return try {
-            AppHttp.throttle("nominatim.openstreetmap.org", 1_100)
+            MapServer.throttle("nominatim", 1_100)
             val body = AppHttp.getText(
                 String.format(Locale.ROOT,
-                    "https://nominatim.openstreetmap.org/reverse?lat=%.5f&lon=%.5f&format=jsonv2&zoom=17&addressdetails=1&accept-language=%s",
+                    MapServer.nominatim + "/reverse?lat=%.5f&lon=%.5f&format=jsonv2&zoom=17&addressdetails=1&accept-language=%s",
                     j.lat, j.lon, Locale.getDefault().language),
             )
             val addr = JSONObject(body).optJSONObject("address")

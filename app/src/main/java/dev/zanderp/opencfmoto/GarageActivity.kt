@@ -47,7 +47,7 @@ class GarageActivity : AppCompatActivity() {
         if (result.resultCode != RESULT_OK || raw == null) return@registerForActivityResult
         val qr = QrData.parse(raw)
         if (qr == null) {
-            LogBus.log("[Garage] QR parse FAILED — raw: $raw")
+            LogBus.log("[Garage] QR parse FAILED (${raw.length} chars, starts '${raw.take(6)}…')")
             Toast.makeText(
                 this,
                 QrData.parseFailureHint(raw, this) ?: getString(R.string.main_invalid_qr),

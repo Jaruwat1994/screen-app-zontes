@@ -70,6 +70,24 @@ object NominatimSearch {
         return result
     }
 
+    /**
+     * Places while the rider types (the Map screen's search box): Photon only, one request. Photon is
+     * made for this; Nominatim's usage policy forbids search-as-you-type, so it stays on the Search key.
+     * Without a GPS fix results lean towards Bangkok (Thai riders).
+     */
+    fun suggest(query: String, nearLat: Double?, nearLon: Double?): List<MapPlace> {
+        val q = query.trim()
+        if (q.length < SUGGEST_MIN_CHARS) return emptyList()
+        val lat = nearLat ?: 13.7563
+        val lon = nearLon ?: 100.5018
+        val key = "suggest|" + cacheKey(q, lat, lon)
+        cacheGet(key)?.let { return it }
+        val r = rankScored(fetchPhoton(q, lat, lon, limit = 8, settlementsOnly = false), q, lat, lon)
+        if (r.isNotEmpty()) cachePut(key, r)
+        return r
+    }
+    const val SUGGEST_MIN_CHARS = 2
+
     // --- Tiny LRU cache so retyping / re-searching the same thing doesn't re-hit the network. ---
     private const val CACHE_MAX = 64
     private val cache = object : LinkedHashMap<String, List<MapPlace>>(16, 0.75f, true) {
@@ -106,12 +124,12 @@ object NominatimSearch {
         val enc = AppHttp.encode(query)
         val bias = if (settlementsOnly) 0.12 else 0.2
         var url =
-            "https://photon.komoot.io/api/?q=$enc&lat=$nearLat&lon=$nearLon&limit=$limit" +
+            "${MapServer.photon}/api/?q=$enc&lat=$nearLat&lon=$nearLon&limit=$limit" +
                 "&location_bias_scale=$bias&lang=default"
         if (settlementsOnly) {
             url += "&osm_tag=place:city&osm_tag=place:town&osm_tag=place:municipality"
         }
-        AppHttp.throttle("photon.komoot.io", 300)
+        MapServer.throttle("photon", 300)
         run {
             val root = JSONObject(AppHttp.getText(url))
             val features = root.optJSONArray("features") ?: JSONArray()
@@ -153,14 +171,14 @@ object NominatimSearch {
     ): List<ScoredPlace> {
         val enc = AppHttp.encode(query)
         var url =
-            "https://nominatim.openstreetmap.org/search?q=$enc&format=jsonv2&addressdetails=1&limit=20"
+            "${MapServer.nominatim}/search?q=$enc&format=jsonv2&addressdetails=1&limit=20"
         if (nearLat != null && nearLon != null) {
             // Soft regional preference (~180 km); bounded=0 still allows farther matches.
             val d = 1.6
             url += "&viewbox=${nearLon - d},${nearLat + d},${nearLon + d},${nearLat - d}&bounded=0"
         }
         // Nominatim usage policy: at most 1 request/second from a single source.
-        AppHttp.throttle("nominatim.openstreetmap.org", 1_100)
+        MapServer.throttle("nominatim", 1_100)
         run {
             val arr = JSONArray(AppHttp.getText(url))
             return buildList {
